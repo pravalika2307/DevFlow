@@ -49,11 +49,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.18.0'
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install --include=optional
 
       - name: Run ESLint
         run: npx turbo run lint
