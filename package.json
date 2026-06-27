@@ -1,0 +1,23 @@
+{
+  "name": "devflow-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@10.8.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md}\"",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.4",
+    "prettier": "^3.2.5",
+    "eslint": "^9.0.0",
+    "typescript": "^5.0.0"
+  }
+}
