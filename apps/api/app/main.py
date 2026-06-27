@@ -11,6 +11,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.logging import configure_logging
+from app.core.security import get_fernet
 from app.middleware import LoggingMiddleware
 
 # Configure production-ready structured loggers on startup
@@ -90,6 +91,16 @@ async def global_exception_handler(request: Request, exc: Exception) -> JSONResp
             },
         },
     )
+
+
+@app.on_event("startup")
+def validate_startup_config() -> None:
+    """Validate critical application config parameters on startup."""
+    try:
+        get_fernet()
+    except Exception as e:
+        logger.error(f"Startup configuration validation failed: {e}")
+        raise e
 
 
 # Mount Routers

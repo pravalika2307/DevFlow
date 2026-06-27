@@ -8,17 +8,30 @@ from jose import jwt
 from app.core.config import settings
 
 # Setup encryption context for GitHub tokens
-fernet = Fernet(
-    settings.ENCRYPTION_KEY.encode()
-    if isinstance(settings.ENCRYPTION_KEY, str)
-    else settings.ENCRYPTION_KEY
-)
+_fernet: Optional[Fernet] = None
+
+
+def get_fernet() -> Fernet:
+    """Lazily initialize and return the Fernet instance using settings configuration."""
+    global _fernet
+    if _fernet is None:
+        key = settings.ENCRYPTION_KEY
+        if not key:
+            raise ValueError("ENCRYPTION_KEY must be configured in settings.")
+        encoded_key = key.encode() if isinstance(key, str) else key
+        try:
+            _fernet = Fernet(encoded_key)
+        except ValueError as e:
+            raise ValueError(
+                f"Invalid ENCRYPTION_KEY: must be a 32-byte url-safe base64-encoded key. Detail: {e}"
+            ) from e
+    return _fernet
 
 
 def get_password_hash(password: str) -> str:
     """Hash password using bcrypt directly."""
-    salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
+    parent_salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password.encode("utf-8"), parent_salt).decode("utf-8")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -56,9 +69,9 @@ def create_refresh_token(
 
 def encrypt_token(token: str) -> str:
     """Encrypt a sensitive API token (e.g. GitHub OAuth token) using Fernet AES-256."""
-    return fernet.encrypt(token.encode()).decode()
+    return get_fernet().encrypt(token.encode()).decode()
 
 
 def decrypt_token(encrypted_token: str) -> str:
     """Decrypt an encrypted API token using Fernet AES-256."""
-    return fernet.decrypt(encrypted_token.encode()).decode()
+    return get_fernet().decrypt(encrypted_token.encode()).decode()
