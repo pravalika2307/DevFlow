@@ -11,7 +11,12 @@ export interface FlowModalProps {
   children: React.ReactNode;
 }
 
-export function FlowModal({ isOpen, onClose, title, children }: FlowModalProps) {
+export function FlowModal({
+  isOpen,
+  onClose,
+  title,
+  children,
+}: FlowModalProps) {
   // Prevent body scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -50,7 +55,7 @@ export function FlowModal({ isOpen, onClose, title, children }: FlowModalProps) 
               <h2 className="text-sm font-bold text-white uppercase tracking-wider">
                 {title || "Action Dialog"}
               </h2>
-              <button 
+              <button
                 onClick={onClose}
                 className="text-slate-400 hover:text-white transition-colors cursor-pointer"
               >
@@ -59,9 +64,7 @@ export function FlowModal({ isOpen, onClose, title, children }: FlowModalProps) 
             </div>
 
             {/* Content */}
-            <div className="p-6">
-              {children}
-            </div>
+            <div className="p-6">{children}</div>
           </motion.div>
         </div>
       )}

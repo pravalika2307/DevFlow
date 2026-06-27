@@ -4,14 +4,15 @@ export interface FlowBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: "indigo" | "emerald" | "amber" | "rose" | "slate";
 }
 
-export function FlowBadge({ 
-  className = "", 
-  children, 
-  variant = "indigo", 
-  ...props 
+export function FlowBadge({
+  className = "",
+  children,
+  variant = "indigo",
+  ...props
 }: FlowBadgeProps) {
-  const baseStyles = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border";
-  
+  const baseStyles =
+    "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border";
+
   const variants = {
     indigo: "bg-indigo-950/40 text-indigo-400 border-indigo-900/30",
     emerald: "bg-emerald-950/40 text-emerald-400 border-emerald-900/30",

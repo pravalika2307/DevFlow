@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "DevFlow | Engineering Intelligence Platform",
-  description: "DevFlow is an enterprise-grade Engineering Intelligence Platform that integrates with GitHub to monitor repository health, pull requests, issues, developer productivity, and metrics with AI insights.",
+  description:
+    "DevFlow is an enterprise-grade Engineering Intelligence Platform that integrates with GitHub to monitor repository health, pull requests, issues, developer productivity, and metrics with AI insights.",
 };
 
 export default function RootLayout({

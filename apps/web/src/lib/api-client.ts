@@ -5,7 +5,8 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -47,7 +48,7 @@ apiClient.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response Interceptor: Catch 401 and execute JWT rotation
@@ -55,11 +56,11 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
-    
+
     // Check if error is 401 and it's not a retry or a direct login/register endpoint
     if (
-      error.response?.status === 401 && 
-      originalRequest && 
+      error.response?.status === 401 &&
+      originalRequest &&
       !originalRequest._retry &&
       !originalRequest.url?.includes("/auth/login") &&
       !originalRequest.url?.includes("/auth/register")
@@ -84,12 +85,12 @@ apiClient.interceptors.response.use(
         const response = await axios.post(
           `${API_URL}/auth/refresh`,
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
-        
+
         const { access_token } = response.data;
         setAccessToken(access_token);
-        
+
         isRefreshing = false;
         onTokenRefreshed(access_token);
 
@@ -101,21 +102,21 @@ apiClient.interceptors.response.use(
       } catch (refreshError) {
         isRefreshing = false;
         setAccessToken(null);
-        
+
         // Dispatch custom event to let Zustand or routing know they should redirect to login
         if (typeof window !== "undefined") {
           window.dispatchEvent(new Event("auth-session-expired"));
         }
-        
+
         return Promise.reject(refreshError);
       }
     }
-    
+
     // Format standardized API errors for easier UI handling
     if (error.response?.data) {
       return Promise.reject(error.response.data);
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );

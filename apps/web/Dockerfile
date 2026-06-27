@@ -1,6 +1,6 @@
 # ==============================================================================
 # STAGE 1: Pruner
-# Isolates only the frontend 'web' application and the workspace dependencies 
+# Isolates only the frontend 'web' application and the workspace dependencies
 # (like shared config, types, and UI packages) to optimize build caching.
 # ==============================================================================
 FROM node:20-alpine AS pruner
@@ -33,7 +33,7 @@ RUN npx turbo run build --filter=web
 
 # ==============================================================================
 # STAGE 3: Runner
-# Slim production stage that only bundles the standalone compiled server.js, 
+# Slim production stage that only bundles the standalone compiled server.js,
 # public assets, and static files. Minimizes container size and vulnerability surface.
 # ==============================================================================
 FROM node:20-alpine AS runner

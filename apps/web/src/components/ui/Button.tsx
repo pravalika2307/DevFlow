@@ -7,16 +7,32 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className = "", variant = "primary", size = "md", isLoading, children, disabled, ...props }, ref) => {
+  (
+    {
+      className = "",
+      variant = "primary",
+      size = "md",
+      isLoading,
+      children,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
     const baseStyles =
       "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
-    
+
     const variants = {
-      primary: "bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm focus:ring-indigo-500",
-      secondary: "bg-slate-800 hover:bg-slate-700 text-slate-100 focus:ring-slate-700",
-      outline: "border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white focus:ring-slate-700",
-      danger: "bg-rose-600 hover:bg-rose-500 text-white shadow-sm focus:ring-rose-500",
-      ghost: "text-slate-400 hover:text-white hover:bg-slate-800 focus:ring-slate-700",
+      primary:
+        "bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm focus:ring-indigo-500",
+      secondary:
+        "bg-slate-800 hover:bg-slate-700 text-slate-100 focus:ring-slate-700",
+      outline:
+        "border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white focus:ring-slate-700",
+      danger:
+        "bg-rose-600 hover:bg-rose-500 text-white shadow-sm focus:ring-rose-500",
+      ghost:
+        "text-slate-400 hover:text-white hover:bg-slate-800 focus:ring-slate-700",
     };
 
     const sizes = {
@@ -57,7 +73,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

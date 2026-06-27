@@ -22,11 +22,15 @@ export function FlowMetric({
     <FlowCard className={className}>
       <FlowCardContent className="pt-6">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</span>
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            {label}
+          </span>
           {icon && <div className="text-slate-400">{icon}</div>}
         </div>
         <div className="mt-2.5 flex items-baseline gap-2">
-          <span className="text-3xl font-extrabold text-white font-mono">{value}</span>
+          <span className="text-3xl font-extrabold text-white font-mono">
+            {value}
+          </span>
           {trend}
         </div>
         {description && (

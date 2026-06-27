@@ -25,9 +25,13 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   login: (usernameOrEmail: string, password: string) => Promise<void>;
-  register: (email: string, username: string, password: string) => Promise<void>;
+  register: (
+    email: string,
+    username: string,
+    password: string,
+  ) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   clearError: () => void;
@@ -57,22 +61,24 @@ export const useAuthStore = create<AuthState>((set, get) => {
           password,
         });
         const { access_token } = response.data;
-        
+
         // Cache token in memory
         setAccessToken(access_token);
-        
+
         // Fetch current user details
         const userResponse = await apiClient.get("/auth/me");
-        
+
         set({
           user: userResponse.data,
           isAuthenticated: true,
           isLoading: false,
         });
-      } catch (err: any) {
+      } catch (err) {
+        const errorVal = err as { error?: { message?: string } };
         set({
           isLoading: false,
-          error: err.error?.message || "Failed to log in. Please try again.",
+          error:
+            errorVal.error?.message || "Failed to log in. Please try again.",
         });
         throw err;
       }
@@ -87,10 +93,12 @@ export const useAuthStore = create<AuthState>((set, get) => {
           password,
         });
         set({ isLoading: false });
-      } catch (err: any) {
+      } catch (err) {
+        const errorVal = err as { error?: { message?: string } };
         set({
           isLoading: false,
-          error: err.error?.message || "Registration failed. Please try again.",
+          error:
+            errorVal.error?.message || "Registration failed. Please try again.",
         });
         throw err;
       }
@@ -115,22 +123,22 @@ export const useAuthStore = create<AuthState>((set, get) => {
     checkAuth: async () => {
       // Avoid triggering check authentication if already authenticated
       if (get().isAuthenticated) return;
-      
+
       set({ isLoading: true, error: null });
       try {
-        // Attempt token rotation. Since access token might be empty on startup, 
+        // Attempt token rotation. Since access token might be empty on startup,
         // the client interceptor or a manual post will check for valid refresh cookies.
         const response = await apiClient.post("/auth/refresh", {});
         const { access_token } = response.data;
         setAccessToken(access_token);
-        
+
         const userResponse = await apiClient.get("/auth/me");
         set({
           user: userResponse.data,
           isAuthenticated: true,
           isLoading: false,
         });
-      } catch (err) {
+      } catch {
         // Safe to ignore on startup - user is simply unauthenticated
         setAccessToken(null);
         set({

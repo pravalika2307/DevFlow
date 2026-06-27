@@ -17,3 +17,4 @@ python-dotenv
 pytest
 pytest-mock
 httpx
+pre-commit

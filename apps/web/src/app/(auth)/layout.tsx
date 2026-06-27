@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-[#030712]">
       {/* Visual panel (Hidden on small screens) */}
@@ -28,13 +32,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             Engineering Intelligence Platform.
           </h1>
           <p className="text-slate-400 leading-relaxed">
-            Monitor repositories, tracking review cycles, issues speed, commit frequencies, and team metrics automatically in one dashboard.
+            Monitor repositories, tracking review cycles, issues speed, commit
+            frequencies, and team metrics automatically in one dashboard.
           </p>
         </div>
 
         {/* Footer info */}
         <div className="text-xs text-slate-500 z-10">
-          © {new Date().getFullYear()} DevFlow Inc. Google DeepMind Pair Programming.
+          © {new Date().getFullYear()} DevFlow Inc. Google DeepMind Pair
+          Programming.
         </div>
       </div>
 

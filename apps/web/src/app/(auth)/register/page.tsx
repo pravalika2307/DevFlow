@@ -5,11 +5,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/Card";
 
 const registerSchema = z
   .object({
@@ -18,7 +23,10 @@ const registerSchema = z
       .string()
       .min(3, "Username must be at least 3 characters")
       .max(100, "Username must be less than 100 characters")
-      .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain alphanumeric characters, underscores, and dashes"),
+      .regex(
+        /^[a-zA-Z0-9_-]+$/,
+        "Username can only contain alphanumeric characters, underscores, and dashes",
+      ),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Password confirmation is required"),
   })
@@ -30,7 +38,6 @@ const registerSchema = z
 type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
-  const router = useRouter();
   const { register: signUp, isLoading, error, clearError } = useAuthStore();
   const [success, setSuccess] = useState(false);
 
@@ -51,7 +58,7 @@ export default function RegisterPage() {
     try {
       await signUp(data.email, data.username, data.password);
       setSuccess(true);
-    } catch (err) {
+    } catch {
       // Handled in store error state
     }
   };
@@ -60,7 +67,9 @@ export default function RegisterPage() {
     return (
       <Card className="border-slate-800 bg-[#090d16]/50">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center text-emerald-400">Account Created!</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-emerald-400">
+            Account Created!
+          </CardTitle>
           <CardDescription className="text-center text-slate-400">
             Your DevFlow account has been created successfully.
           </CardDescription>
@@ -82,7 +91,9 @@ export default function RegisterPage() {
   return (
     <Card className="border-slate-800 bg-[#090d16]/50">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Create an Account</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">
+          Create an Account
+        </CardTitle>
         <CardDescription className="text-center text-slate-400">
           Sign up to monitor repository health and engineering metrics
         </CardDescription>
@@ -126,18 +137,17 @@ export default function RegisterPage() {
             disabled={isLoading}
             {...register("confirmPassword")}
           />
-          <Button
-            type="submit"
-            className="w-full mt-2"
-            isLoading={isLoading}
-          >
+          <Button type="submit" className="w-full mt-2" isLoading={isLoading}>
             Sign Up
           </Button>
         </form>
 
         <div className="mt-6 text-center text-sm">
           Already have an account?{" "}
-          <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors duration-150">
+          <Link
+            href="/login"
+            className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors duration-150"
+          >
             Log In
           </Link>
         </div>

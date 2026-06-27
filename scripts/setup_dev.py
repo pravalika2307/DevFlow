@@ -38,7 +38,9 @@ def main():
 
     # 2. Install Node/npm dependencies
     print("\nInstalling Node.js dependencies at monorepo root...")
-    if not run_command(["npm", "install"], cwd=root_dir):
+    is_windows = sys.platform.startswith("win")
+    npm_cmd = "npm.cmd" if is_windows else "npm"
+    if not run_command([npm_cmd, "install"], cwd=root_dir):
         print("[ERROR] npm install failed. Please ensure Node.js is installed.")
         sys.exit(1)
 
@@ -66,19 +68,31 @@ def main():
 
     print("\nInstalling Python dependencies...")
     reqs_path = os.path.join(api_dir, "requirements.txt")
-    if not run_command([pip_path, "install", "--upgrade", "pip"], cwd=api_dir):
+    if not run_command([python_path, "-m", "pip", "install", "--upgrade", "pip"], cwd=api_dir):
         print("[WARNING] Failed to upgrade pip.")
 
-    if not run_command([pip_path, "install", "-r", reqs_path], cwd=api_dir):
+    if not run_command([python_path, "-m", "pip", "install", "-r", reqs_path], cwd=api_dir):
         print("[ERROR] Failed to install Python dependencies.")
         sys.exit(1)
 
     # Make sure dev code quality libraries are installed natively
     print("\nInstalling quality tooling (ruff, black, mypy)...")
-    if not run_command([pip_path, "install", "ruff", "black", "mypy"], cwd=api_dir):
+    if not run_command([python_path, "-m", "pip", "install", "ruff", "black", "mypy"], cwd=api_dir):
         print("[WARNING] Failed to install code quality libraries.")
 
-    # 4. Verify connectivity and configuration
+    # 4. Install Git pre-commit hooks
+    print("\nInstalling Git pre-commit hooks...")
+    precommit_path = (
+        os.path.join(venv_dir, "Scripts", "pre-commit.exe")
+        if is_windows
+        else os.path.join(venv_dir, "bin", "pre-commit")
+    )
+    if os.path.exists(precommit_path):
+        run_command([precommit_path, "install"], cwd=root_dir)
+    else:
+        print("[WARNING] pre-commit executable not found. Hooks were not installed.")
+
+    # 5. Verify connectivity and configuration
     print("\nRunning environment verification check...")
     verify_script = os.path.join(root_dir, "scripts", "verify_env.py")
     subprocess.run(

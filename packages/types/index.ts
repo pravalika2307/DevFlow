@@ -68,7 +68,7 @@ export interface Issue {
   creator_external_id: string;
   priority: string;
   difficulty?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
   closed_at?: string;
