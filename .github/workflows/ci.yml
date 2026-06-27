@@ -59,7 +59,7 @@ jobs:
         run: npx turbo run lint
 
       - name: Run TypeScript Type Check
-        run: npx tsc --noEmit --project apps/web/tsconfig.json
+        run: npm run typecheck
 
       - name: Run Vitest Unit Tests
         run: npx turbo run test --filter=web
