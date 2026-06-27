@@ -11,10 +11,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.4.0",
-    "@tanstack/react-query": "^5.101.1",
     "@devflow/types": "*",
     "@devflow/ui": "*",
+    "@hookform/resolvers": "^5.4.0",
+    "@tanstack/react-query": "^5.101.1",
     "axios": "^1.18.1",
     "echarts": "^6.1.0",
     "framer-motion": "^11.0.0",
@@ -41,5 +41,8 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^3.0.2"
+  },
+  "optionalDependencies": {
+    "lightningcss-linux-x64-gnu": "^1.32.0"
   }
 }
