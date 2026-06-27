@@ -58,7 +58,7 @@ def run_migrations_online() -> None:
     """
     # Overwrite connection URL dynamically using backend app settings
     configuration = config.get_section(config.config_ini_section) or {}
-    configuration["sqlalchemy.url"] = settings.DATABASE_URL
+    configuration["sqlalchemy.url"] = settings.DATABASE_URL or ""
 
     connectable = engine_from_config(
         configuration,
