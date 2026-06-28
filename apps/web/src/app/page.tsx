@@ -8,6 +8,7 @@ import { Navbar } from "../components/layout/Navbar";
 import { MetricCard } from "../components/ui/MetricCard";
 import { ProjectForm } from "../components/flow/ProjectForm";
 import { ProjectDetail } from "../components/flow/ProjectDetail";
+import { CoachWorkspace } from "../components/coach/CoachWorkspace";
 
 export default function HomePage() {
   const [projects, setProjects] = useState<InnovationProject[]>(() => {
@@ -19,6 +20,8 @@ export default function HomePage() {
 
   // Selection states
   const [selectedProject, setSelectedProject] =
+    useState<InnovationProject | null>(null);
+  const [activeCoachProject, setActiveCoachProject] =
     useState<InnovationProject | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] =
@@ -104,6 +107,19 @@ export default function HomePage() {
     Medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     Low: "bg-slate-500/10 text-slate-400 border-slate-500/20",
   };
+
+  if (activeCoachProject) {
+    return (
+      <CoachWorkspace
+        project={activeCoachProject}
+        onSave={(updated) => {
+          handleSaveProject(updated);
+          setActiveCoachProject(updated);
+        }}
+        onBack={() => setActiveCoachProject(null)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -378,6 +394,10 @@ export default function HomePage() {
           onEdit={() => handleEditClick(selectedProject)}
           onDelete={() => handleDeleteProject(selectedProject.id)}
           onClose={() => setSelectedProject(null)}
+          onLaunchCoach={() => {
+            setActiveCoachProject(selectedProject);
+            setSelectedProject(null);
+          }}
         />
       )}
 

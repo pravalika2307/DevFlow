@@ -196,6 +196,38 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
       testCoverage,
       buildStatus,
       openIssuesCount,
+      empathise: project
+        ? project.empathise
+        : {
+            targetUser: targetBeneficiaries.trim(),
+            userPersona: "",
+            goals: "",
+            pains: "",
+            behaviours: "",
+            needs: "",
+          },
+      define: project
+        ? project.define
+        : {
+            problemStatement: problemStatement.trim(),
+            opportunityStatement: "",
+            howMightWe: "",
+            successMetrics: successMetrics.trim(),
+          },
+      ideate: project ? project.ideate : [],
+      prototype: project ? project.prototype : [],
+      test: project ? project.test : [],
+      innovationScores: project
+        ? project.innovationScores
+        : {
+            problemClarity: 70,
+            innovation: innovationScore,
+            feasibility: readinessScore,
+            socialImpact: impactScore,
+            aiReadiness: 70,
+            scalability: 70,
+            sustainability: 70,
+          },
     };
 
     onSave(savedProject);

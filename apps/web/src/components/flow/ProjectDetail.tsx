@@ -6,6 +6,7 @@ interface ProjectDetailProps {
   onEdit: () => void;
   onDelete: () => void;
   onClose: () => void;
+  onLaunchCoach: () => void;
 }
 
 export function ProjectDetail({
@@ -13,6 +14,7 @@ export function ProjectDetail({
   onEdit,
   onDelete,
   onClose,
+  onLaunchCoach,
 }: ProjectDetailProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "engineering" | "ai">(
     "overview",
@@ -71,6 +73,26 @@ export function ProjectDetail({
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={onLaunchCoach}
+              className="rounded-xl border border-indigo-900/40 bg-indigo-950/20 px-3.5 py-1.5 text-xs font-semibold text-indigo-300 hover:bg-indigo-600 hover:text-white transition-all flex items-center gap-1.5"
+              title="Launch AI Innovation Coach"
+            >
+              <svg
+                className="h-4 w-4 animate-pulse"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                />
+              </svg>
+              Launch AI Coach
+            </button>
             <button
               onClick={onEdit}
               className="rounded-xl border border-slate-800 bg-slate-900/50 p-2 text-slate-400 hover:bg-slate-850 hover:text-indigo-400 transition-all"
