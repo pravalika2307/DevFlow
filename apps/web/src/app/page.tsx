@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { SharedComponentPlaceholder } from "@devflow/ui";
+import React, { useCallback, useState } from "react";
 import { InnovationProject, ProjectStage } from "../types/innovation";
 import { InnovationService } from "../services/innovation";
 import { Navbar } from "../components/layout/Navbar";
@@ -13,16 +12,245 @@ import { DiscoveryWorkspace } from "../components/discovery/DiscoveryWorkspace";
 import { ImpactWorkspace } from "../components/impact/ImpactWorkspace";
 import { CouncilWorkspace } from "../components/council/CouncilWorkspace";
 import { ExportCenterModal } from "../components/flow/ExportCenterModal";
+import { ToastContainer, ToastMessage } from "../components/ui/Toast";
 
+type Module = "dashboard" | "discovery" | "impact" | "council";
+
+/* ── Stage badge colours ─────────────────────────────── */
+const STAGE_COLORS: Record<ProjectStage, string> = {
+  Ideation: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  Prototyping: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  Validation: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+  Scaling: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+};
+
+const PRIORITY_COLORS = {
+  High: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+  Medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  Low: "bg-slate-500/10 text-slate-400 border-slate-500/20",
+};
+
+/* ── Toast helper ────────────────────────────────────── */
+function makeToast(
+  message: string,
+  variant: ToastMessage["variant"] = "success",
+): ToastMessage {
+  return { id: crypto.randomUUID(), message, variant };
+}
+
+/* ── Empty State ─────────────────────────────────────── */
+function EmptyState({
+  onNewProject,
+  hasFilter,
+}: {
+  onNewProject: () => void;
+  hasFilter: boolean;
+}) {
+  if (hasFilter) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 rounded-2xl border border-dashed border-slate-800 bg-slate-900/10 animate-fade-in-up">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800/60 text-slate-400 mb-4">
+          <svg
+            className="h-7 w-7"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"
+            />
+          </svg>
+        </div>
+        <p className="text-sm font-semibold text-slate-300">
+          No matching projects
+        </p>
+        <p className="text-xs text-slate-500 mt-1.5 text-center max-w-xs leading-relaxed">
+          Try adjusting your search or filter criteria to find the project
+          you&#39;re looking for.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center py-24 rounded-2xl border border-dashed border-slate-800 bg-slate-900/10 animate-fade-in-up">
+      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600/20 to-violet-600/20 border border-indigo-500/20 text-indigo-400 mb-5">
+        <svg
+          className="h-8 w-8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.355a14.998 14.998 0 01-3.75 0M15 11.25a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+        <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-white">
+          <svg
+            className="h-2.5 w-2.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+        </div>
+      </div>
+      <p className="text-sm font-bold text-slate-200">
+        Start your first innovation project
+      </p>
+      <p className="text-xs text-slate-500 mt-2 text-center max-w-sm leading-relaxed">
+        Create a project to unlock the AI Design Thinking Coach, Problem
+        Discovery Engine, Impact Intelligence Centre, and the Multi-Agent AI
+        Council.
+      </p>
+      <button
+        onClick={onNewProject}
+        className="btn-glow mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-bold text-white hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400"
+      >
+        <svg
+          className="h-3.5 w-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
+        </svg>
+        Create Innovation Project
+      </button>
+    </div>
+  );
+}
+
+/* ── Project Card ────────────────────────────────────── */
+function ProjectCard({
+  project,
+  index,
+  onClick,
+}: {
+  project: InnovationProject;
+  index: number;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClick();
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Open project: ${project.name}`}
+      className={`group relative rounded-2xl border border-white/[0.06] bg-slate-900/30 p-5 cursor-pointer flex flex-col justify-between min-h-[210px] transition-all duration-200 hover:border-indigo-500/20 hover:bg-slate-900/50 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-950/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500 animate-fade-in-up`}
+      style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
+    >
+      {/* Hover glow */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background:
+            "radial-gradient(ellipse at top left, rgba(99,102,241,0.05) 0%, transparent 70%)",
+        }}
+      />
+
+      <div>
+        {/* Theme + Stage */}
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <span className="tag bg-indigo-500/8 text-indigo-300 border-indigo-500/15 truncate max-w-[140px]">
+            {project.innovationTheme}
+          </span>
+          <span className={`tag ${STAGE_COLORS[project.projectStage]}`}>
+            {project.projectStage}
+          </span>
+        </div>
+
+        {/* Title */}
+        <h3 className="mt-3 text-sm font-bold text-slate-100 tracking-tight group-hover:text-indigo-300 transition-colors duration-200 line-clamp-2">
+          {project.name}
+        </h3>
+
+        {/* Problem Statement */}
+        <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+          {project.problemStatement}
+        </p>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-4 space-y-2.5 pt-3 border-t border-white/[0.04]">
+        {/* Scores row */}
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <div className="flex justify-between mb-1">
+              <span className="text-[10px] text-slate-500 font-medium">
+                Innovation
+              </span>
+              <span className="text-[10px] font-bold text-indigo-400">
+                {project.innovationScore}%
+              </span>
+            </div>
+            <div className="progress-bar">
+              <div
+                className="progress-bar-fill bg-gradient-to-r from-indigo-500 to-violet-500"
+                style={{ width: `${project.innovationScore}%` }}
+              />
+            </div>
+          </div>
+          <div className="flex-1">
+            <div className="flex justify-between mb-1">
+              <span className="text-[10px] text-slate-500 font-medium">
+                Health
+              </span>
+              <span className="text-[10px] font-bold text-emerald-400">
+                {project.engineeringHealth}%
+              </span>
+            </div>
+            <div className="progress-bar">
+              <div
+                className="progress-bar-fill bg-gradient-to-r from-emerald-500 to-teal-500"
+                style={{ width: `${project.engineeringHealth}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Priority + Timeline */}
+        <div className="flex items-center justify-between">
+          <span className={`tag ${PRIORITY_COLORS[project.priority]}`}>
+            {project.priority} Priority
+          </span>
+          <span className="text-[10px] text-slate-500 font-medium">
+            {project.timeline}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Page Component ──────────────────────────────────── */
 export default function HomePage() {
-  const [projects, setProjects] = useState<InnovationProject[]>(() => {
-    return InnovationService.getProjects();
-  });
+  const [projects, setProjects] = useState<InnovationProject[]>(() =>
+    InnovationService.getProjects(),
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("All");
   const [selectedStage, setSelectedStage] = useState("All");
-
-  // Selection states
   const [selectedProject, setSelectedProject] =
     useState<InnovationProject | null>(null);
   const [activeCoachProject, setActiveCoachProject] =
@@ -30,135 +258,116 @@ export default function HomePage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] =
     useState<InnovationProject | null>(null);
-  const [activeModule, setActiveModule] = useState<
-    "dashboard" | "discovery" | "impact" | "council"
-  >("dashboard");
+  const [activeModule, setActiveModule] = useState<Module>("dashboard");
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const handleDemoModeLaunch = () => {
-    // Reset projects to initial mock projects list
+  const pushToast = useCallback(
+    (message: string, variant: ToastMessage["variant"] = "success") => {
+      setToasts((prev) => [...prev.slice(-3), makeToast(message, variant)]);
+    },
+    [],
+  );
+
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  /* ── Demo Mode ─────────────────────────────────────── */
+  const handleDemoModeLaunch = useCallback(() => {
     const demoProjects = InnovationService.getProjects();
     setProjects(demoProjects);
-
-    // Clear dynamic session records to restore default pre-populated assessments
     localStorage.removeItem("devflow_problem_discoveries");
     localStorage.removeItem("devflow_impact_metrics");
     localStorage.removeItem("devflow_council_data");
-
-    alert(
-      "Samsung Solve for Tomorrow Demo Mode loaded! Active study datasets have been successfully pre-populated across all modules.",
-    );
     setActiveModule("dashboard");
-  };
+    pushToast(
+      "Samsung Solve for Tomorrow demo mode loaded. All modules pre-populated.",
+      "info",
+    );
+  }, [pushToast]);
 
-  // Sync state helpers
-  const handleSaveProject = (project: InnovationProject) => {
-    const updated = InnovationService.saveProject(project);
-    setProjects(updated);
-    setIsFormOpen(false);
-    setEditingProject(null);
-    if (selectedProject?.id === project.id) {
-      setSelectedProject(project);
-    }
-  };
+  /* ── Project Actions ───────────────────────────────── */
+  const handleSaveProject = useCallback(
+    (project: InnovationProject) => {
+      const updated = InnovationService.saveProject(project);
+      setProjects(updated);
+      setIsFormOpen(false);
+      setEditingProject(null);
+      if (selectedProject?.id === project.id) setSelectedProject(project);
+      pushToast(`"${project.name}" saved successfully.`);
+    },
+    [selectedProject, pushToast],
+  );
 
-  const handleDeleteProject = (id: string) => {
-    if (confirm("Are you sure you want to delete this innovation project?")) {
+  const handleDeleteProject = useCallback(
+    (id: string) => {
+      if (!confirm("Delete this innovation project? This cannot be undone."))
+        return;
       const updated = InnovationService.deleteProject(id);
       setProjects(updated);
       setSelectedProject(null);
-    }
-  };
+      pushToast("Project deleted.", "warning");
+    },
+    [pushToast],
+  );
 
-  const handleEditClick = (project: InnovationProject) => {
+  const handleEditClick = useCallback((project: InnovationProject) => {
     setEditingProject(project);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  const handleNewProjectClick = () => {
+  const handleNewProjectClick = useCallback(() => {
     setEditingProject(null);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  // Filter logic
-  const filteredProjects = projects.filter((project) => {
-    const matchesSearch =
-      project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.innovationTheme
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      project.problemStatement
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      project.sdgGoals.some((goal) =>
-        goal.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-
-    const matchesTheme =
-      selectedTheme === "All" || project.innovationTheme === selectedTheme;
-    const matchesStage =
-      selectedStage === "All" || project.projectStage === selectedStage;
-
-    return matchesSearch && matchesTheme && matchesStage;
+  /* ── Filtering ─────────────────────────────────────── */
+  const filteredProjects = projects.filter((p) => {
+    const q = searchQuery.toLowerCase();
+    const matchSearch =
+      !q ||
+      p.name.toLowerCase().includes(q) ||
+      p.innovationTheme.toLowerCase().includes(q) ||
+      p.problemStatement.toLowerCase().includes(q) ||
+      p.sdgGoals.some((g) => g.toLowerCase().includes(q));
+    const matchTheme =
+      selectedTheme === "All" || p.innovationTheme === selectedTheme;
+    const matchStage =
+      selectedStage === "All" || p.projectStage === selectedStage;
+    return matchSearch && matchTheme && matchStage;
   });
 
-  // Calculate statistics
   const stats = InnovationService.getWorkspaceStats(filteredProjects);
-
-  // Unique list of themes
   const uniqueThemes = [
     "All",
     ...Array.from(new Set(projects.map((p) => p.innovationTheme))),
   ];
+  const hasActiveFilter =
+    searchQuery !== "" || selectedTheme !== "All" || selectedStage !== "All";
 
-  const getStageColor = (stage: ProjectStage) => {
-    switch (stage) {
-      case "Ideation":
-        return "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
-      case "Prototyping":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
-      case "Validation":
-        return "bg-indigo-500/10 text-indigo-400 border-indigo-500/20";
-      case "Scaling":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
-      default:
-        return "bg-slate-500/10 text-slate-400 border-slate-500/20";
-    }
-  };
-
-  const priorityColors = {
-    High: "bg-rose-500/10 text-rose-450 border-rose-500/20",
-    Medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    Low: "bg-slate-500/10 text-slate-400 border-slate-500/20",
-  };
-
-  if (activeModule === "discovery") {
+  /* ── Module Views ──────────────────────────────────── */
+  if (activeModule === "discovery")
     return (
       <DiscoveryWorkspace
         projects={projects}
         onBack={() => setActiveModule("dashboard")}
       />
     );
-  }
-
-  if (activeModule === "impact") {
+  if (activeModule === "impact")
     return (
       <ImpactWorkspace
         projects={projects}
         onBack={() => setActiveModule("dashboard")}
       />
     );
-  }
-
-  if (activeModule === "council") {
+  if (activeModule === "council")
     return (
       <CouncilWorkspace
         projects={projects}
         onBack={() => setActiveModule("dashboard")}
       />
     );
-  }
-
   if (activeCoachProject) {
     return (
       <CoachWorkspace
@@ -172,8 +381,18 @@ export default function HomePage() {
     );
   }
 
+  /* ── Dashboard ─────────────────────────────────────── */
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+      {/* Ambient background */}
+      <div
+        className="pointer-events-none fixed inset-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div className="absolute -top-64 -left-32 h-[600px] w-[600px] rounded-full bg-indigo-600/4 blur-[120px]" />
+        <div className="absolute top-1/2 -right-64 h-[500px] w-[500px] rounded-full bg-violet-600/4 blur-[120px]" />
+      </div>
+
       <Navbar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -191,21 +410,35 @@ export default function HomePage() {
         />
       )}
 
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8 pb-20">
-        {/* Workspace Summary Row */}
-        <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">
-            Workspace Summary
+      <main
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 pb-24"
+        id="main-content"
+      >
+        {/* Page heading */}
+        <div className="animate-fade-in-up">
+          <h2 className="text-xl font-bold text-white tracking-tight">
+            Innovation Workspace
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <p className="text-sm text-slate-400 mt-1">
+            {projects.length > 0
+              ? `Managing ${projects.length} active innovation project${
+                  projects.length > 1 ? "s" : ""
+                } across all design thinking phases.`
+              : "Start your first innovation project to unlock all AI-powered modules."}
+          </p>
+        </div>
+
+        {/* ── Metric Cards ───────────────────────────────── */}
+        <section aria-label="Workspace metrics">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             <MetricCard
               title="Innovation Score"
               value={stats.avgInnovation}
-              description="Novelty index & design thinking score"
+              description="Novelty index & design thinking"
               variant="indigo"
               icon={
                 <svg
-                  className="h-5 w-5"
+                  className="h-4 w-4"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -220,13 +453,13 @@ export default function HomePage() {
               }
             />
             <MetricCard
-              title="Engineering Health"
+              title="Eng Health"
               value={stats.avgHealth}
-              description="Lint success, code quality, and test coverage"
+              description="Lint, code quality & coverage"
               variant="emerald"
               icon={
                 <svg
-                  className="h-5 w-5"
+                  className="h-4 w-4"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -241,13 +474,13 @@ export default function HomePage() {
               }
             />
             <MetricCard
-              title="Project Progress"
+              title="Progress"
               value={stats.avgProgress}
-              description="Project roadmap completion percentage"
+              description="Roadmap completion"
               variant="amber"
               icon={
                 <svg
-                  className="h-5 w-5"
+                  className="h-4 w-4"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -264,11 +497,11 @@ export default function HomePage() {
             <MetricCard
               title="Impact Score"
               value={stats.avgImpact}
-              description="Estimated UN SDG goal alignment index"
+              description="UN SDG alignment index"
               variant="rose"
               icon={
                 <svg
-                  className="h-5 w-5"
+                  className="h-4 w-4"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -283,13 +516,13 @@ export default function HomePage() {
               }
             />
             <MetricCard
-              title="Readiness Score"
+              title="Readiness"
               value={stats.avgReadiness}
-              description="Technology Readiness Level (TRL) index"
+              description="Technology Readiness Level"
               variant="violet"
               icon={
                 <svg
-                  className="h-5 w-5"
+                  className="h-4 w-4"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -304,245 +537,180 @@ export default function HomePage() {
               }
             />
           </div>
-        </div>
+        </section>
 
-        {/* Executive Dashboard Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* AI Council Consensus */}
-          <div className="lg:col-span-2 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-900 pb-2">
-              AI Council Consensus Summary
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div className="rounded-xl bg-slate-950 p-4 border border-slate-900/60">
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
-                  Research Readiness
-                </span>
-                <span className="text-2xl font-black text-white block mt-1">
-                  85%
-                </span>
-                <p className="text-[10px] text-slate-500 mt-2 leading-relaxed font-medium">
-                  Based on 12 verified user interviews.
-                </p>
-              </div>
-              <div className="rounded-xl bg-slate-950 p-4 border border-slate-900/60">
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
-                  AI Model Readiness
-                </span>
-                <span className="text-2xl font-black text-white block mt-1">
-                  78%
-                </span>
-                <p className="text-[10px] text-slate-500 mt-2 leading-relaxed font-medium">
-                  Consistent model convergence levels.
-                </p>
-              </div>
-              <div className="rounded-xl bg-slate-950 p-4 border border-slate-900/60">
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
-                  Council Advice
-                </span>
-                <span className="text-xs font-bold text-indigo-455 block mt-2.5 uppercase tracking-wide">
-                  Proceed to testing
-                </span>
-                <p className="text-[10px] text-slate-500 mt-2.5 leading-relaxed font-medium">
-                  No fatal block threats found.
-                </p>
-              </div>
+        {/* ── Executive Summary Row ───────────────────────── */}
+        <section
+          aria-label="Executive summary"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-fade-in-up delay-150"
+        >
+          {/* Council Consensus */}
+          <div className="lg:col-span-2 rounded-2xl border border-white/[0.06] bg-slate-900/30 p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400">
+                AI Council Consensus
+              </h3>
+              <span className="tag bg-emerald-500/10 text-emerald-400 border-emerald-500/15">
+                Live
+              </span>
             </div>
-          </div>
-
-          {/* Recent Activity Log */}
-          <div className="lg:col-span-1 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-900 pb-2">
-              Recent Activity Logs
-            </h3>
-            <div className="space-y-3.5 max-h-[140px] overflow-y-auto">
+            <div className="grid grid-cols-3 gap-3">
               {[
                 {
-                  time: "Just now",
-                  action: "Completed AI Council consensus evaluation",
-                  tag: "COUNCIL",
-                  color: "text-indigo-400 bg-indigo-500/10",
+                  label: "Research Readiness",
+                  value: "85%",
+                  sub: "12 verified interviews",
                 },
                 {
-                  time: "1 hour ago",
-                  action: "Updated target beneficiary location reach",
-                  tag: "IMPACT",
-                  color: "text-rose-455 bg-rose-500/10",
+                  label: "AI Model Readiness",
+                  value: "78%",
+                  sub: "Convergence stable",
                 },
                 {
-                  time: "Yesterday",
-                  action: "Completed 5 Whys problem discovery phase",
-                  tag: "RESEARCH",
-                  color: "text-emerald-450 bg-emerald-500/10",
+                  label: "Council Verdict",
+                  value: "Proceed",
+                  sub: "No blockers found",
                 },
-              ].map((act, i) => (
+              ].map((item) => (
                 <div
-                  key={i}
-                  className="flex justify-between items-start gap-2 text-[10.5px]"
+                  key={item.label}
+                  className="rounded-xl bg-slate-950/60 border border-white/[0.04] p-3.5"
                 >
-                  <div className="flex gap-2">
-                    <span
-                      className={`rounded px-1.5 py-0.5 text-[8px] font-bold uppercase ${act.color}`}
-                    >
-                      {act.tag}
-                    </span>
-                    <span className="text-slate-300 font-medium">
-                      {act.action}
-                    </span>
-                  </div>
-                  <span className="text-slate-500 font-medium whitespace-nowrap">
-                    {act.time}
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block">
+                    {item.label}
+                  </span>
+                  <span className="text-lg font-black text-white block mt-1">
+                    {item.value}
+                  </span>
+                  <span className="text-[10px] text-slate-500 block mt-1">
+                    {item.sub}
                   </span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Filters and Search Summary Bar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-900 pb-5">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">
-              Filter Projects:
-            </span>
-            <div className="flex gap-2">
-              <select
-                value={selectedTheme}
-                onChange={(e) => setSelectedTheme(e.target.value)}
-                className="rounded-xl border border-slate-800 bg-slate-900 py-1.5 px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              >
-                <option value="All">All Themes</option>
-                {uniqueThemes
-                  .filter((t) => t !== "All")
-                  .map((theme) => (
-                    <option key={theme} value={theme}>
-                      {theme}
-                    </option>
-                  ))}
-              </select>
-
-              <select
-                value={selectedStage}
-                onChange={(e) => setSelectedStage(e.target.value)}
-                className="rounded-xl border border-slate-800 bg-slate-900 py-1.5 px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              >
-                <option value="All">All Stages</option>
-                <option value="Ideation">Ideation</option>
-                <option value="Prototyping">Prototyping</option>
-                <option value="Validation">Validation</option>
-                <option value="Scaling">Scaling</option>
-              </select>
+          {/* Recent Activity */}
+          <div className="rounded-2xl border border-white/[0.06] bg-slate-900/30 p-5 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              Recent Activity
+            </h3>
+            <div className="space-y-3 overflow-y-auto max-h-32">
+              {[
+                {
+                  time: "Just now",
+                  action: "AI Council evaluation completed",
+                  tag: "COUNCIL",
+                  dot: "bg-indigo-400",
+                },
+                {
+                  time: "1h ago",
+                  action: "Impact reach metrics updated",
+                  tag: "IMPACT",
+                  dot: "bg-rose-400",
+                },
+                {
+                  time: "Yesterday",
+                  action: "5 Whys discovery phase done",
+                  tag: "RESEARCH",
+                  dot: "bg-emerald-400",
+                },
+              ].map((act, i) => (
+                <div key={i} className="flex items-start gap-2.5 text-[11px]">
+                  <div
+                    className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${act.dot}`}
+                    aria-hidden="true"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-slate-300 font-medium block truncate">
+                      {act.action}
+                    </span>
+                    <span className="text-slate-500">{act.time}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+        </section>
 
-          <div className="text-xs text-slate-400">
-            Showing{" "}
-            <span className="text-white font-bold">
+        {/* ── Filter Bar ─────────────────────────────────── */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-white/[0.04] pt-6">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">
+              Filter:
+            </span>
+            <select
+              value={selectedTheme}
+              onChange={(e) => setSelectedTheme(e.target.value)}
+              aria-label="Filter by theme"
+              className="rounded-xl border border-white/[0.08] bg-slate-900/60 py-1.5 px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all"
+            >
+              <option value="All">All Themes</option>
+              {uniqueThemes
+                .filter((t) => t !== "All")
+                .map((theme) => (
+                  <option key={theme} value={theme}>
+                    {theme}
+                  </option>
+                ))}
+            </select>
+            <select
+              value={selectedStage}
+              onChange={(e) => setSelectedStage(e.target.value)}
+              aria-label="Filter by stage"
+              className="rounded-xl border border-white/[0.08] bg-slate-900/60 py-1.5 px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all"
+            >
+              <option value="All">All Stages</option>
+              <option value="Ideation">Ideation</option>
+              <option value="Prototyping">Prototyping</option>
+              <option value="Validation">Validation</option>
+              <option value="Scaling">Scaling</option>
+            </select>
+            {hasActiveFilter && (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedTheme("All");
+                  setSelectedStage("All");
+                }}
+                className="rounded-xl border border-white/[0.06] bg-slate-900/40 px-3 py-1.5 text-xs text-slate-400 hover:text-white hover:border-slate-700 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+          <span className="text-xs text-slate-500">
+            <span className="text-white font-semibold">
               {filteredProjects.length}
             </span>{" "}
-            of <span className="text-slate-500">{projects.length}</span>{" "}
-            Innovation Projects
-          </div>
+            of <span className="text-slate-400">{projects.length}</span>{" "}
+            projects
+          </span>
         </div>
 
-        {/* Projects Grid */}
-        {filteredProjects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
-              <div
-                key={project.id}
-                onClick={() => setSelectedProject(project)}
-                className="group relative rounded-2xl border border-slate-900 bg-slate-900/10 p-6 shadow-md transition-all hover:border-slate-800 hover:bg-slate-900/30 cursor-pointer flex flex-col justify-between min-h-[220px]"
-              >
-                {/* Header row */}
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] uppercase tracking-wider text-indigo-400 bg-indigo-500/5 px-2.5 py-0.5 rounded border border-indigo-900/40">
-                      {project.innovationTheme}
-                    </span>
-                    <span
-                      className={`rounded-full border px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider ${getStageColor(
-                        project.projectStage,
-                      )}`}
-                    >
-                      {project.projectStage}
-                    </span>
-                  </div>
-
-                  <h3 className="mt-3.5 text-base font-bold text-white tracking-tight group-hover:text-indigo-400 transition-colors">
-                    {project.name}
-                  </h3>
-
-                  <p className="mt-2 text-xs text-slate-450 line-clamp-3 leading-relaxed">
-                    {project.problemStatement}
-                  </p>
-                </div>
-
-                {/* Footer details */}
-                <div className="mt-6 space-y-3 pt-3 border-t border-slate-950/60">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-slate-500">Innovation Score</span>
-                    <span className="font-semibold text-indigo-400">
-                      {project.innovationScore}%
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-slate-500">Eng Health</span>
-                    <span className="font-semibold text-emerald-400">
-                      {project.engineeringHealth}%
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1">
-                    <span
-                      className={`rounded border px-1.5 py-0.5 text-[8px] font-bold tracking-wider uppercase ${
-                        priorityColors[project.priority]
-                      }`}
-                    >
-                      {project.priority} Priority
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-medium">
-                      {project.timeline}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 rounded-2xl border border-dashed border-slate-800 bg-slate-900/10">
-            <svg
-              className="h-10 w-10 text-slate-600 mb-3"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 13.5h3.86a2.25 2.25 0 012.008 1.24l.885 1.77a2.25 2.25 0 002.007 1.24h1.98a2.25 2.25 0 002.007-1.24l.885-1.77a2.25 2.25 0 012.007-1.24h3.86m-18 0h18a2.25 2.25 0 012.25 2.25v4.5A2.25 2.25 0 0118.75 21H5.25A2.25 2.25 0 013 18.75v-4.5A2.25 2.25 0 015.25 13.5zm3.69-9h7.12a2.25 2.25 0 012.25 2.25v4.13a2.25 2.25 0 01-2.25 2.25H8.94a2.25 2.25 0 01-2.25-2.25V6.75A2.25 2.25 0 018.94 4.5z"
-              />
-            </svg>
-            <p className="text-sm font-semibold text-slate-400">
-              No innovation projects found
-            </p>
-            <p className="text-xs text-slate-500 mt-1">
-              Refine your search criteria or create a new project above.
-            </p>
-          </div>
-        )}
-
-        {/* Workspace Shared UI Placeholder Section */}
-        <div className="border-t border-slate-900 pt-8 mt-12">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
-            Shared Component Integration
-          </h2>
-          <SharedComponentPlaceholder />
-        </div>
+        {/* ── Projects Grid ───────────────────────────────── */}
+        <section aria-label="Innovation projects">
+          {filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredProjects.map((project, i) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  index={i}
+                  onClick={() => setSelectedProject(project)}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              onNewProject={handleNewProjectClick}
+              hasFilter={hasActiveFilter}
+            />
+          )}
+        </section>
       </main>
 
-      {/* Slide-over details pane */}
+      {/* ── Slide-over detail ──────────────────────────── */}
       {selectedProject && (
         <ProjectDetail
           project={selectedProject}
@@ -556,7 +724,7 @@ export default function HomePage() {
         />
       )}
 
-      {/* Creation and Edit modal form */}
+      {/* ── Form modal ─────────────────────────────────── */}
       {isFormOpen && (
         <ProjectForm
           key={editingProject ? editingProject.id : "new"}
@@ -565,6 +733,9 @@ export default function HomePage() {
           onClose={() => setIsFormOpen(false)}
         />
       )}
+
+      {/* ── Toast notifications ─────────────────────────── */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }
