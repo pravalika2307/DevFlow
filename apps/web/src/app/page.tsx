@@ -11,6 +11,7 @@ import { ProjectDetail } from "../components/flow/ProjectDetail";
 import { CoachWorkspace } from "../components/coach/CoachWorkspace";
 import { DiscoveryWorkspace } from "../components/discovery/DiscoveryWorkspace";
 import { ImpactWorkspace } from "../components/impact/ImpactWorkspace";
+import { CouncilWorkspace } from "../components/council/CouncilWorkspace";
 
 export default function HomePage() {
   const [projects, setProjects] = useState<InnovationProject[]>(() => {
@@ -29,7 +30,7 @@ export default function HomePage() {
   const [editingProject, setEditingProject] =
     useState<InnovationProject | null>(null);
   const [activeModule, setActiveModule] = useState<
-    "dashboard" | "discovery" | "impact"
+    "dashboard" | "discovery" | "impact" | "council"
   >("dashboard");
 
   // Sync state helpers
@@ -125,6 +126,15 @@ export default function HomePage() {
   if (activeModule === "impact") {
     return (
       <ImpactWorkspace
+        projects={projects}
+        onBack={() => setActiveModule("dashboard")}
+      />
+    );
+  }
+
+  if (activeModule === "council") {
+    return (
+      <CouncilWorkspace
         projects={projects}
         onBack={() => setActiveModule("dashboard")}
       />

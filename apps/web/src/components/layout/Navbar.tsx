@@ -4,8 +4,10 @@ interface NavbarProps {
   searchQuery: string;
   onSearchChange: (val: string) => void;
   onNewProjectClick: () => void;
-  activeModule: "dashboard" | "discovery" | "impact";
-  onModuleChange: (module: "dashboard" | "discovery" | "impact") => void;
+  activeModule: "dashboard" | "discovery" | "impact" | "council";
+  onModuleChange: (
+    module: "dashboard" | "discovery" | "impact" | "council",
+  ) => void;
 }
 
 export function Navbar({
@@ -82,6 +84,16 @@ export function Navbar({
               }`}
             >
               Impact Intelligence
+            </button>
+            <button
+              onClick={() => onModuleChange("council")}
+              className={`rounded-xl px-3 py-1.5 text-xs font-semibold tracking-wide transition-all border ${
+                activeModule === "council"
+                  ? "bg-slate-900 border-slate-800 text-white"
+                  : "bg-transparent border-transparent text-slate-455 hover:text-white"
+              }`}
+            >
+              AI Council
             </button>
           </nav>
         </div>
