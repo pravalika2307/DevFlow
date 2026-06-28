@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
-type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
+import React from "react";
 
 interface NavbarProps {
   searchQuery: string;
@@ -9,17 +6,8 @@ interface NavbarProps {
   onNewProjectClick: () => void;
   onDemoModeClick: () => void;
   onExportCenterClick: () => void;
-  activeModule: Module;
-  onModuleChange: (module: Module) => void;
+  onMobileMenuToggle?: () => void;
 }
-
-const NAV_ITEMS: { id: Module; label: string; shortLabel: string }[] = [
-  { id: "dashboard", label: "Workspace", shortLabel: "Work" },
-  { id: "galaxy", label: "Galaxy Map", shortLabel: "Gal" },
-  { id: "discovery", label: "Discovery", shortLabel: "Disc" },
-  { id: "impact", label: "Impact", shortLabel: "Imp" },
-  { id: "council", label: "AI Council", shortLabel: "AI" },
-];
 
 export function Navbar({
   searchQuery,
@@ -27,11 +15,8 @@ export function Navbar({
   onNewProjectClick,
   onDemoModeClick,
   onExportCenterClick,
-  activeModule,
-  onModuleChange,
+  onMobileMenuToggle,
 }: NavbarProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   return (
     <>
       {/* ── Floating Header ───────────────────────────────── */}
@@ -135,54 +120,8 @@ export function Navbar({
             </div>
           </div>
 
-          {/* Center Nav — pill group */}
-          <nav
-            style={{
-              display: "flex",
-              gap: 2,
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid var(--border)",
-              borderRadius: 12,
-              padding: 3,
-            }}
-            role="navigation"
-            aria-label="Main navigation"
-            className="df-hide-mobile"
-          >
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => onModuleChange(item.id)}
-                aria-current={activeModule === item.id ? "page" : undefined}
-                style={{
-                  padding: "6px 14px",
-                  borderRadius: 9,
-                  fontSize: 12,
-                  fontWeight: 600,
-                  letterSpacing: "-0.01em",
-                  cursor: "pointer",
-                  border: "none",
-                  outline: "none",
-                  transition: "all 200ms var(--ease-out)",
-                  background:
-                    activeModule === item.id
-                      ? "var(--blue-dim)"
-                      : "transparent",
-                  color:
-                    activeModule === item.id
-                      ? "#93c5fd"
-                      : "var(--text-tertiary)",
-                  boxShadow:
-                    activeModule === item.id
-                      ? "inset 0 0 0 1px var(--blue-border)"
-                      : "none",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
+          {/* Center Space */}
+          <div className="flex-1 md:block hidden" />
 
           {/* Search */}
           <div
@@ -342,142 +281,28 @@ export function Navbar({
 
             {/* Mobile hamburger */}
             <button
-              onClick={() => setMobileOpen((o) => !o)}
-              className="df-btn df-btn-ghost"
+              onClick={onMobileMenuToggle || (() => {})}
+              className="df-btn df-btn-ghost md:hidden"
               style={{ width: 34, height: 34, padding: 0 }}
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileOpen}
+              aria-label="Open sidebar menu"
             >
-              <AnimatePresence mode="wait" initial={false}>
-                {mobileOpen ? (
-                  <motion.svg
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </motion.svg>
-                ) : (
-                  <motion.svg
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                    />
-                  </motion.svg>
-                )}
-              </AnimatePresence>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
             </button>
           </div>
         </div>
-
-        {/* ── Mobile Dropdown ─────────────────────────────── */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -8, scaleY: 0.95 }}
-              animate={{ opacity: 1, y: 0, scaleY: 1 }}
-              exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "top" }}
-              className="df-glass"
-              role="navigation"
-              aria-label="Mobile navigation"
-              tabIndex={-1}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") setMobileOpen(false);
-              }}
-            >
-              <div
-                style={{
-                  borderRadius: 14,
-                  border: "1px solid var(--border-accent)",
-                  padding: 12,
-                  marginTop: 8,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-                }}
-              >
-                {NAV_ITEMS.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      onModuleChange(item.id);
-                      setMobileOpen(false);
-                    }}
-                    className={`df-nav-item${
-                      activeModule === item.id ? " active" : ""
-                    }`}
-                    aria-current={activeModule === item.id ? "page" : undefined}
-                    style={{ width: "100%", textAlign: "left" }}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-                <div className="df-divider" style={{ margin: "4px 0" }} />
-                <div style={{ display: "flex", gap: 8 }}>
-                  <input
-                    type="search"
-                    placeholder="Search projects…"
-                    value={searchQuery}
-                    onChange={(e) => onSearchChange(e.target.value)}
-                    aria-label="Search"
-                    className="df-input"
-                    style={{ flex: 1, padding: "8px 12px", fontSize: 13 }}
-                  />
-                </div>
-                <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-                  <button
-                    onClick={() => {
-                      onDemoModeClick();
-                      setMobileOpen(false);
-                    }}
-                    className="df-btn df-btn-subtle"
-                    style={{ flex: 1, justifyContent: "center", fontSize: 12 }}
-                  >
-                    Demo Mode
-                  </button>
-                  <button
-                    onClick={() => {
-                      onExportCenterClick();
-                      setMobileOpen(false);
-                    }}
-                    className="df-btn df-btn-ghost"
-                    style={{ flex: 1, justifyContent: "center", fontSize: 12 }}
-                  >
-                    Export
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
     </>
   );

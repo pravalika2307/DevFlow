@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { InnovationProject, ProjectStage } from "../types/innovation";
 import { InnovationService } from "../services/innovation";
 import { Navbar } from "../components/layout/Navbar";
+import { Sidebar } from "../components/layout/Sidebar";
 import { MetricCard } from "../components/ui/MetricCard";
 import { ProjectForm } from "../components/flow/ProjectForm";
 import { ProjectDetail } from "../components/flow/ProjectDetail";
@@ -485,6 +486,7 @@ export default function HomePage() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isPresentationOpen, setIsPresentationOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const pushToast = useCallback(
     (message: string, variant: ToastMessage["variant"] = "success") => {
@@ -748,23 +750,41 @@ export default function HomePage() {
       ];
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--bg-base)",
-        position: "relative",
-      }}
-    >
-      {/* All content above background */}
-      <div style={{ position: "relative", zIndex: 1 }}>
+    <div className="flex min-h-screen bg-bg-base text-text-primary">
+      <Sidebar
+        activeModule={activeModule}
+        onModuleChange={setActiveModule}
+        activeCoachProject={!!activeCoachProject}
+        onLaunchCoach={() => {
+          if (projects.length > 0) {
+            setActiveCoachProject(projects[0]);
+          } else {
+            pushToast(
+              "Please create a project first before launching Coach.",
+              "info",
+            );
+          }
+        }}
+        onExportCenterClick={() => setIsExportOpen(true)}
+        onDemoModeClick={handleDemoModeLaunch}
+        onResourcesClick={() =>
+          pushToast("Resources center launched successfully.", "info")
+        }
+        onSettingsClick={() =>
+          pushToast("Settings matrix updated successfully.", "info")
+        }
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
+      />
+
+      <div className="flex-1 flex flex-col min-w-0 md:pl-64 relative z-10">
         <Navbar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onNewProjectClick={handleNewProjectClick}
           onDemoModeClick={handleDemoModeLaunch}
           onExportCenterClick={() => setIsExportOpen(true)}
-          activeModule={activeModule}
-          onModuleChange={setActiveModule}
+          onMobileMenuToggle={() => setIsMobileSidebarOpen(true)}
         />
 
         <AnimatePresence>
