@@ -898,125 +898,186 @@ export default function HomePage() {
             {/* ── Metric Cards ─────────────────────────────── */}
             <section
               aria-label="Workspace metrics"
-              style={{ marginBottom: 28 }}
+              style={{ marginBottom: 36, marginTop: 12 }}
             >
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                  gap: 12,
+                  display: "flex",
+                  flexFlow: "row nowrap",
+                  justifyContent: "space-between",
+                  alignItems: "stretch",
+                  gap: 16,
+                  overflowX: "auto",
+                  scrollSnapType: "x mandatory",
+                  width: "100%",
+                  paddingBottom: 8,
                 }}
+                className="no-scrollbar"
               >
-                <MetricCard
-                  title="Innovation"
-                  value={stats.avgInnovation}
-                  description="Novelty index & design thinking"
-                  variant="blue"
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9.813 15.904L9 21l8.982-5.097c.36-.204.64-.543.766-.948l.848-2.735a2.25 2.25 0 00-1.848-2.883l-2.61-.227a1.056 1.056 0 01-.827-.58l-1.084-2.114a2.25 2.25 0 00-4.004 0L8.14 8.766a1.056 1.056 0 01-.827.58l-2.61.227a2.25 2.25 0 00-1.848 2.883l.848 2.735c.127.405.406.744.766.948l8.982 5.097z"
-                      />
-                    </svg>
-                  }
-                />
-                <MetricCard
-                  title="Eng Health"
-                  value={stats.avgHealth}
-                  description="Code quality & test coverage"
-                  variant="emerald"
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-                      />
-                    </svg>
-                  }
-                />
-                <MetricCard
-                  title="Progress"
-                  value={stats.avgProgress}
-                  description="Roadmap completion rate"
-                  variant="violet"
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                      />
-                    </svg>
-                  }
-                />
-                <MetricCard
-                  title="Impact"
-                  value={stats.avgImpact}
-                  description="UN SDG alignment index"
-                  variant="cyan"
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                      />
-                    </svg>
-                  }
-                />
-                <MetricCard
-                  title="Readiness"
-                  value={stats.avgReadiness}
-                  description="Technology Readiness Level"
-                  variant="emerald"
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.952 11.952 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m0 0A8.959 8.959 0 013 12c0-.778.099-1.533.284-2.253"
-                      />
-                    </svg>
-                  }
-                />
+                <div
+                  style={{
+                    flex: "1 1 0px",
+                    minWidth: 200,
+                    flexShrink: 0,
+                    scrollSnapAlign: "start",
+                  }}
+                  className="md:min-w-0 md:flex-shrink"
+                >
+                  <MetricCard
+                    title="Innovation"
+                    value={stats.avgInnovation}
+                    description="Novelty index & design thinking"
+                    variant="blue"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9.813 15.904L9 21l8.982-5.097c.36-.204.64-.543.766-.948l.848-2.735a2.25 2.25 0 00-1.848-2.883l-2.61-.227a1.056 1.056 0 01-.827-.58l-1.084-2.114a2.25 2.25 0 00-4.004 0L8.14 8.766a1.056 1.056 0 01-.827.58l-2.61.227a2.25 2.25 0 00-1.848 2.883l.848 2.735c.127.405.406.744.766.948l8.982 5.097z"
+                        />
+                      </svg>
+                    }
+                  />
+                </div>
+
+                <div
+                  style={{
+                    flex: "1 1 0px",
+                    minWidth: 200,
+                    flexShrink: 0,
+                    scrollSnapAlign: "start",
+                  }}
+                  className="md:min-w-0 md:flex-shrink"
+                >
+                  <MetricCard
+                    title="Eng Health"
+                    value={stats.avgHealth}
+                    description="Code quality & test coverage"
+                    variant="emerald"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+                        />
+                      </svg>
+                    }
+                  />
+                </div>
+
+                <div
+                  style={{
+                    flex: "1 1 0px",
+                    minWidth: 200,
+                    flexShrink: 0,
+                    scrollSnapAlign: "start",
+                  }}
+                  className="md:min-w-0 md:flex-shrink"
+                >
+                  <MetricCard
+                    title="Progress"
+                    value={stats.avgProgress}
+                    description="Roadmap completion rate"
+                    variant="violet"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                        />
+                      </svg>
+                    }
+                  />
+                </div>
+
+                <div
+                  style={{
+                    flex: "1 1 0px",
+                    minWidth: 200,
+                    flexShrink: 0,
+                    scrollSnapAlign: "start",
+                  }}
+                  className="md:min-w-0 md:flex-shrink"
+                >
+                  <MetricCard
+                    title="Impact"
+                    value={stats.avgImpact}
+                    description="UN SDG alignment index"
+                    variant="cyan"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                        />
+                      </svg>
+                    }
+                  />
+                </div>
+
+                <div
+                  style={{
+                    flex: "1 1 0px",
+                    minWidth: 200,
+                    flexShrink: 0,
+                    scrollSnapAlign: "start",
+                  }}
+                  className="md:min-w-0 md:flex-shrink"
+                >
+                  <MetricCard
+                    title="Readiness"
+                    value={stats.avgReadiness}
+                    description="Technology Readiness Level"
+                    variant="emerald"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.952 11.952 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m0 0A8.959 8.959 0 013 12c0-.778.099-1.533.284-2.253"
+                        />
+                      </svg>
+                    }
+                  />
+                </div>
               </div>
             </section>
 
