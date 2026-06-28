@@ -163,7 +163,7 @@ export function ConsensusTab({ consensus, onUpdate }: ConsensusTabProps) {
           <div className="flex items-center gap-2">
             <span className="df-live-dot" />
             <h4 className="text-xs font-bold uppercase tracking-widest text-white">
-              Live AI Council Consensus Simulation
+              Live NOVA Council Consensus Simulation
             </h4>
           </div>
           {!isSimulating ? (

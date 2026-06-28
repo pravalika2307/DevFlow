@@ -92,7 +92,7 @@ export function ExportCenterModal({
               },
               {
                 id: "council" as const,
-                title: "AI Council Evaluation Report",
+                title: "NOVA Council Evaluation Report",
                 desc: "Complete 8-advisor consensus matrix.",
               },
               {

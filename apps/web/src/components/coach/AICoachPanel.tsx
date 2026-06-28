@@ -94,7 +94,7 @@ export function AICoachPanel({ project, activeStage }: AICoachPanelProps) {
             style={{ width: 6, height: 6 }}
           />
           <h3 className="text-xs font-bold uppercase tracking-widest text-white">
-            AI Coach OS
+            NOVA Coach OS
           </h3>
         </div>
         <span className="text-[9px] uppercase tracking-wider bg-violet-accent/10 border border-violet-accent/20 px-2 py-0.5 rounded text-violet-accent font-semibold">

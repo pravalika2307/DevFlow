@@ -107,7 +107,7 @@ export function CouncilWorkspace({ projects, onBack }: CouncilWorkspaceProps) {
           <div className="h-6 w-[1px] bg-border-default" />
           <div>
             <h1 className="text-sm font-bold text-white flex items-center gap-2">
-              Multi-Agent AI Council
+              Multi-Agent NOVA Council
               <span className="df-badge df-badge-violet">Section 1-8</span>
             </h1>
             <p className="text-[10px] text-slate-500 font-medium">

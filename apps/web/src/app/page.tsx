@@ -6,6 +6,7 @@ import { InnovationProject, ProjectStage } from "../types/innovation";
 import { InnovationService } from "../services/innovation";
 import { Navbar } from "../components/layout/Navbar";
 import { Sidebar } from "../components/layout/Sidebar";
+import { BootSequence } from "../components/ui/BootSequence";
 import { MetricCard } from "../components/ui/MetricCard";
 import { ProjectForm } from "../components/flow/ProjectForm";
 import { ProjectDetail } from "../components/flow/ProjectDetail";
@@ -487,6 +488,7 @@ export default function HomePage() {
   const [isPresentationOpen, setIsPresentationOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isBooting, setIsBooting] = useState(true);
 
   const pushToast = useCallback(
     (message: string, variant: ToastMessage["variant"] = "success") => {
@@ -700,7 +702,7 @@ export default function HomePage() {
           ),
         },
         {
-          title: "AI Council Evaluation Verdict",
+          title: "NOVA Council Evaluation Verdict",
           subtitle: "Milestone 3: 8-Agent Consensus",
           content: (
             <div className="space-y-6 max-w-2xl text-center flex flex-col items-center">
@@ -750,655 +752,681 @@ export default function HomePage() {
       ];
 
   return (
-    <div className="flex min-h-screen bg-bg-base text-text-primary">
-      <Sidebar
-        activeModule={activeModule}
-        onModuleChange={setActiveModule}
-        activeCoachProject={!!activeCoachProject}
-        onLaunchCoach={() => {
-          if (projects.length > 0) {
-            setActiveCoachProject(projects[0]);
-          } else {
-            pushToast(
-              "Please create a project first before launching Coach.",
-              "info",
-            );
-          }
-        }}
-        onExportCenterClick={() => setIsExportOpen(true)}
-        onDemoModeClick={handleDemoModeLaunch}
-        onResourcesClick={() =>
-          pushToast("Resources center launched successfully.", "info")
-        }
-        onSettingsClick={() =>
-          pushToast("Settings matrix updated successfully.", "info")
-        }
-        isMobileOpen={isMobileSidebarOpen}
-        onCloseMobile={() => setIsMobileSidebarOpen(false)}
-      />
-
-      <div className="flex-1 flex flex-col min-w-0 md:pl-64 relative z-10">
-        <Navbar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onNewProjectClick={handleNewProjectClick}
-          onDemoModeClick={handleDemoModeLaunch}
-          onExportCenterClick={() => setIsExportOpen(true)}
-          onMobileMenuToggle={() => setIsMobileSidebarOpen(true)}
-        />
-
-        <AnimatePresence>
-          {isExportOpen && (
-            <ExportCenterModal
-              project={projects[0] || ({} as InnovationProject)}
-              onClose={() => setIsExportOpen(false)}
-            />
-          )}
-        </AnimatePresence>
-
-        <motion.main
-          key="dashboard"
-          variants={pageVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          style={{
-            maxWidth: 1280,
-            margin: "0 auto",
-            padding: "28px 20px 96px",
-            position: "relative",
-          }}
-          id="main-content"
-        >
-          {/* ── Executive AI Briefing ───────────────────── */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05, duration: 0.4 }}
-            className="p-5 rounded-2xl border border-blue-accent/25 bg-blue-accent/5 backdrop-blur-md mb-6 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl shadow-glow-blue/5"
-          >
-            <div className="space-y-1.5 max-w-2xl text-left">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-accent opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-accent"></span>
-                </span>
-                <span className="text-[9px] font-bold uppercase tracking-widest text-blue-accent">
-                  Cognitive executive update
-                </span>
-              </div>
-              <h2 className="text-xs font-black text-white">
-                Welcome back, Pravalika.
-              </h2>
-              <p className="text-[11px] text-slate-300 leading-relaxed font-semibold">
-                Three innovation opportunities were detected overnight. AI
-                Council recommends prioritizing{" "}
-                <span className="text-white font-bold">
-                  Smart Waste Management
-                </span>{" "}
-                because projected environmental impact increased by{" "}
-                <span className="text-emerald-accent font-bold">18%</span>. Your
-                project readiness is now among the top{" "}
-                <span className="text-blue-accent font-bold">10%</span>.
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                if (projects.length > 0) setSelectedProject(projects[0]);
-                setIsPresentationOpen(true);
-              }}
-              className="df-btn df-btn-primary py-2 px-3 text-[10px] whitespace-nowrap self-stretch md:self-auto text-center"
-            >
-              🚀 Launch Presentation Deck
-            </button>
-          </motion.div>
-
-          {/* ── Page Header ─────────────────────────────── */}
-          <div style={{ marginBottom: 32 }}>
-            <motion.div
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1, duration: 0.4, ease: EASE_OUT }}
-            >
-              <h1
-                style={{
-                  fontSize: 28,
-                  fontWeight: 900,
-                  letterSpacing: "-0.04em",
-                  color: "var(--text-primary)",
-                  lineHeight: 1,
-                  marginBottom: 8,
-                }}
-              >
-                Innovation <span className="df-gradient-text">Workspace</span>
-              </h1>
-              <p
-                style={{
-                  fontSize: 14,
-                  color: "var(--text-secondary)",
-                  fontWeight: 500,
-                }}
-              >
-                {projects.length > 0
-                  ? `${projects.length} active project${
-                      projects.length > 1 ? "s" : ""
-                    } across all innovation phases`
-                  : "Create your first project to unlock all AI-powered modules"}
-              </p>
-            </motion.div>
-          </div>
-
-          {/* ── Metric Cards ─────────────────────────────── */}
-          <section aria-label="Workspace metrics" style={{ marginBottom: 28 }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                gap: 12,
-              }}
-            >
-              <MetricCard
-                title="Innovation"
-                value={stats.avgInnovation}
-                description="Novelty index & design thinking"
-                variant="blue"
-                icon={
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9.813 15.904L9 21l8.982-5.097c.36-.204.64-.543.766-.948l.848-2.735a2.25 2.25 0 00-1.848-2.883l-2.61-.227a1.056 1.056 0 01-.827-.58l-1.084-2.114a2.25 2.25 0 00-4.004 0L8.14 8.766a1.056 1.056 0 01-.827.58l-2.61.227a2.25 2.25 0 00-1.848 2.883l.848 2.735c.127.405.406.744.766.948l8.982 5.097z"
-                    />
-                  </svg>
-                }
-              />
-              <MetricCard
-                title="Eng Health"
-                value={stats.avgHealth}
-                description="Code quality & test coverage"
-                variant="emerald"
-                icon={
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-                    />
-                  </svg>
-                }
-              />
-              <MetricCard
-                title="Progress"
-                value={stats.avgProgress}
-                description="Roadmap completion rate"
-                variant="violet"
-                icon={
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                    />
-                  </svg>
-                }
-              />
-              <MetricCard
-                title="Impact"
-                value={stats.avgImpact}
-                description="UN SDG alignment index"
-                variant="cyan"
-                icon={
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                    />
-                  </svg>
-                }
-              />
-              <MetricCard
-                title="Readiness"
-                value={stats.avgReadiness}
-                description="Technology Readiness Level"
-                variant="emerald"
-                icon={
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.952 11.952 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m0 0A8.959 8.959 0 013 12c0-.778.099-1.533.284-2.253"
-                    />
-                  </svg>
-                }
-              />
-            </div>
-          </section>
-
-          {/* ── Executive Panel ───────────────────────────── */}
-          <section aria-label="Executive summary" style={{ marginBottom: 28 }}>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "2fr 1fr",
-                gap: 12,
-              }}
-              className="df-hide-mobile"
-            >
-              {/* Council Status */}
-              <div className="df-card" style={{ padding: 20 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: 16,
-                  }}
-                >
-                  <span
-                    className="df-section-label"
-                    style={{ color: "#93c5fd" }}
-                  >
-                    AI Council Consensus
-                  </span>
-                  <span
-                    className="df-badge df-badge-emerald"
-                    style={{ display: "flex", alignItems: "center", gap: 5 }}
-                  >
-                    <span
-                      className="df-live-dot"
-                      style={{ width: 5, height: 5 }}
-                      aria-hidden="true"
-                    />
-                    Live
-                  </span>
-                </div>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr",
-                    gap: 10,
-                  }}
-                >
-                  {[
-                    {
-                      label: "Research Readiness",
-                      value: "85%",
-                      sub: "12 verified interviews",
-                    },
-                    {
-                      label: "AI Model Readiness",
-                      value: "78%",
-                      sub: "Convergence stable",
-                    },
-                    {
-                      label: "Council Verdict",
-                      value: "Proceed",
-                      sub: "No blockers found",
-                    },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      style={{
-                        background: "var(--bg-surface)",
-                        border: "1px solid var(--border)",
-                        borderRadius: 12,
-                        padding: "12px 14px",
-                      }}
-                    >
-                      <span className="df-section-label">{item.label}</span>
-                      <div
-                        style={{
-                          fontSize: 20,
-                          fontWeight: 900,
-                          letterSpacing: "-0.03em",
-                          color: "var(--text-primary)",
-                          marginTop: 6,
-                          marginBottom: 4,
-                        }}
-                      >
-                        {item.value}
-                      </div>
-                      <span
-                        style={{
-                          fontSize: 11,
-                          color: "var(--text-tertiary)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {item.sub}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Activity Log */}
-              <div className="df-card" style={{ padding: 20 }}>
-                <span
-                  className="df-section-label"
-                  style={{ display: "block", marginBottom: 14 }}
-                >
-                  Recent Activity
-                </span>
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: 12 }}
-                >
-                  {[
-                    {
-                      action: "AI Council evaluation completed",
-                      tag: "COUNCIL",
-                      dot: "var(--blue)",
-                    },
-                    {
-                      action: "Impact reach metrics updated",
-                      tag: "IMPACT",
-                      dot: "var(--cyan)",
-                    },
-                    {
-                      action: "5 Whys discovery phase done",
-                      tag: "RESEARCH",
-                      dot: "var(--emerald)",
-                    },
-                  ].map((act, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 10,
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: "50%",
-                          background: act.dot,
-                          marginTop: 5,
-                          flexShrink: 0,
-                        }}
-                        aria-hidden="true"
-                      />
-                      <div>
-                        <p
-                          style={{
-                            fontSize: 12,
-                            fontWeight: 600,
-                            color: "var(--text-primary)",
-                            lineHeight: 1.4,
-                          }}
-                        >
-                          {act.action}
-                        </p>
-                        <span
-                          className="df-badge df-badge-blue"
-                          style={{ marginTop: 4, fontSize: 9 }}
-                        >
-                          {act.tag}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </section>
-
-          {/* ── Filter Bar ────────────────────────────────── */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 10,
-              marginBottom: 20,
-              paddingTop: 20,
-              borderTop: "1px solid var(--border)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                flexWrap: "wrap",
-              }}
-            >
-              <span className="df-section-label">Filter:</span>
-              <select
-                value={selectedTheme}
-                onChange={(e) => setSelectedTheme(e.target.value)}
-                aria-label="Filter by theme"
-                className="df-input"
-                style={{ padding: "6px 10px", fontSize: 12, cursor: "pointer" }}
-              >
-                <option value="All">All Themes</option>
-                {uniqueThemes
-                  .filter((t) => t !== "All")
-                  .map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-              </select>
-              <select
-                value={selectedStage}
-                onChange={(e) => setSelectedStage(e.target.value)}
-                aria-label="Filter by stage"
-                className="df-input"
-                style={{ padding: "6px 10px", fontSize: 12, cursor: "pointer" }}
-              >
-                <option value="All">All Stages</option>
-                <option value="Ideation">Ideation</option>
-                <option value="Prototyping">Prototyping</option>
-                <option value="Validation">Validation</option>
-                <option value="Scaling">Scaling</option>
-              </select>
-              {hasActiveFilter && (
-                <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedTheme("All");
-                    setSelectedStage("All");
-                  }}
-                  className="df-btn df-btn-ghost"
-                  style={{ padding: "5px 12px", fontSize: 12 }}
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-            <span
-              style={{
-                fontSize: 12,
-                color: "var(--text-tertiary)",
-                fontWeight: 500,
-              }}
-            >
-              <span style={{ color: "var(--text-primary)", fontWeight: 700 }}>
-                {filteredProjects.length}
-              </span>{" "}
-              / {projects.length} projects
-            </span>
-          </div>
-
-          {/* ── Projects Grid ─────────────────────────────── */}
-          <section aria-label="Innovation projects">
-            <AnimatePresence mode="wait">
-              {filteredProjects.length > 0 ? (
-                <motion.div
-                  key="grid"
-                  variants={cardContainerVariants}
-                  initial="hidden"
-                  animate="show"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fill, minmax(280px, 1fr))",
-                    gap: 12,
-                  }}
-                >
-                  {filteredProjects.map((project) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      onClick={() => setSelectedProject(project)}
-                    />
-                  ))}
-                </motion.div>
-              ) : (
-                <EmptyState
-                  key="empty"
-                  onNewProject={handleNewProjectClick}
-                  hasFilter={hasActiveFilter}
-                />
-              )}
-            </AnimatePresence>
-          </section>
-        </motion.main>
-      </div>
-
-      {/* Slide-over */}
-      {selectedProject && (
-        <ProjectDetail
-          project={selectedProject}
-          onEdit={() => handleEditClick(selectedProject)}
-          onDelete={() => handleDeleteProject(selectedProject.id)}
-          onClose={() => setSelectedProject(null)}
-          onLaunchCoach={() => {
-            setActiveCoachProject(selectedProject);
-            setSelectedProject(null);
-          }}
-        />
-      )}
-
-      {/* Form modal */}
-      {isFormOpen && (
-        <ProjectForm
-          key={editingProject ? editingProject.id : "new"}
-          project={editingProject}
-          onSave={handleSaveProject}
-          onClose={() => setIsFormOpen(false)}
-        />
-      )}
-
-      {/* Toasts */}
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
-
-      {/* Samsung Presentation Widescreen Deck Overlay */}
+    <>
       <AnimatePresence>
-        {isPresentationOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex flex-col bg-bg-base/98 backdrop-blur-lg p-8"
+        {isBooting && <BootSequence onComplete={() => setIsBooting(false)} />}
+      </AnimatePresence>
+
+      <div className="flex min-h-screen bg-bg-base text-text-primary">
+        <Sidebar
+          activeModule={activeModule}
+          onModuleChange={setActiveModule}
+          activeCoachProject={!!activeCoachProject}
+          onLaunchCoach={() => {
+            if (projects.length > 0) {
+              setActiveCoachProject(projects[0]);
+            } else {
+              pushToast(
+                "Please create a project first before launching Coach.",
+                "info",
+              );
+            }
+          }}
+          onExportCenterClick={() => setIsExportOpen(true)}
+          onDemoModeClick={handleDemoModeLaunch}
+          onResourcesClick={() =>
+            pushToast("Resources center launched successfully.", "info")
+          }
+          onSettingsClick={() =>
+            pushToast("Settings matrix updated successfully.", "info")
+          }
+          isMobileOpen={isMobileSidebarOpen}
+          onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        />
+
+        <div className="flex-1 flex flex-col min-w-0 md:pl-64 relative z-10">
+          <Navbar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onNewProjectClick={handleNewProjectClick}
+            onDemoModeClick={handleDemoModeLaunch}
+            onExportCenterClick={() => setIsExportOpen(true)}
+            onMobileMenuToggle={() => setIsMobileSidebarOpen(true)}
+          />
+
+          <AnimatePresence>
+            {isExportOpen && (
+              <ExportCenterModal
+                project={projects[0] || ({} as InnovationProject)}
+                onClose={() => setIsExportOpen(false)}
+              />
+            )}
+          </AnimatePresence>
+
+          <motion.main
+            key="dashboard"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={{
+              maxWidth: 1280,
+              margin: "0 auto",
+              padding: "28px 20px 96px",
+              position: "relative",
+            }}
+            id="main-content"
           >
-            <div className="flex justify-between items-center border-b border-border-default pb-4 z-10">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                  Samsung Presentation Mode
-                </span>
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider mt-1">
-                  {selectedProject ? selectedProject.name : "DevFlow OS"}
-                </h3>
+            {/* ── Executive AI Briefing ───────────────────── */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05, duration: 0.4 }}
+              className="p-5 rounded-2xl border border-blue-accent/25 bg-blue-accent/5 backdrop-blur-md mb-6 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl shadow-glow-blue/5"
+            >
+              <div className="space-y-1.5 max-w-2xl text-left">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-accent opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-accent"></span>
+                  </span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-blue-accent">
+                    Cognitive executive update
+                  </span>
+                </div>
+                <h2 className="text-xs font-black text-white">
+                  Welcome back, Pravalika.
+                </h2>
+                <p className="text-[11px] text-slate-300 leading-relaxed font-semibold">
+                  Three innovation opportunities were detected overnight. NOVA
+                  Council recommends prioritizing{" "}
+                  <span className="text-white font-bold">
+                    Smart Waste Management
+                  </span>{" "}
+                  because projected environmental impact increased by{" "}
+                  <span className="text-emerald-accent font-bold">18%</span>.
+                  Your project readiness is now among the top{" "}
+                  <span className="text-blue-accent font-bold">10%</span>.
+                </p>
               </div>
               <button
-                onClick={() => setIsPresentationOpen(false)}
-                className="df-btn df-btn-ghost text-slate-400 hover:text-white text-lg font-bold"
+                onClick={() => {
+                  if (projects.length > 0) setSelectedProject(projects[0]);
+                  setIsPresentationOpen(true);
+                }}
+                className="df-btn df-btn-primary py-2 px-3 text-[10px] whitespace-nowrap self-stretch md:self-auto text-center"
               >
-                Exit Presentation
+                🚀 Launch Presentation Deck
               </button>
-            </div>
+            </motion.div>
 
-            <div className="flex-1 flex flex-col items-center justify-center relative p-6">
-              <div className="text-center space-y-2 mb-6">
-                <span className="text-[10px] font-bold text-blue-accent uppercase tracking-widest block">
-                  {presentationSlides[currentSlide]?.subtitle}
-                </span>
-                <h1 className="text-2xl font-black text-white">
-                  {presentationSlides[currentSlide]?.title}
-                </h1>
-              </div>
-
+            {/* ── Page Header ─────────────────────────────── */}
+            <div style={{ marginBottom: 32 }}>
               <motion.div
-                key={currentSlide}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.4 }}
-                className="w-full flex items-center justify-center py-4"
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1, duration: 0.4, ease: EASE_OUT }}
               >
-                {presentationSlides[currentSlide]?.content}
+                <h1
+                  style={{
+                    fontSize: 28,
+                    fontWeight: 900,
+                    letterSpacing: "-0.04em",
+                    color: "var(--text-primary)",
+                    lineHeight: 1,
+                    marginBottom: 8,
+                  }}
+                >
+                  Innovation <span className="df-gradient-text">Workspace</span>
+                </h1>
+                <p
+                  style={{
+                    fontSize: 14,
+                    color: "var(--text-secondary)",
+                    fontWeight: 500,
+                  }}
+                >
+                  {projects.length > 0
+                    ? `${projects.length} active project${
+                        projects.length > 1 ? "s" : ""
+                      } across all innovation phases`
+                    : "Create your first project to unlock all AI-powered modules"}
+                </p>
               </motion.div>
             </div>
 
-            <div className="flex justify-between items-center border-t border-border-default pt-4">
-              <button
-                onClick={() => setCurrentSlide((prev) => Math.max(0, prev - 1))}
-                disabled={currentSlide === 0}
-                className="df-btn df-btn-ghost text-xs"
+            {/* ── Metric Cards ─────────────────────────────── */}
+            <section
+              aria-label="Workspace metrics"
+              style={{ marginBottom: 28 }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                  gap: 12,
+                }}
               >
-                Previous Slide
-              </button>
-              <span className="text-xs text-slate-500 font-semibold">
-                Slide {currentSlide + 1} / {presentationSlides.length}
+                <MetricCard
+                  title="Innovation"
+                  value={stats.avgInnovation}
+                  description="Novelty index & design thinking"
+                  variant="blue"
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9.813 15.904L9 21l8.982-5.097c.36-.204.64-.543.766-.948l.848-2.735a2.25 2.25 0 00-1.848-2.883l-2.61-.227a1.056 1.056 0 01-.827-.58l-1.084-2.114a2.25 2.25 0 00-4.004 0L8.14 8.766a1.056 1.056 0 01-.827.58l-2.61.227a2.25 2.25 0 00-1.848 2.883l.848 2.735c.127.405.406.744.766.948l8.982 5.097z"
+                      />
+                    </svg>
+                  }
+                />
+                <MetricCard
+                  title="Eng Health"
+                  value={stats.avgHealth}
+                  description="Code quality & test coverage"
+                  variant="emerald"
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+                      />
+                    </svg>
+                  }
+                />
+                <MetricCard
+                  title="Progress"
+                  value={stats.avgProgress}
+                  description="Roadmap completion rate"
+                  variant="violet"
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                      />
+                    </svg>
+                  }
+                />
+                <MetricCard
+                  title="Impact"
+                  value={stats.avgImpact}
+                  description="UN SDG alignment index"
+                  variant="cyan"
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                      />
+                    </svg>
+                  }
+                />
+                <MetricCard
+                  title="Readiness"
+                  value={stats.avgReadiness}
+                  description="Technology Readiness Level"
+                  variant="emerald"
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.952 11.952 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m0 0A8.959 8.959 0 013 12c0-.778.099-1.533.284-2.253"
+                      />
+                    </svg>
+                  }
+                />
+              </div>
+            </section>
+
+            {/* ── Executive Panel ───────────────────────────── */}
+            <section
+              aria-label="Executive summary"
+              style={{ marginBottom: 28 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "2fr 1fr",
+                  gap: 12,
+                }}
+                className="df-hide-mobile"
+              >
+                {/* Council Status */}
+                <div className="df-card" style={{ padding: 20 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: 16,
+                    }}
+                  >
+                    <span
+                      className="df-section-label"
+                      style={{ color: "#93c5fd" }}
+                    >
+                      NOVA Council Consensus
+                    </span>
+                    <span
+                      className="df-badge df-badge-emerald"
+                      style={{ display: "flex", alignItems: "center", gap: 5 }}
+                    >
+                      <span
+                        className="df-live-dot"
+                        style={{ width: 5, height: 5 }}
+                        aria-hidden="true"
+                      />
+                      Live
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gap: 10,
+                    }}
+                  >
+                    {[
+                      {
+                        label: "Research Readiness",
+                        value: "85%",
+                        sub: "12 verified interviews",
+                      },
+                      {
+                        label: "AI Model Readiness",
+                        value: "78%",
+                        sub: "Convergence stable",
+                      },
+                      {
+                        label: "Council Verdict",
+                        value: "Proceed",
+                        sub: "No blockers found",
+                      },
+                    ].map((item) => (
+                      <div
+                        key={item.label}
+                        style={{
+                          background: "var(--bg-surface)",
+                          border: "1px solid var(--border)",
+                          borderRadius: 12,
+                          padding: "12px 14px",
+                        }}
+                      >
+                        <span className="df-section-label">{item.label}</span>
+                        <div
+                          style={{
+                            fontSize: 20,
+                            fontWeight: 900,
+                            letterSpacing: "-0.03em",
+                            color: "var(--text-primary)",
+                            marginTop: 6,
+                            marginBottom: 4,
+                          }}
+                        >
+                          {item.value}
+                        </div>
+                        <span
+                          style={{
+                            fontSize: 11,
+                            color: "var(--text-tertiary)",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {item.sub}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Activity Log */}
+                <div className="df-card" style={{ padding: 20 }}>
+                  <span
+                    className="df-section-label"
+                    style={{ display: "block", marginBottom: 14 }}
+                  >
+                    Recent Activity
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 12,
+                    }}
+                  >
+                    {[
+                      {
+                        action: "NOVA Council evaluation completed",
+                        tag: "COUNCIL",
+                        dot: "var(--blue)",
+                      },
+                      {
+                        action: "Impact reach metrics updated",
+                        tag: "IMPACT",
+                        dot: "var(--cyan)",
+                      },
+                      {
+                        action: "5 Whys discovery phase done",
+                        tag: "RESEARCH",
+                        dot: "var(--emerald)",
+                      },
+                    ].map((act, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          gap: 10,
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            background: act.dot,
+                            marginTop: 5,
+                            flexShrink: 0,
+                          }}
+                          aria-hidden="true"
+                        />
+                        <div>
+                          <p
+                            style={{
+                              fontSize: 12,
+                              fontWeight: 600,
+                              color: "var(--text-primary)",
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            {act.action}
+                          </p>
+                          <span
+                            className="df-badge df-badge-blue"
+                            style={{ marginTop: 4, fontSize: 9 }}
+                          >
+                            {act.tag}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </section>
+
+            {/* ── Filter Bar ────────────────────────────────── */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+                marginBottom: 20,
+                paddingTop: 20,
+                borderTop: "1px solid var(--border)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  flexWrap: "wrap",
+                }}
+              >
+                <span className="df-section-label">Filter:</span>
+                <select
+                  value={selectedTheme}
+                  onChange={(e) => setSelectedTheme(e.target.value)}
+                  aria-label="Filter by theme"
+                  className="df-input"
+                  style={{
+                    padding: "6px 10px",
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="All">All Themes</option>
+                  {uniqueThemes
+                    .filter((t) => t !== "All")
+                    .map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                </select>
+                <select
+                  value={selectedStage}
+                  onChange={(e) => setSelectedStage(e.target.value)}
+                  aria-label="Filter by stage"
+                  className="df-input"
+                  style={{
+                    padding: "6px 10px",
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="All">All Stages</option>
+                  <option value="Ideation">Ideation</option>
+                  <option value="Prototyping">Prototyping</option>
+                  <option value="Validation">Validation</option>
+                  <option value="Scaling">Scaling</option>
+                </select>
+                {hasActiveFilter && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedTheme("All");
+                      setSelectedStage("All");
+                    }}
+                    className="df-btn df-btn-ghost"
+                    style={{ padding: "5px 12px", fontSize: 12 }}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <span
+                style={{
+                  fontSize: 12,
+                  color: "var(--text-tertiary)",
+                  fontWeight: 500,
+                }}
+              >
+                <span style={{ color: "var(--text-primary)", fontWeight: 700 }}>
+                  {filteredProjects.length}
+                </span>{" "}
+                / {projects.length} projects
               </span>
-              <button
-                onClick={() =>
-                  setCurrentSlide((prev) =>
-                    Math.min(presentationSlides.length - 1, prev + 1),
-                  )
-                }
-                disabled={currentSlide === presentationSlides.length - 1}
-                className="df-btn df-btn-primary text-xs"
-              >
-                Next Slide
-              </button>
             </div>
-          </motion.div>
+
+            {/* ── Projects Grid ─────────────────────────────── */}
+            <section aria-label="Innovation projects">
+              <AnimatePresence mode="wait">
+                {filteredProjects.length > 0 ? (
+                  <motion.div
+                    key="grid"
+                    variants={cardContainerVariants}
+                    initial="hidden"
+                    animate="show"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(280px, 1fr))",
+                      gap: 12,
+                    }}
+                  >
+                    {filteredProjects.map((project) => (
+                      <ProjectCard
+                        key={project.id}
+                        project={project}
+                        onClick={() => setSelectedProject(project)}
+                      />
+                    ))}
+                  </motion.div>
+                ) : (
+                  <EmptyState
+                    key="empty"
+                    onNewProject={handleNewProjectClick}
+                    hasFilter={hasActiveFilter}
+                  />
+                )}
+              </AnimatePresence>
+            </section>
+          </motion.main>
+        </div>
+
+        {/* Slide-over */}
+        {selectedProject && (
+          <ProjectDetail
+            project={selectedProject}
+            onEdit={() => handleEditClick(selectedProject)}
+            onDelete={() => handleDeleteProject(selectedProject.id)}
+            onClose={() => setSelectedProject(null)}
+            onLaunchCoach={() => {
+              setActiveCoachProject(selectedProject);
+              setSelectedProject(null);
+            }}
+          />
         )}
-      </AnimatePresence>
-    </div>
+
+        {/* Form modal */}
+        {isFormOpen && (
+          <ProjectForm
+            key={editingProject ? editingProject.id : "new"}
+            project={editingProject}
+            onSave={handleSaveProject}
+            onClose={() => setIsFormOpen(false)}
+          />
+        )}
+
+        {/* Toasts */}
+        <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+
+        {/* Samsung Presentation Widescreen Deck Overlay */}
+        <AnimatePresence>
+          {isPresentationOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex flex-col bg-bg-base/98 backdrop-blur-lg p-8"
+            >
+              <div className="flex justify-between items-center border-b border-border-default pb-4 z-10">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    Samsung Presentation Mode
+                  </span>
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider mt-1">
+                    {selectedProject ? selectedProject.name : "DevFlow OS"}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsPresentationOpen(false)}
+                  className="df-btn df-btn-ghost text-slate-400 hover:text-white text-lg font-bold"
+                >
+                  Exit Presentation
+                </button>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center justify-center relative p-6">
+                <div className="text-center space-y-2 mb-6">
+                  <span className="text-[10px] font-bold text-blue-accent uppercase tracking-widest block">
+                    {presentationSlides[currentSlide]?.subtitle}
+                  </span>
+                  <h1 className="text-2xl font-black text-white">
+                    {presentationSlides[currentSlide]?.title}
+                  </h1>
+                </div>
+
+                <motion.div
+                  key={currentSlide}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.4 }}
+                  className="w-full flex items-center justify-center py-4"
+                >
+                  {presentationSlides[currentSlide]?.content}
+                </motion.div>
+              </div>
+
+              <div className="flex justify-between items-center border-t border-border-default pt-4">
+                <button
+                  onClick={() =>
+                    setCurrentSlide((prev) => Math.max(0, prev - 1))
+                  }
+                  disabled={currentSlide === 0}
+                  className="df-btn df-btn-ghost text-xs"
+                >
+                  Previous Slide
+                </button>
+                <span className="text-xs text-slate-500 font-semibold">
+                  Slide {currentSlide + 1} / {presentationSlides.length}
+                </span>
+                <button
+                  onClick={() =>
+                    setCurrentSlide((prev) =>
+                      Math.min(presentationSlides.length - 1, prev + 1),
+                    )
+                  }
+                  disabled={currentSlide === presentationSlides.length - 1}
+                  className="df-btn df-btn-primary text-xs"
+                >
+                  Next Slide
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }

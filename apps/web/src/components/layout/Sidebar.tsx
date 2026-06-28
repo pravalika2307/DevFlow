@@ -40,7 +40,7 @@ export function Sidebar({
       action: onLaunchCoach,
     },
     { id: "impact", label: "Impact Intelligence", icon: "🌍", isTab: true },
-    { id: "council", label: "AI Council", icon: "🤖", isTab: true },
+    { id: "council", label: "NOVA Council", icon: "🤖", isTab: true },
     {
       id: "reports",
       label: "Reports & Export",

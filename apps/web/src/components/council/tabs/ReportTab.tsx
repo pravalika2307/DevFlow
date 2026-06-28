@@ -90,7 +90,7 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
         <div className="flex justify-between items-start border-b border-border-default print:border-slate-300 pb-5">
           <div>
             <span className="df-badge df-badge-violet print:border print:border-indigo-400">
-              Multi-Agent AI Council Evaluation Report
+              Multi-Agent NOVA Council Evaluation Report
             </span>
             <h2 className="text-2xl font-black text-white print:text-black tracking-tight mt-4">
               {project.name}
