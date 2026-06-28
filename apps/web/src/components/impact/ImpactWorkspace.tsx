@@ -221,6 +221,7 @@ export function ImpactWorkspace({ projects, onBack }: ImpactWorkspaceProps) {
               <SdgTab
                 sdgs={impactData.sdgs}
                 onUpdate={(val) => handleUpdate({ sdgs: val })}
+                projects={projects}
               />
             )}
             {activeTab === "predictions" && (

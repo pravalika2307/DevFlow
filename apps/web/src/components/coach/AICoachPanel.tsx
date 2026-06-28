@@ -102,90 +102,131 @@ export function AICoachPanel({ project, activeStage }: AICoachPanelProps) {
         </span>
       </div>
 
-      {/* Futuristic Visual Centerpiece: Animated Neural Graphic */}
+      {/* Central AI Holographic Core */}
       <div className="p-4 border-b border-border-default bg-bg-base/40 flex flex-col gap-3">
-        <div className="rounded-xl border border-border-default bg-bg-base/60 p-2 relative overflow-hidden flex items-center justify-center">
+        <div className="rounded-xl border border-border-default bg-bg-base/60 p-4 relative overflow-hidden flex flex-col items-center justify-center min-h-[120px]">
+          <style>{`
+            @keyframes orbit-cw {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            @keyframes orbit-ccw {
+              0% { transform: rotate(360deg); }
+              100% { transform: rotate(0deg); }
+            }
+            @keyframes core-breathe {
+              0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px var(--violet)); }
+              50% { transform: scale(1.15); filter: drop-shadow(0 0 20px var(--blue)); }
+            }
+            .animate-core-breathe {
+              animation: core-breathe 4s ease-in-out infinite;
+              transform-origin: center;
+            }
+            .animate-orbit-cw {
+              animation: orbit-cw 10s linear infinite;
+              transform-origin: 100px 50px;
+            }
+            .animate-orbit-ccw {
+              animation: orbit-ccw 14s linear infinite;
+              transform-origin: 100px 50px;
+            }
+          `}</style>
+
           <svg
             width="100%"
-            height="76"
-            viewBox="0 0 200 76"
-            className="opacity-80"
+            height="110"
+            viewBox="0 0 200 110"
+            className="relative"
             aria-hidden="true"
           >
+            {/* Holographic grid base */}
+            <line
+              x1="10"
+              y1="90"
+              x2="190"
+              y2="90"
+              stroke="rgba(255,255,255,0.04)"
+              strokeWidth="1"
+            />
+            <line
+              x1="20"
+              y1="95"
+              x2="180"
+              y2="95"
+              stroke="rgba(255,255,255,0.02)"
+              strokeWidth="1"
+            />
+
+            {/* Orbit paths */}
+            <ellipse
+              cx="100"
+              cy="50"
+              rx="60"
+              ry="18"
+              fill="none"
+              stroke="rgba(59,130,246,0.15)"
+              strokeWidth="1"
+              transform="rotate(-15, 100, 50)"
+            />
+            <ellipse
+              cx="100"
+              cy="50"
+              rx="48"
+              ry="32"
+              fill="none"
+              stroke="rgba(139,92,246,0.12)"
+              strokeWidth="1"
+              transform="rotate(35, 100, 50)"
+            />
+
+            {/* Pulsing Central Energy Core */}
+            <g className="animate-core-breathe">
+              <circle cx="100" cy="50" r="16" fill="url(#core-grad)" />
+              <circle
+                cx="100"
+                cy="50"
+                r="16"
+                fill="none"
+                stroke="rgba(255,255,255,0.2)"
+                strokeWidth="0.5"
+              />
+            </g>
+
+            {/* Gradient definition */}
             <defs>
-              <linearGradient id="net-grad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="var(--blue)" stopOpacity="0.8" />
-                <stop
-                  offset="100%"
-                  stopColor="var(--violet)"
-                  stopOpacity="0.8"
-                />
-              </linearGradient>
+              <radialGradient id="core-grad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+                <stop offset="35%" stopColor="var(--blue)" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="var(--violet)" stopOpacity="0" />
+              </radialGradient>
             </defs>
-            <line
-              x1="20"
-              y1="38"
-              x2="60"
-              y2="18"
-              stroke="rgba(255,255,255,0.08)"
-              strokeWidth="1"
-            />
-            <line
-              x1="20"
-              y1="38"
-              x2="60"
-              y2="58"
-              stroke="rgba(255,255,255,0.08)"
-              strokeWidth="1"
-            />
-            <line
-              x1="60"
-              y1="18"
-              x2="120"
-              y2="14"
-              stroke="rgba(255,255,255,0.08)"
-              strokeWidth="1"
-            />
-            <line
-              x1="60"
-              y1="58"
-              x2="120"
-              y2="62"
-              stroke="rgba(255,255,255,0.08)"
-              strokeWidth="1"
-            />
-            <line
-              x1="120"
-              y1="14"
-              x2="180"
-              y2="38"
-              stroke="url(#net-grad)"
-              strokeWidth="1.5"
-              strokeDasharray="3 2"
-            />
-            <line
-              x1="120"
-              y1="62"
-              x2="180"
-              y2="38"
-              stroke="url(#net-grad)"
-              strokeWidth="1.5"
-              strokeDasharray="3 2"
-            />
-            <circle
-              cx="180"
-              cy="38"
-              r="8"
-              fill="var(--violet)"
-              opacity="0.2"
-              className="animate-pulse"
-            />
-            <circle cx="20" cy="38" r="4" fill="var(--blue)" />
-            <circle cx="60" cy="18" r="3" fill="#fff" opacity="0.6" />
-            <circle cx="60" cy="58" r="3" fill="#fff" opacity="0.6" />
-            <circle cx="120" cy="14" r="3" fill="#fff" opacity="0.6" />
-            <circle cx="120" cy="62" r="3" fill="#fff" opacity="0.6" />
-            <circle cx="180" cy="38" r="4" fill="var(--violet)" />
+
+            {/* Outer revolving nodes */}
+            <g className="animate-orbit-cw">
+              <circle cx="160" cy="50" r="3.5" fill="var(--cyan)" />
+              <line
+                x1="100"
+                y1="50"
+                x2="160"
+                y2="50"
+                stroke="rgba(6,182,212,0.15)"
+                strokeWidth="0.5"
+                strokeDasharray="2 2"
+              />
+            </g>
+
+            <g className="animate-orbit-ccw">
+              <circle cx="52" cy="50" r="2.5" fill="var(--violet)" />
+              <line
+                x1="100"
+                y1="50"
+                x2="52"
+                y2="50"
+                stroke="rgba(139,92,246,0.15)"
+                strokeWidth="0.5"
+                strokeDasharray="2 2"
+              />
+            </g>
           </svg>
         </div>
 

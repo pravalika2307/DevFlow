@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { SdgMetric } from "../../../types/impact";
+import { InnovationProject } from "../../../types/innovation";
+import { DynamicImpactMap } from "../../ui/DynamicImpactMap";
 
 interface SdgTabProps {
   sdgs: SdgMetric[];
   onUpdate: (sdgs: SdgMetric[]) => void;
+  projects: InnovationProject[];
 }
 
 const SDG_LIST = [
@@ -94,7 +97,7 @@ const SDG_LIST = [
   },
 ];
 
-export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
+export function SdgTab({ sdgs, onUpdate, projects }: SdgTabProps) {
   const [sdgNum, setSdgNum] = useState<number>(4);
   const [contributionLevel, setContributionLevel] = useState(80);
   const [confidence, setConfidence] = useState(80);
@@ -166,6 +169,9 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
           Development Goals.
         </p>
       </div>
+
+      {/* Dynamic Network Connection Map */}
+      <DynamicImpactMap projects={projects} />
 
       {/* Mapped SDG Cards */}
       <div className="space-y-4">

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Module = "dashboard" | "discovery" | "impact" | "council";
+type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
 
 interface NavbarProps {
   searchQuery: string;
@@ -15,6 +15,7 @@ interface NavbarProps {
 
 const NAV_ITEMS: { id: Module; label: string; shortLabel: string }[] = [
   { id: "dashboard", label: "Workspace", shortLabel: "Work" },
+  { id: "galaxy", label: "Galaxy Map", shortLabel: "Gal" },
   { id: "discovery", label: "Discovery", shortLabel: "Disc" },
   { id: "impact", label: "Impact", shortLabel: "Imp" },
   { id: "council", label: "AI Council", shortLabel: "AI" },

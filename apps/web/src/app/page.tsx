@@ -14,8 +14,9 @@ import { ImpactWorkspace } from "../components/impact/ImpactWorkspace";
 import { CouncilWorkspace } from "../components/council/CouncilWorkspace";
 import { ExportCenterModal } from "../components/flow/ExportCenterModal";
 import { ToastContainer, ToastMessage } from "../components/ui/Toast";
+import { InnovationGalaxy } from "../components/ui/InnovationGalaxy";
 
-type Module = "dashboard" | "discovery" | "impact" | "council";
+type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
 
 /* ── Stage badge colours ──────────────────────────────── */
 const STAGE_CONFIG: Record<ProjectStage, { badge: string; label: string }> = {
@@ -482,6 +483,8 @@ export default function HomePage() {
   const [activeModule, setActiveModule] = useState<Module>("dashboard");
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isPresentationOpen, setIsPresentationOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const pushToast = useCallback(
     (message: string, variant: ToastMessage["variant"] = "success") => {
@@ -564,6 +567,13 @@ export default function HomePage() {
     searchQuery !== "" || selectedTheme !== "All" || selectedStage !== "All";
 
   /* Module views */
+  if (activeModule === "galaxy")
+    return (
+      <InnovationGalaxy
+        projects={projects}
+        onBack={() => setActiveModule("dashboard")}
+      />
+    );
   if (activeModule === "discovery")
     return (
       <DiscoveryWorkspace
@@ -597,6 +607,145 @@ export default function HomePage() {
       />
     );
   }
+
+  const presentationSlides = selectedProject
+    ? [
+        {
+          title: "Project Scope & Challenge",
+          subtitle: "Milestone 1: The Core Solution Matrix",
+          content: (
+            <div className="space-y-6 max-w-2xl text-center flex flex-col items-center">
+              <span className="df-badge df-badge-blue text-xs py-1 px-3">
+                {selectedProject.innovationTheme}
+              </span>
+              <h2 className="text-4xl font-black text-white tracking-tight">
+                {selectedProject.name}
+              </h2>
+              <p className="text-lg text-slate-355 leading-relaxed italic">
+                &ldquo;{selectedProject.problemStatement}&rdquo;
+              </p>
+              <div className="p-4 rounded-2xl border border-border-default bg-bg-card max-w-lg mx-auto">
+                <span className="df-section-label">Target Beneficiaries</span>
+                <p className="text-xs text-slate-400 mt-2 font-semibold">
+                  {selectedProject.targetBeneficiaries ||
+                    "Localized populations requiring assistance."}
+                </p>
+              </div>
+            </div>
+          ),
+        },
+        {
+          title: "AI Design Thinking Lifecycle",
+          subtitle: "Milestone 2: Stages of Innovation",
+          content: (
+            <div className="space-y-6 w-full max-w-3xl">
+              <div className="flex justify-between items-center text-xs font-bold text-slate-400">
+                <span>Progress Matrix</span>
+                <span className="text-violet-accent">
+                  {selectedProject.projectProgress}% Complete
+                </span>
+              </div>
+              <div className="grid grid-cols-5 gap-3">
+                {[
+                  {
+                    label: "Empathise",
+                    active: true,
+                    desc: selectedProject.empathise?.targetUser,
+                  },
+                  {
+                    label: "Define",
+                    active: true,
+                    desc: selectedProject.define?.problemStatement,
+                  },
+                  {
+                    label: "Ideate",
+                    active: true,
+                    desc: `${selectedProject.ideate?.length || 3} Solutions`,
+                  },
+                  {
+                    label: "Prototype",
+                    active: selectedProject.projectProgress >= 70,
+                    desc: `${
+                      selectedProject.prototype?.length || 1
+                    } Build logs`,
+                  },
+                  {
+                    label: "Test",
+                    active: selectedProject.projectProgress >= 90,
+                    desc: `${
+                      selectedProject.test?.length || 1
+                    } Tests completed`,
+                  },
+                ].map((stg) => (
+                  <div
+                    key={stg.label}
+                    className={`p-4 rounded-2xl border text-center transition-all ${
+                      stg.active
+                        ? "bg-violet-accent/10 border-violet-accent text-white"
+                        : "bg-bg-card border-border-default opacity-40"
+                    }`}
+                  >
+                    <span className="text-xs font-black block">
+                      {stg.label}
+                    </span>
+                    <span className="text-[9px] text-slate-500 block mt-2 font-semibold truncate">
+                      {stg.desc || "Dormant Stage"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ),
+        },
+        {
+          title: "AI Council Evaluation Verdict",
+          subtitle: "Milestone 3: 8-Agent Consensus",
+          content: (
+            <div className="space-y-6 max-w-2xl text-center flex flex-col items-center">
+              <h3 className="text-3xl font-black text-white">
+                Verdict:{" "}
+                <span className="text-emerald-accent">Approve to Scale</span>
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed max-w-lg mx-auto">
+                The multi-agent council concluded evaluation with 0 high-risk
+                blockers detected and stable innovation ratios.
+              </p>
+              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto w-full">
+                <div className="p-4 rounded-xl border border-border-default bg-bg-card text-center">
+                  <span className="df-section-label">Innovation Score</span>
+                  <span className="text-2xl font-black text-blue-accent block mt-1">
+                    {selectedProject.innovationScore}%
+                  </span>
+                </div>
+                <div className="p-4 rounded-xl border border-border-default bg-bg-card text-center">
+                  <span className="df-section-label">Readiness Level</span>
+                  <span className="text-2xl font-black text-emerald-accent block mt-1">
+                    {selectedProject.engineeringHealth}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          ),
+        },
+      ]
+    : [
+        {
+          title: "Samsung Solve for Tomorrow Deck",
+          subtitle: "Interactive Presentation Console",
+          content: (
+            <div className="space-y-6 text-center">
+              <h2 className="text-2xl font-black text-white">
+                Select a project on the workspace to launch the widescreen
+                presentation deck.
+              </h2>
+              <p className="text-xs text-slate-500 leading-relaxed font-semibold">
+                Widescreen slide controllers allow you to demonstrate structural
+                milestones, research layers, and AI verdicts.
+              </p>
+            </div>
+          ),
+        },
+      ];
 
   return (
     <div
@@ -641,6 +790,49 @@ export default function HomePage() {
           }}
           id="main-content"
         >
+          {/* ── Executive AI Briefing ───────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05, duration: 0.4 }}
+            className="p-5 rounded-2xl border border-blue-accent/25 bg-blue-accent/5 backdrop-blur-md mb-6 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl shadow-glow-blue/5"
+          >
+            <div className="space-y-1.5 max-w-2xl text-left">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-accent"></span>
+                </span>
+                <span className="text-[9px] font-bold uppercase tracking-widest text-blue-accent">
+                  Cognitive executive update
+                </span>
+              </div>
+              <h2 className="text-xs font-black text-white">
+                Welcome back, Pravalika.
+              </h2>
+              <p className="text-[11px] text-slate-300 leading-relaxed font-semibold">
+                Three innovation opportunities were detected overnight. AI
+                Council recommends prioritizing{" "}
+                <span className="text-white font-bold">
+                  Smart Waste Management
+                </span>{" "}
+                because projected environmental impact increased by{" "}
+                <span className="text-emerald-accent font-bold">18%</span>. Your
+                project readiness is now among the top{" "}
+                <span className="text-blue-accent font-bold">10%</span>.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                if (projects.length > 0) setSelectedProject(projects[0]);
+                setIsPresentationOpen(true);
+              }}
+              className="df-btn df-btn-primary py-2 px-3 text-[10px] whitespace-nowrap self-stretch md:self-auto text-center"
+            >
+              🚀 Launch Presentation Deck
+            </button>
+          </motion.div>
+
           {/* ── Page Header ─────────────────────────────── */}
           <div style={{ marginBottom: 32 }}>
             <motion.div
@@ -1112,6 +1304,81 @@ export default function HomePage() {
 
       {/* Toasts */}
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+
+      {/* Samsung Presentation Widescreen Deck Overlay */}
+      <AnimatePresence>
+        {isPresentationOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex flex-col bg-bg-base/98 backdrop-blur-lg p-8"
+          >
+            <div className="flex justify-between items-center border-b border-border-default pb-4 z-10">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  Samsung Presentation Mode
+                </span>
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider mt-1">
+                  {selectedProject ? selectedProject.name : "DevFlow OS"}
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsPresentationOpen(false)}
+                className="df-btn df-btn-ghost text-slate-400 hover:text-white text-lg font-bold"
+              >
+                Exit Presentation
+              </button>
+            </div>
+
+            <div className="flex-1 flex flex-col items-center justify-center relative p-6">
+              <div className="text-center space-y-2 mb-6">
+                <span className="text-[10px] font-bold text-blue-accent uppercase tracking-widest block">
+                  {presentationSlides[currentSlide]?.subtitle}
+                </span>
+                <h1 className="text-2xl font-black text-white">
+                  {presentationSlides[currentSlide]?.title}
+                </h1>
+              </div>
+
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.4 }}
+                className="w-full flex items-center justify-center py-4"
+              >
+                {presentationSlides[currentSlide]?.content}
+              </motion.div>
+            </div>
+
+            <div className="flex justify-between items-center border-t border-border-default pt-4">
+              <button
+                onClick={() => setCurrentSlide((prev) => Math.max(0, prev - 1))}
+                disabled={currentSlide === 0}
+                className="df-btn df-btn-ghost text-xs"
+              >
+                Previous Slide
+              </button>
+              <span className="text-xs text-slate-500 font-semibold">
+                Slide {currentSlide + 1} / {presentationSlides.length}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentSlide((prev) =>
+                    Math.min(presentationSlides.length - 1, prev + 1),
+                  )
+                }
+                disabled={currentSlide === presentationSlides.length - 1}
+                className="df-btn df-btn-primary text-xs"
+              >
+                Next Slide
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
