@@ -10,6 +10,7 @@ import { ProjectForm } from "../components/flow/ProjectForm";
 import { ProjectDetail } from "../components/flow/ProjectDetail";
 import { CoachWorkspace } from "../components/coach/CoachWorkspace";
 import { DiscoveryWorkspace } from "../components/discovery/DiscoveryWorkspace";
+import { ImpactWorkspace } from "../components/impact/ImpactWorkspace";
 
 export default function HomePage() {
   const [projects, setProjects] = useState<InnovationProject[]>(() => {
@@ -27,9 +28,9 @@ export default function HomePage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] =
     useState<InnovationProject | null>(null);
-  const [activeModule, setActiveModule] = useState<"dashboard" | "discovery">(
-    "dashboard",
-  );
+  const [activeModule, setActiveModule] = useState<
+    "dashboard" | "discovery" | "impact"
+  >("dashboard");
 
   // Sync state helpers
   const handleSaveProject = (project: InnovationProject) => {
@@ -115,6 +116,15 @@ export default function HomePage() {
   if (activeModule === "discovery") {
     return (
       <DiscoveryWorkspace
+        projects={projects}
+        onBack={() => setActiveModule("dashboard")}
+      />
+    );
+  }
+
+  if (activeModule === "impact") {
+    return (
+      <ImpactWorkspace
         projects={projects}
         onBack={() => setActiveModule("dashboard")}
       />

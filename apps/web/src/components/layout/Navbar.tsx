@@ -4,8 +4,8 @@ interface NavbarProps {
   searchQuery: string;
   onSearchChange: (val: string) => void;
   onNewProjectClick: () => void;
-  activeModule: "dashboard" | "discovery";
-  onModuleChange: (module: "dashboard" | "discovery") => void;
+  activeModule: "dashboard" | "discovery" | "impact";
+  onModuleChange: (module: "dashboard" | "discovery" | "impact") => void;
 }
 
 export function Navbar({
@@ -44,7 +44,7 @@ export function Navbar({
                   OS
                 </span>
               </h1>
-              <p className="text-[10px] text-slate-450 font-medium">
+              <p className="text-[10px] text-slate-455 font-medium">
                 AI Innovation Operating System
               </p>
             </div>
@@ -58,7 +58,7 @@ export function Navbar({
               className={`rounded-xl px-3 py-1.5 text-xs font-semibold tracking-wide transition-all border ${
                 activeModule === "dashboard"
                   ? "bg-slate-900 border-slate-800 text-white"
-                  : "bg-transparent border-transparent text-slate-450 hover:text-white"
+                  : "bg-transparent border-transparent text-slate-455 hover:text-white"
               }`}
             >
               Innovation Workspace
@@ -68,10 +68,20 @@ export function Navbar({
               className={`rounded-xl px-3 py-1.5 text-xs font-semibold tracking-wide transition-all border ${
                 activeModule === "discovery"
                   ? "bg-slate-900 border-slate-800 text-white"
-                  : "bg-transparent border-transparent text-slate-450 hover:text-white"
+                  : "bg-transparent border-transparent text-slate-455 hover:text-white"
               }`}
             >
               Problem Discovery
+            </button>
+            <button
+              onClick={() => onModuleChange("impact")}
+              className={`rounded-xl px-3 py-1.5 text-xs font-semibold tracking-wide transition-all border ${
+                activeModule === "impact"
+                  ? "bg-slate-900 border-slate-800 text-white"
+                  : "bg-transparent border-transparent text-slate-455 hover:text-white"
+              }`}
+            >
+              Impact Intelligence
             </button>
           </nav>
         </div>
