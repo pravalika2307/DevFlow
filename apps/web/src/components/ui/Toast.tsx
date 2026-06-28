@@ -13,14 +13,16 @@ interface ToastProps {
   onDismiss: (id: string) => void;
 }
 
-const icons: Record<ToastVariant, React.ReactNode> = {
+const ICONS: Record<ToastVariant, React.ReactNode> = {
   success: (
     <svg
-      className="h-4 w-4 shrink-0"
+      className="shrink-0"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
-      viewBox="0 0 24 24"
     >
       <path
         strokeLinecap="round"
@@ -31,11 +33,13 @@ const icons: Record<ToastVariant, React.ReactNode> = {
   ),
   info: (
     <svg
-      className="h-4 w-4 shrink-0"
+      className="shrink-0"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
-      viewBox="0 0 24 24"
     >
       <path
         strokeLinecap="round"
@@ -46,11 +50,13 @@ const icons: Record<ToastVariant, React.ReactNode> = {
   ),
   warning: (
     <svg
-      className="h-4 w-4 shrink-0"
+      className="shrink-0"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
-      viewBox="0 0 24 24"
     >
       <path
         strokeLinecap="round"
@@ -61,11 +67,13 @@ const icons: Record<ToastVariant, React.ReactNode> = {
   ),
   error: (
     <svg
-      className="h-4 w-4 shrink-0"
+      className="shrink-0"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
-      viewBox="0 0 24 24"
     >
       <path
         strokeLinecap="round"
@@ -76,11 +84,11 @@ const icons: Record<ToastVariant, React.ReactNode> = {
   ),
 };
 
-const variantStyles: Record<ToastVariant, string> = {
-  success: "bg-emerald-950/80 border-emerald-500/25 text-emerald-300",
-  info: "bg-indigo-950/80 border-indigo-500/25 text-indigo-300",
-  warning: "bg-amber-950/80 border-amber-500/25 text-amber-300",
-  error: "bg-rose-950/80 border-rose-500/25 text-rose-300",
+const VARIANT_CLASS: Record<ToastVariant, string> = {
+  success: "df-toast-success",
+  info: "df-toast-info",
+  warning: "df-toast-warning",
+  error: "df-toast-error",
 };
 
 function SingleToast({
@@ -90,42 +98,64 @@ function SingleToast({
   toast: ToastMessage;
   onDismiss: (id: string) => void;
 }) {
-  const [visible, setVisible] = useState(true);
+  const [exiting, setExiting] = useState(false);
+
+  const dismiss = () => {
+    setExiting(true);
+    setTimeout(() => onDismiss(toast.id), 280);
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-      setTimeout(() => onDismiss(toast.id), 300);
-    }, 4000);
-    return () => clearTimeout(timer);
-  }, [toast.id, onDismiss]);
+    const t = setTimeout(dismiss, 4500);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
-      className={`toast ${
-        variantStyles[toast.variant]
-      } animate-toast-in flex items-center gap-3 transition-all duration-300 ${
-        !visible ? "opacity-0 translate-y-2" : ""
-      }`}
+      className={`df-toast ${VARIANT_CLASS[toast.variant]}`}
       role="alert"
       aria-live="polite"
+      style={{
+        opacity: exiting ? 0 : 1,
+        transform: exiting ? "translateY(8px) scale(0.97)" : undefined,
+        transition: "opacity 280ms ease, transform 280ms ease",
+      }}
     >
-      {icons[toast.variant]}
-      <span className="text-sm font-medium leading-snug">{toast.message}</span>
+      {ICONS[toast.variant]}
+      <span style={{ flex: 1, fontSize: 13, fontWeight: 500, lineHeight: 1.4 }}>
+        {toast.message}
+      </span>
       <button
-        onClick={() => {
-          setVisible(false);
-          setTimeout(() => onDismiss(toast.id), 300);
+        onClick={dismiss}
+        aria-label="Dismiss"
+        style={{
+          marginLeft: 8,
+          padding: 2,
+          borderRadius: 6,
+          border: "none",
+          background: "transparent",
+          color: "inherit",
+          opacity: 0.6,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          transition: "opacity 150ms ease",
         }}
-        aria-label="Dismiss notification"
-        className="ml-auto shrink-0 rounded-lg p-0.5 opacity-60 hover:opacity-100 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/40"
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.opacity = "1";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.opacity = "0.6";
+        }}
       >
         <svg
-          className="h-3.5 w-3.5"
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
-          viewBox="0 0 24 24"
         >
           <path
             strokeLinecap="round"
@@ -141,7 +171,7 @@ function SingleToast({
 export function ToastContainer({ toasts, onDismiss }: ToastProps) {
   if (toasts.length === 0) return null;
   return (
-    <div className="toast-container" aria-label="Notifications">
+    <div className="df-toast-container" aria-label="Notifications">
       {toasts.map((t) => (
         <SingleToast key={t.id} toast={t} onDismiss={onDismiss} />
       ))}

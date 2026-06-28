@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Module = "dashboard" | "discovery" | "impact" | "council";
 
@@ -13,10 +14,10 @@ interface NavbarProps {
 }
 
 const NAV_ITEMS: { id: Module; label: string; shortLabel: string }[] = [
-  { id: "dashboard", label: "Innovation Workspace", shortLabel: "Workspace" },
-  { id: "discovery", label: "Problem Discovery", shortLabel: "Discovery" },
-  { id: "impact", label: "Impact Intelligence", shortLabel: "Impact" },
-  { id: "council", label: "AI Council", shortLabel: "Council" },
+  { id: "dashboard", label: "Workspace", shortLabel: "Work" },
+  { id: "discovery", label: "Discovery", shortLabel: "Disc" },
+  { id: "impact", label: "Impact", shortLabel: "Imp" },
+  { id: "council", label: "AI Council", shortLabel: "AI" },
 ];
 
 export function Navbar({
@@ -28,27 +29,62 @@ export function Navbar({
   activeModule,
   onModuleChange,
 }: NavbarProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <>
+      {/* ── Floating Header ───────────────────────────────── */}
       <header
-        className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-slate-950/85 backdrop-blur-xl"
+        className="sticky top-0 z-50"
+        style={{ padding: "12px 16px 0" }}
         role="banner"
       >
-        <div className="flex h-16 items-center justify-between px-4 sm:px-6 gap-4">
-          {/* ── Brand ─────────────────────────────────────── */}
-          <div className="flex items-center gap-3 shrink-0">
+        <div
+          className="df-glass"
+          style={{
+            borderRadius: 18,
+            border: "1px solid var(--border-accent)",
+            padding: "0 20px",
+            height: 60,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            boxShadow:
+              "0 8px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05) inset",
+          }}
+        >
+          {/* Brand */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              flexShrink: 0,
+            }}
+          >
             <div
-              className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-500/25"
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 10,
+                background:
+                  "linear-gradient(135deg, var(--blue) 0%, var(--violet) 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 0 16px rgba(59,130,246,0.35)",
+                flexShrink: 0,
+              }}
               aria-hidden="true"
             >
               <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
+                width="17"
+                height="17"
                 viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="2.5"
               >
                 <path
                   strokeLinecap="round"
@@ -56,100 +92,180 @@ export function Navbar({
                   d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
                 />
               </svg>
-              <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 blur-md opacity-40" />
             </div>
-            <div className="hidden sm:block">
-              <div className="flex items-center gap-2">
-                <span className="text-base font-bold tracking-tight text-white">
+            <div className="df-hide-mobile">
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 800,
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
                   DevFlow
                 </span>
-                <span className="text-[9px] uppercase tracking-widest bg-indigo-950/60 text-indigo-400 px-1.5 py-0.5 rounded-md border border-indigo-900/40 font-semibold">
+                <span
+                  style={{
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    background: "var(--blue-dim)",
+                    color: "#93c5fd",
+                    border: "1px solid var(--blue-border)",
+                    padding: "2px 6px",
+                    borderRadius: 6,
+                  }}
+                >
                   OS
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 font-medium leading-none mt-0.5">
-                AI Innovation Operating System
+              <p
+                style={{
+                  fontSize: 10,
+                  color: "var(--text-tertiary)",
+                  fontWeight: 500,
+                  marginTop: 1,
+                }}
+              >
+                AI Innovation OS
               </p>
             </div>
           </div>
 
-          {/* ── Desktop Nav ───────────────────────────────── */}
+          {/* Center Nav — pill group */}
           <nav
-            className="hidden lg:flex items-center gap-0.5 bg-slate-900/60 rounded-xl border border-white/[0.06] p-1"
+            style={{
+              display: "flex",
+              gap: 2,
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid var(--border)",
+              borderRadius: 12,
+              padding: 3,
+            }}
             role="navigation"
             aria-label="Main navigation"
+            className="df-hide-mobile"
           >
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.id}
                 onClick={() => onModuleChange(item.id)}
                 aria-current={activeModule === item.id ? "page" : undefined}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500 ${
-                  activeModule === item.id
-                    ? "bg-indigo-600/20 text-indigo-300 shadow-sm"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
-                }`}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: 9,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: "-0.01em",
+                  cursor: "pointer",
+                  border: "none",
+                  outline: "none",
+                  transition: "all 200ms var(--ease-out)",
+                  background:
+                    activeModule === item.id
+                      ? "var(--blue-dim)"
+                      : "transparent",
+                  color:
+                    activeModule === item.id
+                      ? "#93c5fd"
+                      : "var(--text-tertiary)",
+                  boxShadow:
+                    activeModule === item.id
+                      ? "inset 0 0 0 1px var(--blue-border)"
+                      : "none",
+                  whiteSpace: "nowrap",
+                }}
               >
                 {item.label}
               </button>
             ))}
           </nav>
 
-          {/* ── Search ────────────────────────────────────── */}
-          <div className="flex-1 max-w-xs hidden md:block">
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg
-                  className="h-3.5 w-3.5 text-slate-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="search"
-                placeholder="Search projects…"
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                aria-label="Search innovation projects"
-                className="input-premium w-full py-2 pl-9 pr-3 text-xs"
+          {/* Search */}
+          <div
+            style={{ flex: 1, maxWidth: 280, position: "relative" }}
+            className="df-hide-tablet"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--text-tertiary)"
+              strokeWidth="2"
+              style={{
+                position: "absolute",
+                left: 11,
+                top: "50%",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+              }}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
-            </div>
+            </svg>
+            <input
+              type="search"
+              placeholder="Search projects…"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              aria-label="Search innovation projects"
+              className="df-input"
+              style={{
+                width: "100%",
+                paddingLeft: 34,
+                paddingRight: 12,
+                paddingTop: 7,
+                paddingBottom: 7,
+              }}
+            />
           </div>
 
-          {/* ── Actions ───────────────────────────────────── */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Right actions */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexShrink: 0,
+            }}
+          >
             {/* Demo Mode */}
             <button
               onClick={onDemoModeClick}
-              aria-label="Launch Samsung Solve for Tomorrow demo mode"
-              className="hidden sm:flex items-center gap-1.5 rounded-xl border border-indigo-500/25 bg-indigo-500/8 px-3 py-1.5 text-xs font-semibold text-indigo-300 hover:bg-indigo-500/15 hover:border-indigo-500/40 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
+              className="df-btn df-btn-subtle df-hide-mobile"
+              style={{ padding: "6px 12px", fontSize: 12 }}
+              aria-label="Launch Samsung demo mode"
             >
-              <span className="live-dot" aria-hidden="true" />
-              Demo Mode
+              <span
+                className="df-live-dot"
+                aria-hidden="true"
+                style={{ width: 6, height: 6 }}
+              />
+              Demo
             </button>
 
             {/* Export */}
             <button
               onClick={onExportCenterClick}
-              aria-label="Open export center"
+              className="df-btn df-btn-ghost df-hide-mobile"
+              style={{ width: 34, height: 34, padding: 0 }}
+              aria-label="Export center"
               title="Export Center"
-              className="hidden sm:flex items-center justify-center h-8 w-8 rounded-xl border border-white/[0.08] bg-slate-900/60 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
             >
               <svg
-                className="h-4 w-4"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                viewBox="0 0 24 24"
                 aria-hidden="true"
               >
                 <path
@@ -160,18 +276,20 @@ export function Navbar({
               </svg>
             </button>
 
-            {/* New Project CTA */}
+            {/* New Project */}
             <button
               onClick={onNewProjectClick}
+              className="df-btn df-btn-primary"
+              style={{ padding: "7px 14px", fontSize: 12 }}
               aria-label="Create new innovation project"
-              className="btn-glow inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-3 sm:px-4 py-2 text-xs font-semibold text-white hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400"
             >
               <svg
-                className="h-3.5 w-3.5"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.5"
-                viewBox="0 0 24 24"
                 aria-hidden="true"
               >
                 <path
@@ -180,136 +298,185 @@ export function Navbar({
                   d="M12 4.5v15m7.5-7.5h-15"
                 />
               </svg>
-              <span className="hidden sm:inline">New Project</span>
-              <span className="sm:hidden">New</span>
+              <span className="df-hide-mobile">New Project</span>
+              <span style={{ display: "none" }} className="df-show-mobile">
+                New
+              </span>
             </button>
 
-            {/* Divider + Avatar */}
+            {/* Divider */}
             <div
-              className="h-7 w-px bg-white/[0.08] hidden sm:block"
+              style={{
+                width: 1,
+                height: 28,
+                background: "var(--border)",
+                margin: "0 4px",
+              }}
               aria-hidden="true"
             />
+
+            {/* Avatar */}
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-[10px] font-bold text-white shadow-md shadow-indigo-600/20 cursor-default shrink-0"
-              title="Guest Innovator – Workspace Member"
-              aria-label="User avatar: Guest Innovator"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                background:
+                  "linear-gradient(135deg, var(--blue) 0%, var(--violet) 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 12,
+                fontWeight: 800,
+                color: "white",
+                boxShadow: "0 0 12px rgba(59,130,246,0.3)",
+                cursor: "default",
+                flexShrink: 0,
+              }}
+              title="Pravalika – Workspace Admin"
+              aria-label="User avatar: Pravalika"
             >
-              GI
+              P
             </div>
 
             {/* Mobile hamburger */}
             <button
-              onClick={() => setMobileMenuOpen((o) => !o)}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
-              className="lg:hidden flex items-center justify-center h-8 w-8 rounded-xl border border-white/[0.08] bg-slate-900/60 text-slate-400 hover:text-white transition-all"
+              onClick={() => setMobileOpen((o) => !o)}
+              className="df-btn df-btn-ghost"
+              style={{ width: 34, height: 34, padding: 0 }}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
             >
-              {mobileMenuOpen ? (
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* ── Mobile Menu ────────────────────────────────── */}
-        {mobileMenuOpen && (
-          <div
-            className="lg:hidden border-t border-white/[0.06] bg-slate-950/95 backdrop-blur-xl animate-fade-in-up"
-            role="navigation"
-            aria-label="Mobile navigation"
-          >
-            <div className="px-4 py-3 space-y-1">
-              {NAV_ITEMS.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    onModuleChange(item.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  aria-current={activeModule === item.id ? "page" : undefined}
-                  className={`nav-item w-full text-left ${
-                    activeModule === item.id ? "active" : ""
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-            <div className="px-4 py-3 border-t border-white/[0.06] flex flex-col gap-2">
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <svg
-                    className="h-3.5 w-3.5 text-slate-500"
+              <AnimatePresence mode="wait" initial={false}>
+                {mobileOpen ? (
+                  <motion.svg
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
+                    strokeWidth="2.5"
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      d="M6 18L18 6M6 6l12 12"
                     />
-                  </svg>
-                </div>
-                <input
-                  type="search"
-                  placeholder="Search projects…"
-                  value={searchQuery}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  aria-label="Search innovation projects"
-                  className="input-premium w-full py-2 pl-9 pr-3 text-xs"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => {
-                    onDemoModeClick();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex-1 rounded-xl border border-indigo-500/25 bg-indigo-500/8 py-2 text-xs font-semibold text-indigo-300 hover:bg-indigo-500/15 transition-all"
-                >
-                  Demo Mode
-                </button>
-                <button
-                  onClick={() => {
-                    onExportCenterClick();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex-1 rounded-xl border border-white/[0.08] bg-slate-900/60 py-2 text-xs font-semibold text-slate-400 hover:text-white transition-all"
-                >
-                  Export
-                </button>
-              </div>
-            </div>
+                  </motion.svg>
+                ) : (
+                  <motion.svg
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                    />
+                  </motion.svg>
+                )}
+              </AnimatePresence>
+            </button>
           </div>
-        )}
+        </div>
+
+        {/* ── Mobile Dropdown ─────────────────────────────── */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scaleY: 0.95 }}
+              animate={{ opacity: 1, y: 0, scaleY: 1 }}
+              exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              style={{ transformOrigin: "top" }}
+              className="df-glass"
+              role="navigation"
+              aria-label="Mobile navigation"
+              tabIndex={-1}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setMobileOpen(false);
+              }}
+            >
+              <div
+                style={{
+                  borderRadius: 14,
+                  border: "1px solid var(--border-accent)",
+                  padding: 12,
+                  marginTop: 8,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                }}
+              >
+                {NAV_ITEMS.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      onModuleChange(item.id);
+                      setMobileOpen(false);
+                    }}
+                    className={`df-nav-item${
+                      activeModule === item.id ? " active" : ""
+                    }`}
+                    aria-current={activeModule === item.id ? "page" : undefined}
+                    style={{ width: "100%", textAlign: "left" }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <div className="df-divider" style={{ margin: "4px 0" }} />
+                <div style={{ display: "flex", gap: 8 }}>
+                  <input
+                    type="search"
+                    placeholder="Search projects…"
+                    value={searchQuery}
+                    onChange={(e) => onSearchChange(e.target.value)}
+                    aria-label="Search"
+                    className="df-input"
+                    style={{ flex: 1, padding: "8px 12px", fontSize: 13 }}
+                  />
+                </div>
+                <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                  <button
+                    onClick={() => {
+                      onDemoModeClick();
+                      setMobileOpen(false);
+                    }}
+                    className="df-btn df-btn-subtle"
+                    style={{ flex: 1, justifyContent: "center", fontSize: 12 }}
+                  >
+                    Demo Mode
+                  </button>
+                  <button
+                    onClick={() => {
+                      onExportCenterClick();
+                      setMobileOpen(false);
+                    }}
+                    className="df-btn df-btn-ghost"
+                    style={{ flex: 1, justifyContent: "center", fontSize: 12 }}
+                  >
+                    Export
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </>
   );

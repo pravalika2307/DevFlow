@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { InnovationProject, ProjectStage } from "../types/innovation";
 import { InnovationService } from "../services/innovation";
 import { Navbar } from "../components/layout/Navbar";
@@ -13,24 +14,25 @@ import { ImpactWorkspace } from "../components/impact/ImpactWorkspace";
 import { CouncilWorkspace } from "../components/council/CouncilWorkspace";
 import { ExportCenterModal } from "../components/flow/ExportCenterModal";
 import { ToastContainer, ToastMessage } from "../components/ui/Toast";
+import { BackgroundGrid } from "../components/ui/BackgroundGrid";
 
 type Module = "dashboard" | "discovery" | "impact" | "council";
 
-/* ── Stage badge colours ─────────────────────────────── */
-const STAGE_COLORS: Record<ProjectStage, string> = {
-  Ideation: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-  Prototyping: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  Validation: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-  Scaling: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+/* ── Stage badge colours ──────────────────────────────── */
+const STAGE_CONFIG: Record<ProjectStage, { badge: string; label: string }> = {
+  Ideation: { badge: "df-badge-cyan", label: "Ideation" },
+  Prototyping: { badge: "df-badge-amber", label: "Prototyping" },
+  Validation: { badge: "df-badge-violet", label: "Validation" },
+  Scaling: { badge: "df-badge-emerald", label: "Scaling" },
 };
 
-const PRIORITY_COLORS = {
-  High: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-  Medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  Low: "bg-slate-500/10 text-slate-400 border-slate-500/20",
+const PRIORITY_BADGE: Record<string, string> = {
+  High: "df-badge-rose",
+  Medium: "df-badge-amber",
+  Low: "df-badge-blue",
 };
 
-/* ── Toast helper ────────────────────────────────────── */
+/* ── Toast helper ─────────────────────────────────────── */
 function makeToast(
   message: string,
   variant: ToastMessage["variant"] = "success",
@@ -38,7 +40,26 @@ function makeToast(
   return { id: crypto.randomUUID(), message, variant };
 }
 
-/* ── Empty State ─────────────────────────────────────── */
+/* ── Framer Motion variants ───────────────────────────── */
+const EASE_OUT = [0.16, 1, 0.3, 1] as const;
+
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: EASE_OUT } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.25 } },
+};
+
+const cardContainerVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE_OUT } },
+};
+
+/* ── Empty State ──────────────────────────────────────── */
 function EmptyState({
   onNewProject,
   hasFilter,
@@ -48,14 +69,42 @@ function EmptyState({
 }) {
   if (hasFilter) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 rounded-2xl border border-dashed border-slate-800 bg-slate-900/10 animate-fade-in-up">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800/60 text-slate-400 mb-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.35 }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "80px 32px",
+          borderRadius: 24,
+          border: "1px dashed var(--border-accent)",
+          background: "var(--bg-card)",
+        }}
+      >
+        <div
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: 16,
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid var(--border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: 16,
+            color: "var(--text-tertiary)",
+          }}
+        >
           <svg
-            className="h-7 w-7"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
-            viewBox="0 0 24 24"
           >
             <path
               strokeLinecap="round"
@@ -64,26 +113,77 @@ function EmptyState({
             />
           </svg>
         </div>
-        <p className="text-sm font-semibold text-slate-300">
+        <p
+          style={{
+            fontSize: 15,
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            marginBottom: 6,
+          }}
+        >
           No matching projects
         </p>
-        <p className="text-xs text-slate-500 mt-1.5 text-center max-w-xs leading-relaxed">
-          Try adjusting your search or filter criteria to find the project
-          you&#39;re looking for.
+        <p
+          style={{
+            fontSize: 13,
+            color: "var(--text-secondary)",
+            textAlign: "center",
+            lineHeight: 1.6,
+            maxWidth: 320,
+          }}
+        >
+          Try adjusting your search or filter criteria.
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-24 rounded-2xl border border-dashed border-slate-800 bg-slate-900/10 animate-fade-in-up">
-      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600/20 to-violet-600/20 border border-indigo-500/20 text-indigo-400 mb-5">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "80px 32px",
+        borderRadius: 24,
+        border: "1px dashed var(--border-accent)",
+        background: "var(--bg-card)",
+        textAlign: "center",
+      }}
+    >
+      {/* Animated icon */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{
+          duration: 3.5,
+          repeat: Infinity,
+          ease: "easeInOut" as const,
+        }}
+        style={{
+          width: 72,
+          height: 72,
+          borderRadius: 22,
+          background:
+            "linear-gradient(135deg, var(--blue-dim) 0%, var(--violet-dim) 100%)",
+          border: "1px solid var(--blue-border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 24,
+          boxShadow: "var(--shadow-glow-blue)",
+        }}
+      >
         <svg
-          className="h-8 w-8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
+          width="32"
+          height="32"
           viewBox="0 0 24 24"
+          fill="none"
+          stroke="#93c5fd"
+          strokeWidth="1.5"
         >
           <path
             strokeLinecap="round"
@@ -91,40 +191,44 @@ function EmptyState({
             d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.355a14.998 14.998 0 01-3.75 0M15 11.25a3 3 0 11-6 0 3 3 0 016 0z"
           />
         </svg>
-        <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-white">
-          <svg
-            className="h-2.5 w-2.5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-        </div>
-      </div>
-      <p className="text-sm font-bold text-slate-200">
-        Start your first innovation project
+      </motion.div>
+
+      <p
+        style={{
+          fontSize: 20,
+          fontWeight: 800,
+          color: "var(--text-primary)",
+          letterSpacing: "-0.03em",
+          marginBottom: 10,
+        }}
+      >
+        Start your first innovation
       </p>
-      <p className="text-xs text-slate-500 mt-2 text-center max-w-sm leading-relaxed">
+      <p
+        style={{
+          fontSize: 13,
+          color: "var(--text-secondary)",
+          lineHeight: 1.7,
+          maxWidth: 360,
+          marginBottom: 28,
+        }}
+      >
         Create a project to unlock the AI Design Thinking Coach, Problem
         Discovery Engine, Impact Intelligence Centre, and the Multi-Agent AI
         Council.
       </p>
       <button
         onClick={onNewProject}
-        className="btn-glow mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-bold text-white hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400"
+        className="df-btn df-btn-primary"
+        style={{ padding: "10px 24px", fontSize: 13 }}
       >
         <svg
-          className="h-3.5 w-3.5"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
-          viewBox="0 0 24 24"
         >
           <path
             strokeLinecap="round"
@@ -134,22 +238,22 @@ function EmptyState({
         </svg>
         Create Innovation Project
       </button>
-    </div>
+    </motion.div>
   );
 }
 
-/* ── Project Card ────────────────────────────────────── */
+/* ── Project Card ─────────────────────────────────────── */
 function ProjectCard({
   project,
-  index,
   onClick,
 }: {
   project: InnovationProject;
-  index: number;
   onClick: () => void;
 }) {
+  const stage = STAGE_CONFIG[project.projectStage];
   return (
-    <div
+    <motion.div
+      variants={cardVariants}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") onClick();
@@ -157,93 +261,211 @@ function ProjectCard({
       tabIndex={0}
       role="button"
       aria-label={`Open project: ${project.name}`}
-      className={`group relative rounded-2xl border border-white/[0.06] bg-slate-900/30 p-5 cursor-pointer flex flex-col justify-between min-h-[210px] transition-all duration-200 hover:border-indigo-500/20 hover:bg-slate-900/50 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-950/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500 animate-fade-in-up`}
-      style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
+      whileHover={{ y: -3, transition: { duration: 0.2 } }}
+      whileTap={{ scale: 0.98 }}
+      className="df-card df-card-glow-blue"
+      style={{
+        padding: 20,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        minHeight: 220,
+        cursor: "pointer",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      {/* Hover glow */}
+      {/* Subtle corner glow on hover */}
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
+          position: "absolute",
+          top: -30,
+          right: -30,
+          width: 100,
+          height: 100,
+          borderRadius: "50%",
           background:
-            "radial-gradient(ellipse at top left, rgba(99,102,241,0.05) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
+          pointerEvents: "none",
+          transition: "opacity 300ms ease",
         }}
+        aria-hidden="true"
       />
 
+      {/* Top row */}
       <div>
-        {/* Theme + Stage */}
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <span className="tag bg-indigo-500/8 text-indigo-300 border-indigo-500/15 truncate max-w-[140px]">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8,
+            flexWrap: "wrap",
+          }}
+        >
+          <span
+            className="df-badge df-badge-blue"
+            style={{
+              maxWidth: 160,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {project.innovationTheme}
           </span>
-          <span className={`tag ${STAGE_COLORS[project.projectStage]}`}>
-            {project.projectStage}
-          </span>
+          <span className={`df-badge ${stage.badge}`}>{stage.label}</span>
         </div>
 
-        {/* Title */}
-        <h3 className="mt-3 text-sm font-bold text-slate-100 tracking-tight group-hover:text-indigo-300 transition-colors duration-200 line-clamp-2">
+        <h3
+          style={{
+            marginTop: 14,
+            fontSize: 14,
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.4,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
           {project.name}
         </h3>
-
-        {/* Problem Statement */}
-        <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+        <p
+          style={{
+            marginTop: 6,
+            fontSize: 12,
+            color: "var(--text-tertiary)",
+            lineHeight: 1.6,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
           {project.problemStatement}
         </p>
       </div>
 
       {/* Footer */}
-      <div className="mt-4 space-y-2.5 pt-3 border-t border-white/[0.04]">
-        {/* Scores row */}
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <div className="flex justify-between mb-1">
-              <span className="text-[10px] text-slate-500 font-medium">
+      <div
+        style={{
+          marginTop: 16,
+          paddingTop: 14,
+          borderTop: "1px solid var(--border)",
+        }}
+      >
+        {/* Score bars */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            marginBottom: 12,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: 4,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: "var(--text-tertiary)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                }}
+              >
                 Innovation
               </span>
-              <span className="text-[10px] font-bold text-indigo-400">
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#93c5fd" }}>
                 {project.innovationScore}%
               </span>
             </div>
-            <div className="progress-bar">
+            <div className="df-progress">
               <div
-                className="progress-bar-fill bg-gradient-to-r from-indigo-500 to-violet-500"
-                style={{ width: `${project.innovationScore}%` }}
+                className="df-progress-fill"
+                style={{
+                  width: `${project.innovationScore}%`,
+                  background:
+                    "linear-gradient(90deg, var(--blue), var(--violet))",
+                }}
               />
             </div>
           </div>
-          <div className="flex-1">
-            <div className="flex justify-between mb-1">
-              <span className="text-[10px] text-slate-500 font-medium">
-                Health
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: 4,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: "var(--text-tertiary)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Eng Health
               </span>
-              <span className="text-[10px] font-bold text-emerald-400">
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#6ee7b7" }}>
                 {project.engineeringHealth}%
               </span>
             </div>
-            <div className="progress-bar">
+            <div className="df-progress">
               <div
-                className="progress-bar-fill bg-gradient-to-r from-emerald-500 to-teal-500"
-                style={{ width: `${project.engineeringHealth}%` }}
+                className="df-progress-fill"
+                style={{
+                  width: `${project.engineeringHealth}%`,
+                  background:
+                    "linear-gradient(90deg, var(--emerald), var(--cyan))",
+                }}
               />
             </div>
           </div>
         </div>
 
-        {/* Priority + Timeline */}
-        <div className="flex items-center justify-between">
-          <span className={`tag ${PRIORITY_COLORS[project.priority]}`}>
-            {project.priority} Priority
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span
+            className={`df-badge ${
+              PRIORITY_BADGE[project.priority] ?? "df-badge-blue"
+            }`}
+          >
+            {project.priority}
           </span>
-          <span className="text-[10px] text-slate-500 font-medium">
+          <span
+            style={{
+              fontSize: 11,
+              color: "var(--text-tertiary)",
+              fontWeight: 500,
+            }}
+          >
             {project.timeline}
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-/* ── Page Component ──────────────────────────────────── */
+/* ── Dashboard Page ───────────────────────────────────── */
 export default function HomePage() {
   const [projects, setProjects] = useState<InnovationProject[]>(() =>
     InnovationService.getProjects(),
@@ -268,12 +490,10 @@ export default function HomePage() {
     },
     [],
   );
-
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  /* ── Demo Mode ─────────────────────────────────────── */
   const handleDemoModeLaunch = useCallback(() => {
     const demoProjects = InnovationService.getProjects();
     setProjects(demoProjects);
@@ -282,12 +502,11 @@ export default function HomePage() {
     localStorage.removeItem("devflow_council_data");
     setActiveModule("dashboard");
     pushToast(
-      "Samsung Solve for Tomorrow demo mode loaded. All modules pre-populated.",
+      "Samsung Solve for Tomorrow demo loaded. All modules pre-populated.",
       "info",
     );
   }, [pushToast]);
 
-  /* ── Project Actions ───────────────────────────────── */
   const handleSaveProject = useCallback(
     (project: InnovationProject) => {
       const updated = InnovationService.saveProject(project);
@@ -302,8 +521,7 @@ export default function HomePage() {
 
   const handleDeleteProject = useCallback(
     (id: string) => {
-      if (!confirm("Delete this innovation project? This cannot be undone."))
-        return;
+      if (!confirm("Delete this project? This cannot be undone.")) return;
       const updated = InnovationService.deleteProject(id);
       setProjects(updated);
       setSelectedProject(null);
@@ -322,7 +540,7 @@ export default function HomePage() {
     setIsFormOpen(true);
   }, []);
 
-  /* ── Filtering ─────────────────────────────────────── */
+  /* Filtering */
   const filteredProjects = projects.filter((p) => {
     const q = searchQuery.toLowerCase();
     const matchSearch =
@@ -346,7 +564,7 @@ export default function HomePage() {
   const hasActiveFilter =
     searchQuery !== "" || selectedTheme !== "All" || selectedStage !== "All";
 
-  /* ── Module Views ──────────────────────────────────── */
+  /* Module views */
   if (activeModule === "discovery")
     return (
       <DiscoveryWorkspace
@@ -381,336 +599,498 @@ export default function HomePage() {
     );
   }
 
-  /* ── Dashboard ─────────────────────────────────────── */
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-      {/* Ambient background */}
-      <div
-        className="pointer-events-none fixed inset-0 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div className="absolute -top-64 -left-32 h-[600px] w-[600px] rounded-full bg-indigo-600/4 blur-[120px]" />
-        <div className="absolute top-1/2 -right-64 h-[500px] w-[500px] rounded-full bg-violet-600/4 blur-[120px]" />
-      </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg-base)",
+        position: "relative",
+      }}
+    >
+      {/* Alive background */}
+      <BackgroundGrid />
 
-      <Navbar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onNewProjectClick={handleNewProjectClick}
-        onDemoModeClick={handleDemoModeLaunch}
-        onExportCenterClick={() => setIsExportOpen(true)}
-        activeModule={activeModule}
-        onModuleChange={setActiveModule}
-      />
-
-      {isExportOpen && (
-        <ExportCenterModal
-          project={projects[0] || ({} as InnovationProject)}
-          onClose={() => setIsExportOpen(false)}
+      {/* All content above background */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <Navbar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onNewProjectClick={handleNewProjectClick}
+          onDemoModeClick={handleDemoModeLaunch}
+          onExportCenterClick={() => setIsExportOpen(true)}
+          activeModule={activeModule}
+          onModuleChange={setActiveModule}
         />
-      )}
 
-      <main
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 pb-24"
-        id="main-content"
-      >
-        {/* Page heading */}
-        <div className="animate-fade-in-up">
-          <h2 className="text-xl font-bold text-white tracking-tight">
-            Innovation Workspace
-          </h2>
-          <p className="text-sm text-slate-400 mt-1">
-            {projects.length > 0
-              ? `Managing ${projects.length} active innovation project${
-                  projects.length > 1 ? "s" : ""
-                } across all design thinking phases.`
-              : "Start your first innovation project to unlock all AI-powered modules."}
-          </p>
-        </div>
-
-        {/* ── Metric Cards ───────────────────────────────── */}
-        <section aria-label="Workspace metrics">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            <MetricCard
-              title="Innovation Score"
-              value={stats.avgInnovation}
-              description="Novelty index & design thinking"
-              variant="indigo"
-              icon={
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.813 15.904L9 21l8.982-5.097c.36-.204.64-.543.766-.948l.848-2.735a2.25 2.25 0 00-1.848-2.883l-2.61-.227a1.056 1.056 0 01-.827-.58l-1.084-2.114a2.25 2.25 0 00-4.004 0L8.14 8.766a1.056 1.056 0 01-.827.58l-2.61.227a2.25 2.25 0 00-1.848 2.883l.848 2.735c.127.405.406.744.766.948l8.982 5.097z"
-                  />
-                </svg>
-              }
-            />
-            <MetricCard
-              title="Eng Health"
-              value={stats.avgHealth}
-              description="Lint, code quality & coverage"
-              variant="emerald"
-              icon={
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-                  />
-                </svg>
-              }
-            />
-            <MetricCard
-              title="Progress"
-              value={stats.avgProgress}
-              description="Roadmap completion"
-              variant="amber"
-              icon={
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                  />
-                </svg>
-              }
-            />
-            <MetricCard
-              title="Impact Score"
-              value={stats.avgImpact}
-              description="UN SDG alignment index"
-              variant="rose"
-              icon={
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                  />
-                </svg>
-              }
-            />
-            <MetricCard
-              title="Readiness"
-              value={stats.avgReadiness}
-              description="Technology Readiness Level"
-              variant="violet"
-              icon={
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.952 11.952 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m0 0A8.959 8.959 0 013 12c0-.778.099-1.533.284-2.253"
-                  />
-                </svg>
-              }
-            />
-          </div>
-        </section>
-
-        {/* ── Executive Summary Row ───────────────────────── */}
-        <section
-          aria-label="Executive summary"
-          className="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-fade-in-up delay-150"
-        >
-          {/* Council Consensus */}
-          <div className="lg:col-span-2 rounded-2xl border border-white/[0.06] bg-slate-900/30 p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400">
-                AI Council Consensus
-              </h3>
-              <span className="tag bg-emerald-500/10 text-emerald-400 border-emerald-500/15">
-                Live
-              </span>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                {
-                  label: "Research Readiness",
-                  value: "85%",
-                  sub: "12 verified interviews",
-                },
-                {
-                  label: "AI Model Readiness",
-                  value: "78%",
-                  sub: "Convergence stable",
-                },
-                {
-                  label: "Council Verdict",
-                  value: "Proceed",
-                  sub: "No blockers found",
-                },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-xl bg-slate-950/60 border border-white/[0.04] p-3.5"
-                >
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block">
-                    {item.label}
-                  </span>
-                  <span className="text-lg font-black text-white block mt-1">
-                    {item.value}
-                  </span>
-                  <span className="text-[10px] text-slate-500 block mt-1">
-                    {item.sub}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="rounded-2xl border border-white/[0.06] bg-slate-900/30 p-5 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              Recent Activity
-            </h3>
-            <div className="space-y-3 overflow-y-auto max-h-32">
-              {[
-                {
-                  time: "Just now",
-                  action: "AI Council evaluation completed",
-                  tag: "COUNCIL",
-                  dot: "bg-indigo-400",
-                },
-                {
-                  time: "1h ago",
-                  action: "Impact reach metrics updated",
-                  tag: "IMPACT",
-                  dot: "bg-rose-400",
-                },
-                {
-                  time: "Yesterday",
-                  action: "5 Whys discovery phase done",
-                  tag: "RESEARCH",
-                  dot: "bg-emerald-400",
-                },
-              ].map((act, i) => (
-                <div key={i} className="flex items-start gap-2.5 text-[11px]">
-                  <div
-                    className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${act.dot}`}
-                    aria-hidden="true"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-slate-300 font-medium block truncate">
-                      {act.action}
-                    </span>
-                    <span className="text-slate-500">{act.time}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Filter Bar ─────────────────────────────────── */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-white/[0.04] pt-6">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">
-              Filter:
-            </span>
-            <select
-              value={selectedTheme}
-              onChange={(e) => setSelectedTheme(e.target.value)}
-              aria-label="Filter by theme"
-              className="rounded-xl border border-white/[0.08] bg-slate-900/60 py-1.5 px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all"
-            >
-              <option value="All">All Themes</option>
-              {uniqueThemes
-                .filter((t) => t !== "All")
-                .map((theme) => (
-                  <option key={theme} value={theme}>
-                    {theme}
-                  </option>
-                ))}
-            </select>
-            <select
-              value={selectedStage}
-              onChange={(e) => setSelectedStage(e.target.value)}
-              aria-label="Filter by stage"
-              className="rounded-xl border border-white/[0.08] bg-slate-900/60 py-1.5 px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all"
-            >
-              <option value="All">All Stages</option>
-              <option value="Ideation">Ideation</option>
-              <option value="Prototyping">Prototyping</option>
-              <option value="Validation">Validation</option>
-              <option value="Scaling">Scaling</option>
-            </select>
-            {hasActiveFilter && (
-              <button
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedTheme("All");
-                  setSelectedStage("All");
-                }}
-                className="rounded-xl border border-white/[0.06] bg-slate-900/40 px-3 py-1.5 text-xs text-slate-400 hover:text-white hover:border-slate-700 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500"
-              >
-                Clear filters
-              </button>
-            )}
-          </div>
-          <span className="text-xs text-slate-500">
-            <span className="text-white font-semibold">
-              {filteredProjects.length}
-            </span>{" "}
-            of <span className="text-slate-400">{projects.length}</span>{" "}
-            projects
-          </span>
-        </div>
-
-        {/* ── Projects Grid ───────────────────────────────── */}
-        <section aria-label="Innovation projects">
-          {filteredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredProjects.map((project, i) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  index={i}
-                  onClick={() => setSelectedProject(project)}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              onNewProject={handleNewProjectClick}
-              hasFilter={hasActiveFilter}
+        <AnimatePresence>
+          {isExportOpen && (
+            <ExportCenterModal
+              project={projects[0] || ({} as InnovationProject)}
+              onClose={() => setIsExportOpen(false)}
             />
           )}
-        </section>
-      </main>
+        </AnimatePresence>
 
-      {/* ── Slide-over detail ──────────────────────────── */}
+        <motion.main
+          key="dashboard"
+          variants={pageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          style={{
+            maxWidth: 1280,
+            margin: "0 auto",
+            padding: "28px 20px 96px",
+            position: "relative",
+          }}
+          id="main-content"
+        >
+          {/* ── Page Header ─────────────────────────────── */}
+          <div style={{ marginBottom: 32 }}>
+            <motion.div
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.4, ease: EASE_OUT }}
+            >
+              <h1
+                style={{
+                  fontSize: 28,
+                  fontWeight: 900,
+                  letterSpacing: "-0.04em",
+                  color: "var(--text-primary)",
+                  lineHeight: 1,
+                  marginBottom: 8,
+                }}
+              >
+                Innovation <span className="df-gradient-text">Workspace</span>
+              </h1>
+              <p
+                style={{
+                  fontSize: 14,
+                  color: "var(--text-secondary)",
+                  fontWeight: 500,
+                }}
+              >
+                {projects.length > 0
+                  ? `${projects.length} active project${
+                      projects.length > 1 ? "s" : ""
+                    } across all innovation phases`
+                  : "Create your first project to unlock all AI-powered modules"}
+              </p>
+            </motion.div>
+          </div>
+
+          {/* ── Metric Cards ─────────────────────────────── */}
+          <section aria-label="Workspace metrics" style={{ marginBottom: 28 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: 12,
+              }}
+            >
+              <MetricCard
+                title="Innovation"
+                value={stats.avgInnovation}
+                description="Novelty index & design thinking"
+                variant="blue"
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9.813 15.904L9 21l8.982-5.097c.36-.204.64-.543.766-.948l.848-2.735a2.25 2.25 0 00-1.848-2.883l-2.61-.227a1.056 1.056 0 01-.827-.58l-1.084-2.114a2.25 2.25 0 00-4.004 0L8.14 8.766a1.056 1.056 0 01-.827.58l-2.61.227a2.25 2.25 0 00-1.848 2.883l.848 2.735c.127.405.406.744.766.948l8.982 5.097z"
+                    />
+                  </svg>
+                }
+              />
+              <MetricCard
+                title="Eng Health"
+                value={stats.avgHealth}
+                description="Code quality & test coverage"
+                variant="emerald"
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+                    />
+                  </svg>
+                }
+              />
+              <MetricCard
+                title="Progress"
+                value={stats.avgProgress}
+                description="Roadmap completion rate"
+                variant="violet"
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                    />
+                  </svg>
+                }
+              />
+              <MetricCard
+                title="Impact"
+                value={stats.avgImpact}
+                description="UN SDG alignment index"
+                variant="cyan"
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    />
+                  </svg>
+                }
+              />
+              <MetricCard
+                title="Readiness"
+                value={stats.avgReadiness}
+                description="Technology Readiness Level"
+                variant="emerald"
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.952 11.952 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m0 0A8.959 8.959 0 013 12c0-.778.099-1.533.284-2.253"
+                    />
+                  </svg>
+                }
+              />
+            </div>
+          </section>
+
+          {/* ── Executive Panel ───────────────────────────── */}
+          <section aria-label="Executive summary" style={{ marginBottom: 28 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "2fr 1fr",
+                gap: 12,
+              }}
+              className="df-hide-mobile"
+            >
+              {/* Council Status */}
+              <div className="df-card" style={{ padding: 20 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 16,
+                  }}
+                >
+                  <span
+                    className="df-section-label"
+                    style={{ color: "#93c5fd" }}
+                  >
+                    AI Council Consensus
+                  </span>
+                  <span
+                    className="df-badge df-badge-emerald"
+                    style={{ display: "flex", alignItems: "center", gap: 5 }}
+                  >
+                    <span
+                      className="df-live-dot"
+                      style={{ width: 5, height: 5 }}
+                      aria-hidden="true"
+                    />
+                    Live
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr 1fr",
+                    gap: 10,
+                  }}
+                >
+                  {[
+                    {
+                      label: "Research Readiness",
+                      value: "85%",
+                      sub: "12 verified interviews",
+                    },
+                    {
+                      label: "AI Model Readiness",
+                      value: "78%",
+                      sub: "Convergence stable",
+                    },
+                    {
+                      label: "Council Verdict",
+                      value: "Proceed",
+                      sub: "No blockers found",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      style={{
+                        background: "var(--bg-surface)",
+                        border: "1px solid var(--border)",
+                        borderRadius: 12,
+                        padding: "12px 14px",
+                      }}
+                    >
+                      <span className="df-section-label">{item.label}</span>
+                      <div
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 900,
+                          letterSpacing: "-0.03em",
+                          color: "var(--text-primary)",
+                          marginTop: 6,
+                          marginBottom: 4,
+                        }}
+                      >
+                        {item.value}
+                      </div>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          color: "var(--text-tertiary)",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {item.sub}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Activity Log */}
+              <div className="df-card" style={{ padding: 20 }}>
+                <span
+                  className="df-section-label"
+                  style={{ display: "block", marginBottom: 14 }}
+                >
+                  Recent Activity
+                </span>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 12 }}
+                >
+                  {[
+                    {
+                      action: "AI Council evaluation completed",
+                      tag: "COUNCIL",
+                      dot: "var(--blue)",
+                    },
+                    {
+                      action: "Impact reach metrics updated",
+                      tag: "IMPACT",
+                      dot: "var(--cyan)",
+                    },
+                    {
+                      action: "5 Whys discovery phase done",
+                      tag: "RESEARCH",
+                      dot: "var(--emerald)",
+                    },
+                  ].map((act, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 10,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: "50%",
+                          background: act.dot,
+                          marginTop: 5,
+                          flexShrink: 0,
+                        }}
+                        aria-hidden="true"
+                      />
+                      <div>
+                        <p
+                          style={{
+                            fontSize: 12,
+                            fontWeight: 600,
+                            color: "var(--text-primary)",
+                            lineHeight: 1.4,
+                          }}
+                        >
+                          {act.action}
+                        </p>
+                        <span
+                          className="df-badge df-badge-blue"
+                          style={{ marginTop: 4, fontSize: 9 }}
+                        >
+                          {act.tag}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </section>
+
+          {/* ── Filter Bar ────────────────────────────────── */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 10,
+              marginBottom: 20,
+              paddingTop: 20,
+              borderTop: "1px solid var(--border)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "wrap",
+              }}
+            >
+              <span className="df-section-label">Filter:</span>
+              <select
+                value={selectedTheme}
+                onChange={(e) => setSelectedTheme(e.target.value)}
+                aria-label="Filter by theme"
+                className="df-input"
+                style={{ padding: "6px 10px", fontSize: 12, cursor: "pointer" }}
+              >
+                <option value="All">All Themes</option>
+                {uniqueThemes
+                  .filter((t) => t !== "All")
+                  .map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+              </select>
+              <select
+                value={selectedStage}
+                onChange={(e) => setSelectedStage(e.target.value)}
+                aria-label="Filter by stage"
+                className="df-input"
+                style={{ padding: "6px 10px", fontSize: 12, cursor: "pointer" }}
+              >
+                <option value="All">All Stages</option>
+                <option value="Ideation">Ideation</option>
+                <option value="Prototyping">Prototyping</option>
+                <option value="Validation">Validation</option>
+                <option value="Scaling">Scaling</option>
+              </select>
+              {hasActiveFilter && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedTheme("All");
+                    setSelectedStage("All");
+                  }}
+                  className="df-btn df-btn-ghost"
+                  style={{ padding: "5px 12px", fontSize: 12 }}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <span
+              style={{
+                fontSize: 12,
+                color: "var(--text-tertiary)",
+                fontWeight: 500,
+              }}
+            >
+              <span style={{ color: "var(--text-primary)", fontWeight: 700 }}>
+                {filteredProjects.length}
+              </span>{" "}
+              / {projects.length} projects
+            </span>
+          </div>
+
+          {/* ── Projects Grid ─────────────────────────────── */}
+          <section aria-label="Innovation projects">
+            <AnimatePresence mode="wait">
+              {filteredProjects.length > 0 ? (
+                <motion.div
+                  key="grid"
+                  variants={cardContainerVariants}
+                  initial="hidden"
+                  animate="show"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(280px, 1fr))",
+                    gap: 12,
+                  }}
+                >
+                  {filteredProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      onClick={() => setSelectedProject(project)}
+                    />
+                  ))}
+                </motion.div>
+              ) : (
+                <EmptyState
+                  key="empty"
+                  onNewProject={handleNewProjectClick}
+                  hasFilter={hasActiveFilter}
+                />
+              )}
+            </AnimatePresence>
+          </section>
+        </motion.main>
+      </div>
+
+      {/* Slide-over */}
       {selectedProject && (
         <ProjectDetail
           project={selectedProject}
@@ -724,7 +1104,7 @@ export default function HomePage() {
         />
       )}
 
-      {/* ── Form modal ─────────────────────────────────── */}
+      {/* Form modal */}
       {isFormOpen && (
         <ProjectForm
           key={editingProject ? editingProject.id : "new"}
@@ -734,7 +1114,7 @@ export default function HomePage() {
         />
       )}
 
-      {/* ── Toast notifications ─────────────────────────── */}
+      {/* Toasts */}
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
