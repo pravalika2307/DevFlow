@@ -4,6 +4,8 @@ interface NavbarProps {
   searchQuery: string;
   onSearchChange: (val: string) => void;
   onNewProjectClick: () => void;
+  onDemoModeClick: () => void;
+  onExportCenterClick: () => void;
   activeModule: "dashboard" | "discovery" | "impact" | "council";
   onModuleChange: (
     module: "dashboard" | "discovery" | "impact" | "council",
@@ -14,6 +16,8 @@ export function Navbar({
   searchQuery,
   onSearchChange,
   onNewProjectClick,
+  onDemoModeClick,
+  onExportCenterClick,
   activeModule,
   onModuleChange,
 }: NavbarProps) {
@@ -127,7 +131,21 @@ export function Navbar({
         </div>
 
         {/* Right Side: Primary Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={onDemoModeClick}
+            className="rounded-xl border border-slate-800 bg-slate-900 px-3.5 py-2 text-xs font-semibold text-indigo-400 hover:text-white hover:border-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Launch Demo Mode
+          </button>
+
+          <button
+            onClick={onExportCenterClick}
+            className="rounded-xl border border-slate-800 bg-slate-900 px-3.5 py-2 text-xs font-semibold text-slate-400 hover:text-white hover:border-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Export Center
+          </button>
+
           <button
             onClick={onNewProjectClick}
             className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-600/15 hover:from-indigo-500 hover:to-violet-500 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/50"

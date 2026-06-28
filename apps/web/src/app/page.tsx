@@ -12,6 +12,7 @@ import { CoachWorkspace } from "../components/coach/CoachWorkspace";
 import { DiscoveryWorkspace } from "../components/discovery/DiscoveryWorkspace";
 import { ImpactWorkspace } from "../components/impact/ImpactWorkspace";
 import { CouncilWorkspace } from "../components/council/CouncilWorkspace";
+import { ExportCenterModal } from "../components/flow/ExportCenterModal";
 
 export default function HomePage() {
   const [projects, setProjects] = useState<InnovationProject[]>(() => {
@@ -32,6 +33,23 @@ export default function HomePage() {
   const [activeModule, setActiveModule] = useState<
     "dashboard" | "discovery" | "impact" | "council"
   >("dashboard");
+  const [isExportOpen, setIsExportOpen] = useState(false);
+
+  const handleDemoModeLaunch = () => {
+    // Reset projects to initial mock projects list
+    const demoProjects = InnovationService.getProjects();
+    setProjects(demoProjects);
+
+    // Clear dynamic session records to restore default pre-populated assessments
+    localStorage.removeItem("devflow_problem_discoveries");
+    localStorage.removeItem("devflow_impact_metrics");
+    localStorage.removeItem("devflow_council_data");
+
+    alert(
+      "Samsung Solve for Tomorrow Demo Mode loaded! Active study datasets have been successfully pre-populated across all modules.",
+    );
+    setActiveModule("dashboard");
+  };
 
   // Sync state helpers
   const handleSaveProject = (project: InnovationProject) => {
@@ -160,9 +178,18 @@ export default function HomePage() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onNewProjectClick={handleNewProjectClick}
+        onDemoModeClick={handleDemoModeLaunch}
+        onExportCenterClick={() => setIsExportOpen(true)}
         activeModule={activeModule}
         onModuleChange={setActiveModule}
       />
+
+      {isExportOpen && (
+        <ExportCenterModal
+          project={projects[0] || ({} as InnovationProject)}
+          onClose={() => setIsExportOpen(false)}
+        />
+      )}
 
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-8 pb-20">
         {/* Workspace Summary Row */}
@@ -276,6 +303,99 @@ export default function HomePage() {
                 </svg>
               }
             />
+          </div>
+        </div>
+
+        {/* Executive Dashboard Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* AI Council Consensus */}
+          <div className="lg:col-span-2 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-900 pb-2">
+              AI Council Consensus Summary
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="rounded-xl bg-slate-950 p-4 border border-slate-900/60">
+                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
+                  Research Readiness
+                </span>
+                <span className="text-2xl font-black text-white block mt-1">
+                  85%
+                </span>
+                <p className="text-[10px] text-slate-500 mt-2 leading-relaxed font-medium">
+                  Based on 12 verified user interviews.
+                </p>
+              </div>
+              <div className="rounded-xl bg-slate-950 p-4 border border-slate-900/60">
+                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
+                  AI Model Readiness
+                </span>
+                <span className="text-2xl font-black text-white block mt-1">
+                  78%
+                </span>
+                <p className="text-[10px] text-slate-500 mt-2 leading-relaxed font-medium">
+                  Consistent model convergence levels.
+                </p>
+              </div>
+              <div className="rounded-xl bg-slate-950 p-4 border border-slate-900/60">
+                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
+                  Council Advice
+                </span>
+                <span className="text-xs font-bold text-indigo-455 block mt-2.5 uppercase tracking-wide">
+                  Proceed to testing
+                </span>
+                <p className="text-[10px] text-slate-500 mt-2.5 leading-relaxed font-medium">
+                  No fatal block threats found.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Activity Log */}
+          <div className="lg:col-span-1 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-900 pb-2">
+              Recent Activity Logs
+            </h3>
+            <div className="space-y-3.5 max-h-[140px] overflow-y-auto">
+              {[
+                {
+                  time: "Just now",
+                  action: "Completed AI Council consensus evaluation",
+                  tag: "COUNCIL",
+                  color: "text-indigo-400 bg-indigo-500/10",
+                },
+                {
+                  time: "1 hour ago",
+                  action: "Updated target beneficiary location reach",
+                  tag: "IMPACT",
+                  color: "text-rose-455 bg-rose-500/10",
+                },
+                {
+                  time: "Yesterday",
+                  action: "Completed 5 Whys problem discovery phase",
+                  tag: "RESEARCH",
+                  color: "text-emerald-450 bg-emerald-500/10",
+                },
+              ].map((act, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between items-start gap-2 text-[10.5px]"
+                >
+                  <div className="flex gap-2">
+                    <span
+                      className={`rounded px-1.5 py-0.5 text-[8px] font-bold uppercase ${act.color}`}
+                    >
+                      {act.tag}
+                    </span>
+                    <span className="text-slate-300 font-medium">
+                      {act.action}
+                    </span>
+                  </div>
+                  <span className="text-slate-500 font-medium whitespace-nowrap">
+                    {act.time}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
