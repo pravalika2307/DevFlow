@@ -4,45 +4,76 @@ interface NavbarProps {
   searchQuery: string;
   onSearchChange: (val: string) => void;
   onNewProjectClick: () => void;
+  activeModule: "dashboard" | "discovery";
+  onModuleChange: (module: "dashboard" | "discovery") => void;
 }
 
 export function Navbar({
   searchQuery,
   onSearchChange,
   onNewProjectClick,
+  activeModule,
+  onModuleChange,
 }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
       <div className="flex h-16 items-center justify-between px-6">
-        {/* Left Side: Brand Logo */}
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-500/20">
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              viewBox="0 0 24 24"
+        {/* Left Side: Brand Logo & Navigation */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-500/20">
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                />
+              </svg>
+              <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 blur-sm opacity-50" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                DevFlow{" "}
+                <span className="text-[10px] uppercase tracking-widest bg-indigo-950/50 text-indigo-400 px-2 py-0.5 rounded border border-indigo-900/30">
+                  OS
+                </span>
+              </h1>
+              <p className="text-[10px] text-slate-450 font-medium">
+                AI Innovation Operating System
+              </p>
+            </div>
+          </div>
+
+          <div className="h-6 w-[1px] bg-slate-800" />
+
+          <nav className="flex gap-2">
+            <button
+              onClick={() => onModuleChange("dashboard")}
+              className={`rounded-xl px-3 py-1.5 text-xs font-semibold tracking-wide transition-all border ${
+                activeModule === "dashboard"
+                  ? "bg-slate-900 border-slate-800 text-white"
+                  : "bg-transparent border-transparent text-slate-450 hover:text-white"
+              }`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-              />
-            </svg>
-            <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 blur-sm opacity-50" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-              DevFlow{" "}
-              <span className="text-[10px] uppercase tracking-widest bg-indigo-950/50 text-indigo-400 px-2 py-0.5 rounded border border-indigo-900/30">
-                OS
-              </span>
-            </h1>
-            <p className="text-[10px] text-slate-400">
-              AI Innovation Operating System
-            </p>
-          </div>
+              Innovation Workspace
+            </button>
+            <button
+              onClick={() => onModuleChange("discovery")}
+              className={`rounded-xl px-3 py-1.5 text-xs font-semibold tracking-wide transition-all border ${
+                activeModule === "discovery"
+                  ? "bg-slate-900 border-slate-800 text-white"
+                  : "bg-transparent border-transparent text-slate-450 hover:text-white"
+              }`}
+            >
+              Problem Discovery
+            </button>
+          </nav>
         </div>
 
         {/* Center: Search Field */}

@@ -9,6 +9,7 @@ import { MetricCard } from "../components/ui/MetricCard";
 import { ProjectForm } from "../components/flow/ProjectForm";
 import { ProjectDetail } from "../components/flow/ProjectDetail";
 import { CoachWorkspace } from "../components/coach/CoachWorkspace";
+import { DiscoveryWorkspace } from "../components/discovery/DiscoveryWorkspace";
 
 export default function HomePage() {
   const [projects, setProjects] = useState<InnovationProject[]>(() => {
@@ -26,6 +27,9 @@ export default function HomePage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] =
     useState<InnovationProject | null>(null);
+  const [activeModule, setActiveModule] = useState<"dashboard" | "discovery">(
+    "dashboard",
+  );
 
   // Sync state helpers
   const handleSaveProject = (project: InnovationProject) => {
@@ -108,6 +112,15 @@ export default function HomePage() {
     Low: "bg-slate-500/10 text-slate-400 border-slate-500/20",
   };
 
+  if (activeModule === "discovery") {
+    return (
+      <DiscoveryWorkspace
+        projects={projects}
+        onBack={() => setActiveModule("dashboard")}
+      />
+    );
+  }
+
   if (activeCoachProject) {
     return (
       <CoachWorkspace
@@ -127,6 +140,8 @@ export default function HomePage() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onNewProjectClick={handleNewProjectClick}
+        activeModule={activeModule}
+        onModuleChange={setActiveModule}
       />
 
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-8 pb-20">
