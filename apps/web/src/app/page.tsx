@@ -17,6 +17,7 @@ import { CouncilWorkspace } from "../components/council/CouncilWorkspace";
 import { ExportCenterModal } from "../components/flow/ExportCenterModal";
 import { ToastContainer, ToastMessage } from "../components/ui/Toast";
 import { InnovationGalaxy } from "../components/ui/InnovationGalaxy";
+import { AIMentorPanel } from "../components/mentor/AIMentorPanel";
 
 type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
 
@@ -1260,6 +1261,9 @@ export default function HomePage() {
                 </div>
               </motion.div>
             </section>
+
+            {/* ── AI Innovation Mentor ──────────────────────── */}
+            <AIMentorPanel project={projects.length > 0 ? projects[0] : null} />
 
             {/* ── Filter Bar ────────────────────────────────── */}
             <div
