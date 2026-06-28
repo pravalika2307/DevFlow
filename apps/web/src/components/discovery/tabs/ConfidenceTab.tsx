@@ -94,13 +94,11 @@ export function ConfidenceTab({
   return (
     <div className="space-y-6">
       {/* Overview Readiness */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Readiness Circular gauge */}
-        <div className="md:col-span-1 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 flex flex-col items-center justify-center relative overflow-hidden">
-          <div className="absolute -left-12 -top-12 h-24 w-24 bg-indigo-500/5 rounded-full blur-2xl" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-6">
-            Research Readiness Score
-          </span>
+        <div className="md:col-span-1 rounded-2xl border border-border-default bg-bg-card p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-lg animate-fade-in-up">
+          <div className="absolute -left-12 -top-12 h-24 w-24 bg-blue-accent/5 rounded-full blur-2xl" />
+          <span className="df-section-label mb-6">Research Readiness</span>
 
           <div className="relative flex items-center justify-center">
             {/* SVG Ring */}
@@ -109,16 +107,20 @@ export function ConfidenceTab({
                 cx="72"
                 cy="72"
                 r="60"
-                className="stroke-slate-800"
-                strokeWidth="10"
+                stroke="rgba(255, 255, 255, 0.04)"
+                strokeWidth="8"
                 fill="transparent"
               />
               <circle
                 cx="72"
                 cy="72"
                 r="60"
-                className="stroke-indigo-500 transition-all duration-1000"
-                strokeWidth="10"
+                stroke="var(--blue)"
+                style={{
+                  transition: "stroke-dashoffset 1s ease",
+                  filter: "drop-shadow(0 0 6px var(--blue))",
+                }}
+                strokeWidth="8"
                 fill="transparent"
                 strokeDasharray={2 * Math.PI * 60}
                 strokeDashoffset={
@@ -128,33 +130,33 @@ export function ConfidenceTab({
               />
             </svg>
             <div className="absolute flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-white">
+              <span className="text-3xl font-black text-white tracking-tight">
                 {overallReadiness}%
               </span>
-              <span className="text-[9px] uppercase tracking-widest text-slate-500 mt-1">
+              <span className="text-[9px] uppercase tracking-widest text-slate-500 mt-1 font-bold">
                 Ready
               </span>
             </div>
           </div>
 
-          <p className="text-[10px] text-slate-500 mt-6 text-center leading-relaxed">
+          <p className="text-[10px] text-slate-500 mt-6 text-center leading-relaxed font-medium">
             Overall confidence weight based on the 5 qualitative validation
             dimensions.
           </p>
         </div>
 
         {/* Dynamic score editors */}
-        <div className="md:col-span-2 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 space-y-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-900 pb-2">
+        <div className="md:col-span-2 rounded-2xl border border-border-default bg-bg-card p-6 space-y-4 shadow-lg animate-fade-in-up delay-100">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-450 border-b border-border-default pb-2">
             Research Confidence Matrix
           </h4>
 
-          <div className="space-y-3">
+          <div className="space-y-4 pt-1">
             {categories.map((c) => (
               <div key={c.field} className="space-y-1.5">
                 <div className="flex justify-between text-xs font-semibold text-slate-300">
                   <span title={c.desc}>{c.label}</span>
-                  <span className="text-indigo-400 font-bold">
+                  <span className="text-blue-accent font-extrabold">
                     {scores[c.field]}%
                   </span>
                 </div>
@@ -166,7 +168,7 @@ export function ConfidenceTab({
                   onChange={(e) =>
                     handleScoreChange(c.field, Number(e.target.value))
                   }
-                  className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                  className="w-full h-1 bg-white/[0.04] rounded-lg appearance-none cursor-pointer accent-blue-accent"
                 />
               </div>
             ))}
@@ -175,12 +177,12 @@ export function ConfidenceTab({
       </div>
 
       {/* AI Recommendations */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/10 p-6 space-y-6">
+      <div className="rounded-2xl border border-border-default bg-bg-card p-6 space-y-6 shadow-lg animate-fade-in-up delay-150">
         <div>
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-450">
             Proactive AI Recommendations & Gaps Analysis
           </h4>
-          <p className="text-[10px] text-slate-500 mt-1">
+          <p className="text-[10px] text-slate-500 mt-1.5 font-semibold">
             Solve for Tomorrow AI continuously audits research timelines and
             outputs to identify weaknesses.
           </p>
@@ -190,7 +192,7 @@ export function ConfidenceTab({
           {recommendationsList.map((rec) => (
             <div
               key={rec.label}
-              className="rounded-xl border border-slate-900 bg-slate-950/40 p-4 space-y-2.5"
+              className="rounded-xl border border-border-default bg-bg-base/40 p-4 space-y-2.5 hover:border-border-accent transition-colors"
             >
               <span
                 className={`text-[10px] font-bold uppercase tracking-wider block ${
@@ -203,9 +205,9 @@ export function ConfidenceTab({
                 {rec.items.map((item, idx) => (
                   <li
                     key={idx}
-                    className="flex gap-2 text-xs text-slate-350 leading-relaxed items-start"
+                    className="flex gap-2 text-xs text-slate-350 leading-relaxed items-start font-medium"
                   >
-                    <span className="inline-block h-1 w-1 rounded-full bg-slate-700 mt-2 flex-shrink-0" />
+                    <span className="inline-block h-1 w-1 rounded-full bg-slate-700 mt-1.5 flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}

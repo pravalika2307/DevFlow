@@ -94,7 +94,7 @@ export function DefineStage({ project, onUpdate }: DefineStageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           Stage 2: Define
         </h3>
@@ -113,7 +113,7 @@ export function DefineStage({ project, onUpdate }: DefineStageProps) {
             value={problemStatement}
             onChange={(e) => setProblemStatement(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="Who has what specific problem, and why does it occur?"
           />
         </div>
@@ -126,7 +126,7 @@ export function DefineStage({ project, onUpdate }: DefineStageProps) {
             value={opportunityStatement}
             onChange={(e) => setOpportunityStatement(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="What recent technology, cost reduction, or environmental factor enables a unique solution?"
           />
         </div>
@@ -140,7 +140,7 @@ export function DefineStage({ project, onUpdate }: DefineStageProps) {
               type="text"
               value={howMightWe}
               onChange={(e) => setHowMightWe(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+              className="w-full df-input px-3 py-2.5"
               placeholder="How Might We [action] for [user] so that [impact]?"
             />
           </div>
@@ -153,7 +153,7 @@ export function DefineStage({ project, onUpdate }: DefineStageProps) {
               type="text"
               value={successMetrics}
               onChange={(e) => setSuccessMetrics(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+              className="w-full df-input px-3 py-2.5"
               placeholder="What measurable indicators prove the problem is resolved?"
             />
           </div>
@@ -161,18 +161,18 @@ export function DefineStage({ project, onUpdate }: DefineStageProps) {
       </div>
 
       {/* Action Row */}
-      <div className="flex items-center gap-3 border-t border-slate-900 pt-4">
+      <div className="flex items-center gap-3 border-t border-border-default pt-4">
         <button
           type="button"
           onClick={handleSave}
-          className="rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-750 transition-colors"
+          className="df-btn df-btn-ghost"
         >
           Save Phase Inputs
         </button>
         <button
           type="button"
           onClick={handleClarityScore}
-          className="rounded-xl bg-gradient-to-r from-indigo-650 to-violet-650 px-4 py-2 text-xs font-semibold text-white hover:from-indigo-600 hover:to-violet-600 transition-all flex items-center gap-1.5"
+          className="df-btn df-btn-primary"
         >
           <svg
             className="h-4 w-4"
@@ -193,20 +193,20 @@ export function DefineStage({ project, onUpdate }: DefineStageProps) {
 
       {/* AI Score Feedback Panel */}
       {clarityScore !== null && (
-        <div className="rounded-xl border border-indigo-950/50 bg-indigo-950/10 p-5 grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-          <div className="md:col-span-1 flex flex-col items-center justify-center border-r border-slate-800/80 pr-4">
-            <span className="text-[9px] uppercase tracking-wider text-slate-500 mb-1">
+        <div className="rounded-xl border border-violet-accent/20 bg-violet-accent/5 p-5 grid grid-cols-1 md:grid-cols-4 gap-6 items-center animate-fade-in-up">
+          <div className="md:col-span-1 flex flex-col items-center justify-center border-r border-border-default pr-4">
+            <span className="text-[9px] uppercase tracking-wider text-slate-500 mb-1 font-bold">
               Clarity Score
             </span>
-            <span className="text-3xl font-extrabold text-indigo-400">
+            <span className="text-3xl font-extrabold text-violet-accent">
               {clarityScore}/100
             </span>
           </div>
           <div className="md:col-span-3 space-y-2">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-violet-accent">
               Clarity Improvements Recommended:
             </h4>
-            <ul className="space-y-1.5 list-disc pl-4 text-xs text-slate-350 leading-relaxed">
+            <ul className="space-y-1.5 list-disc pl-4 text-xs text-slate-350 leading-relaxed font-medium">
               {aiSuggestions.map((sug, i) => (
                 <li key={i}>{sug}</li>
               ))}

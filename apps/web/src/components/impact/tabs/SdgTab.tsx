@@ -157,7 +157,7 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           UN Sustainable Development Goals (SDGs)
         </h3>
@@ -178,7 +178,7 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
             {sdgs.map((sdg) => (
               <div
                 key={sdg.sdgNumber}
-                className="rounded-xl border border-slate-900 bg-slate-900/10 p-5 flex flex-col justify-between h-full space-y-4"
+                className="rounded-xl border border-border-default bg-bg-card p-5 flex flex-col justify-between h-full space-y-4 shadow-md hover:border-border-accent transition-colors"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2">
@@ -192,7 +192,8 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
                     <button
                       type="button"
                       onClick={() => handleRemoveSdg(sdg.sdgNumber)}
-                      className="text-slate-500 hover:text-rose-455 p-1 rounded transition-colors"
+                      className="text-slate-500 hover:text-rose-accent p-1 rounded transition-colors"
+                      aria-label="Remove SDG"
                     >
                       <svg
                         className="h-3.5 w-3.5"
@@ -210,28 +211,30 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
                     </button>
                   </div>
 
-                  <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                    <strong>Reasoning:</strong> {sdg.reasoning}
+                  <p className="text-xs text-slate-350 mt-3.5 leading-relaxed font-medium">
+                    <strong className="text-slate-400 font-bold uppercase tracking-wider text-[9px] block mb-1">
+                      Reasoning:
+                    </strong>{" "}
+                    {sdg.reasoning}
                   </p>
-                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                    <strong>Outcomes:</strong> {sdg.outcomes}
+                  <p className="text-xs text-slate-400 mt-2.5 leading-relaxed font-medium">
+                    <strong className="text-slate-450 font-bold uppercase tracking-wider text-[9px] block mb-1">
+                      Outcomes:
+                    </strong>{" "}
+                    {sdg.outcomes}
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-900/60 text-[10px] font-semibold">
+                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border-default text-[10px] font-bold uppercase tracking-wider">
                   <div>
-                    <span className="text-slate-550 block uppercase tracking-wider">
-                      Contribution
-                    </span>
-                    <span className="text-indigo-400 block mt-0.5">
+                    <span className="text-slate-500 block">Contribution</span>
+                    <span className="text-blue-accent block mt-0.5 font-extrabold text-xs">
                       {sdg.contributionLevel}%
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-550 block uppercase tracking-wider">
-                      Confidence
-                    </span>
-                    <span className="text-emerald-450 block mt-0.5">
+                    <span className="text-slate-500 block">Confidence</span>
+                    <span className="text-emerald-accent block mt-0.5 font-extrabold text-xs">
                       {sdg.confidence}%
                     </span>
                   </div>
@@ -247,8 +250,8 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
       </div>
 
       {/* Inputs Form */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/10 p-5 space-y-4">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-900 pb-2">
+      <div className="rounded-2xl border border-border-default bg-bg-surface/50 p-5 space-y-4 shadow-lg animate-fade-in-up">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-blue-accent border-b border-border-default pb-2">
           Map New SDG Alignment
         </h4>
 
@@ -264,7 +267,7 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
               <select
                 value={sdgNum}
                 onChange={(e) => setSdgNum(Number(e.target.value))}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full df-input py-2.5 px-3 cursor-pointer text-xs font-semibold"
               >
                 {SDG_LIST.map((t) => (
                   <option key={t.num} value={t.num}>
@@ -282,13 +285,13 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
                 value={reasoning}
                 onChange={(e) => setReasoning(e.target.value)}
                 rows={3}
-                className={`w-full rounded-xl border ${
-                  errors.reasoning ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2 px-3 text-xs text-white focus:outline-none focus:border-indigo-500`}
+                className={`w-full df-input p-3 ${
+                  errors.reasoning ? "border-rose-accent" : ""
+                }`}
                 placeholder="Why does this technology assist this SDG?"
               />
               {errors.reasoning && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.reasoning}
                 </p>
               )}
@@ -302,13 +305,13 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
                 type="text"
                 value={outcomes}
                 onChange={(e) => setOutcomes(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.outcomes ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500`}
+                className={`w-full df-input px-3 py-2.5 ${
+                  errors.outcomes ? "border-rose-accent" : ""
+                }`}
                 placeholder="Measurable results of alignment..."
               />
               {errors.outcomes && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.outcomes}
                 </p>
               )}
@@ -316,14 +319,14 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
           </div>
 
           {/* Sliders */}
-          <div className="space-y-4 bg-slate-950 p-4 rounded-xl border border-slate-900">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
-              Metrics Weights
-            </span>
+          <div className="space-y-4 bg-bg-card p-4 rounded-xl border border-border-default">
+            <span className="df-section-label block mb-2">Metrics Weights</span>
 
             <div>
               <div className="flex justify-between text-[10px] mb-1">
-                <span className="text-slate-400">Contribution Level</span>
+                <span className="text-slate-400 font-medium">
+                  Contribution Level
+                </span>
                 <span className="text-white font-semibold">
                   {contributionLevel}%
                 </span>
@@ -334,13 +337,13 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
                 max="100"
                 value={contributionLevel}
                 onChange={(e) => setContributionLevel(Number(e.target.value))}
-                className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                className="w-full h-1 bg-white/[0.04] rounded-lg appearance-none cursor-pointer accent-blue-accent"
               />
             </div>
 
             <div>
               <div className="flex justify-between text-[10px] mb-1">
-                <span className="text-slate-400">Confidence</span>
+                <span className="text-slate-400 font-medium">Confidence</span>
                 <span className="text-white font-semibold">{confidence}%</span>
               </div>
               <input
@@ -349,14 +352,14 @@ export function SdgTab({ sdgs, onUpdate }: SdgTabProps) {
                 max="100"
                 value={confidence}
                 onChange={(e) => setConfidence(Number(e.target.value))}
-                className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                className="w-full h-1 bg-white/[0.04] rounded-lg appearance-none cursor-pointer accent-blue-accent"
               />
             </div>
 
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full rounded-xl bg-indigo-650 py-2.5 text-xs font-semibold text-white hover:bg-indigo-500 shadow-md shadow-indigo-600/10 transition-all"
+                className="df-btn df-btn-primary w-full py-2.5"
               >
                 Map SDG Goal
               </button>

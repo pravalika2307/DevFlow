@@ -66,21 +66,22 @@ export function InsightTab({ explorer, records }: InsightTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           AI Insight Generator
         </h3>
         <p className="text-xs text-slate-400 mt-1">
           Review generated patterns, core needs, and unmet user requirements
-          extracted from your timeline log logs.
+          extracted from your timeline logs.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {clusters.map((c) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {clusters.map((c, i) => (
           <div
             key={c.title}
-            className="rounded-2xl border border-slate-900 bg-slate-900/10 p-6 flex flex-col justify-between h-full"
+            className={`rounded-2xl border border-border-default bg-bg-card p-6 flex flex-col justify-between h-full shadow-lg hover:border-border-accent transition-colors animate-fade-in-up`}
+            style={{ animationDelay: `${i * 50}ms` }}
           >
             <div>
               <span
@@ -90,15 +91,15 @@ export function InsightTab({ explorer, records }: InsightTabProps) {
               >
                 {c.title}
               </span>
-              <p className="text-[10px] text-slate-500 mt-1 mb-4 leading-relaxed">
+              <p className="text-[10px] text-slate-500 mt-1 mb-4 leading-relaxed font-semibold">
                 {c.desc}
               </p>
 
-              <ul className="space-y-2 list-none">
+              <ul className="space-y-2.5 list-none">
                 {c.items.map((item, idx) => (
                   <li
                     key={idx}
-                    className="flex gap-2 text-xs text-slate-300 leading-relaxed items-start"
+                    className="flex gap-2.5 text-xs text-slate-300 leading-relaxed items-start font-medium"
                   >
                     <span className="inline-block h-1.5 w-1.5 rounded-full bg-slate-700 mt-1.5 flex-shrink-0" />
                     <span>{item}</span>
@@ -108,7 +109,7 @@ export function InsightTab({ explorer, records }: InsightTabProps) {
             </div>
 
             {records.length > 0 && (
-              <div className="mt-6 pt-4 border-t border-slate-900 text-[9px] text-slate-500 font-semibold uppercase tracking-wider text-right">
+              <div className="mt-6 pt-4 border-t border-border-default text-[9px] text-slate-500 font-bold uppercase tracking-wider text-right">
                 Based on {records.length} timeline observations
               </div>
             )}

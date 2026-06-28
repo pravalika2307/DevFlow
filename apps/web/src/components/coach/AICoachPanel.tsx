@@ -84,13 +84,133 @@ export function AICoachPanel({ project, activeStage }: AICoachPanelProps) {
   ];
 
   return (
-    <aside className="w-80 border-l border-slate-900 bg-slate-950/60 backdrop-blur-md flex flex-col h-full">
+    <aside className="w-80 border-l border-border-default bg-bg-surface/85 backdrop-blur-xl flex flex-col h-full">
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-slate-900 bg-slate-900/10 flex items-center gap-2">
-        <div className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
-        <h3 className="text-xs font-bold uppercase tracking-wider text-white">
-          AI Design Thinking Coach
-        </h3>
+      <div className="p-4 border-b border-border-default bg-bg-surface flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span
+            className="df-live-dot"
+            aria-hidden="true"
+            style={{ width: 6, height: 6 }}
+          />
+          <h3 className="text-xs font-bold uppercase tracking-widest text-white">
+            AI Coach OS
+          </h3>
+        </div>
+        <span className="text-[9px] uppercase tracking-wider bg-violet-accent/10 border border-violet-accent/20 px-2 py-0.5 rounded text-violet-accent font-semibold">
+          v1.1
+        </span>
+      </div>
+
+      {/* Futuristic Visual Centerpiece: Animated Neural Graphic */}
+      <div className="p-4 border-b border-border-default bg-bg-base/40 flex flex-col gap-3">
+        <div className="rounded-xl border border-border-default bg-bg-base/60 p-2 relative overflow-hidden flex items-center justify-center">
+          <svg
+            width="100%"
+            height="76"
+            viewBox="0 0 200 76"
+            className="opacity-80"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="net-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="var(--blue)" stopOpacity="0.8" />
+                <stop
+                  offset="100%"
+                  stopColor="var(--violet)"
+                  stopOpacity="0.8"
+                />
+              </linearGradient>
+            </defs>
+            <line
+              x1="20"
+              y1="38"
+              x2="60"
+              y2="18"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="1"
+            />
+            <line
+              x1="20"
+              y1="38"
+              x2="60"
+              y2="58"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="1"
+            />
+            <line
+              x1="60"
+              y1="18"
+              x2="120"
+              y2="14"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="1"
+            />
+            <line
+              x1="60"
+              y1="58"
+              x2="120"
+              y2="62"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="1"
+            />
+            <line
+              x1="120"
+              y1="14"
+              x2="180"
+              y2="38"
+              stroke="url(#net-grad)"
+              strokeWidth="1.5"
+              strokeDasharray="3 2"
+            />
+            <line
+              x1="120"
+              y1="62"
+              x2="180"
+              y2="38"
+              stroke="url(#net-grad)"
+              strokeWidth="1.5"
+              strokeDasharray="3 2"
+            />
+            <circle
+              cx="180"
+              cy="38"
+              r="8"
+              fill="var(--violet)"
+              opacity="0.2"
+              className="animate-pulse"
+            />
+            <circle cx="20" cy="38" r="4" fill="var(--blue)" />
+            <circle cx="60" cy="18" r="3" fill="#fff" opacity="0.6" />
+            <circle cx="60" cy="58" r="3" fill="#fff" opacity="0.6" />
+            <circle cx="120" cy="14" r="3" fill="#fff" opacity="0.6" />
+            <circle cx="120" cy="62" r="3" fill="#fff" opacity="0.6" />
+            <circle cx="180" cy="38" r="4" fill="var(--violet)" />
+          </svg>
+        </div>
+
+        {/* Confidence Meter */}
+        <div className="p-3 bg-bg-card border border-border-default rounded-xl space-y-1.5">
+          <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            <span>Confidence Index</span>
+            <span className="text-emerald-accent">96%</span>
+          </div>
+          <div className="h-1 w-full bg-white/[0.04] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-blue-accent to-emerald-accent rounded-full"
+              style={{ width: "96%" }}
+            />
+          </div>
+        </div>
+
+        {/* Status indicator */}
+        <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider text-slate-500 px-3 py-1.5 border border-border-default bg-bg-card/40 rounded-lg">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-accent opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-accent"></span>
+          </span>
+          <span>Cognitive Audit Status: Ready</span>
+        </div>
       </div>
 
       {/* Chat Messages */}
@@ -98,20 +218,20 @@ export function AICoachPanel({ project, activeStage }: AICoachPanelProps) {
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`flex flex-col max-w-[90%] ${
+            className={`flex flex-col max-w-[85%] ${
               msg.sender === "user"
                 ? "ml-auto items-end"
                 : "mr-auto items-start"
             }`}
           >
-            <span className="text-[9px] uppercase tracking-wider text-slate-500 mb-1">
-              {msg.sender === "coach" ? "AI Innovation Coach" : "You"}
+            <span className="text-[9px] uppercase tracking-widest text-slate-500 mb-1 font-bold">
+              {msg.sender === "coach" ? "Coach" : "You"}
             </span>
             <div
-              className={`rounded-xl p-3 text-xs leading-relaxed ${
+              className={`rounded-xl p-3 text-xs leading-relaxed border ${
                 msg.sender === "user"
-                  ? "bg-indigo-600 text-white rounded-tr-none"
-                  : "bg-slate-900 border border-slate-850 text-slate-300 rounded-tl-none"
+                  ? "bg-blue-accent/15 border-blue-accent/30 text-blue-accent rounded-tr-none"
+                  : "bg-bg-card border-border-default text-slate-300 rounded-tl-none"
               }`}
             >
               {msg.text}
@@ -121,17 +241,17 @@ export function AICoachPanel({ project, activeStage }: AICoachPanelProps) {
       </div>
 
       {/* Quick Coach Prompts */}
-      <div className="p-4 border-t border-slate-900 bg-slate-900/20 space-y-2">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 block mb-1">
-          Ask Coach (Samsung Solve for Tomorrow):
+      <div className="p-4 border-t border-border-default bg-bg-surface/50 space-y-2">
+        <span className="df-section-label block mb-1">
+          Innovation Audit Prompts
         </span>
-        <div className="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto">
+        <div className="grid grid-cols-1 gap-1.5 max-h-36 overflow-y-auto">
           {prompts.map((prompt) => (
             <button
               key={prompt}
               type="button"
               onClick={() => handlePromptClick(prompt)}
-              className="text-left w-full rounded-lg border border-slate-900 bg-slate-950 p-2 text-[10px] text-slate-400 hover:border-indigo-500/50 hover:bg-slate-900 hover:text-white transition-all truncate"
+              className="text-left w-full rounded-lg border border-border-default bg-bg-card p-2 text-[10px] text-slate-400 hover:border-blue-accent hover:bg-bg-surface hover:text-white transition-all truncate font-medium"
               title={prompt}
             >
               {prompt}

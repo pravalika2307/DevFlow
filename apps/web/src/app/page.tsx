@@ -14,7 +14,6 @@ import { ImpactWorkspace } from "../components/impact/ImpactWorkspace";
 import { CouncilWorkspace } from "../components/council/CouncilWorkspace";
 import { ExportCenterModal } from "../components/flow/ExportCenterModal";
 import { ToastContainer, ToastMessage } from "../components/ui/Toast";
-import { BackgroundGrid } from "../components/ui/BackgroundGrid";
 
 type Module = "dashboard" | "discovery" | "impact" | "council";
 
@@ -607,9 +606,6 @@ export default function HomePage() {
         position: "relative",
       }}
     >
-      {/* Alive background */}
-      <BackgroundGrid />
-
       {/* All content above background */}
       <div style={{ position: "relative", zIndex: 1 }}>
         <Navbar

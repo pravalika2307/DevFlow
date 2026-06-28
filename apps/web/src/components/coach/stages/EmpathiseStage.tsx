@@ -74,7 +74,7 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           Stage 1: Empathise
         </h3>
@@ -93,7 +93,7 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
             value={targetUser}
             onChange={(e) => setTargetUser(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="Who are you designing this solution for?"
           />
         </div>
@@ -106,7 +106,7 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
             value={userPersona}
             onChange={(e) => setUserPersona(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="Introduce a representative user profile (e.g. Ramesh, age 12...)"
           />
         </div>
@@ -119,7 +119,7 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
             value={goals}
             onChange={(e) => setGoals(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="What positive outcomes does the user wish to achieve?"
           />
         </div>
@@ -132,7 +132,7 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
             value={pains}
             onChange={(e) => setPains(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="What current barriers cause frustration or cost?"
           />
         </div>
@@ -145,7 +145,7 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
             value={behaviours}
             onChange={(e) => setBehaviours(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="What daily habits and device sharing restrictions exist?"
           />
         </div>
@@ -158,25 +158,25 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
             value={needs}
             onChange={(e) => setNeeds(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full df-input p-3"
             placeholder="What is the key functional requirement needed to support them?"
           />
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3 border-t border-slate-900 pt-4">
+      <div className="flex items-center gap-3 border-t border-border-default pt-4">
         <button
           type="button"
           onClick={handleSave}
-          className="rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-750 transition-colors"
+          className="df-btn df-btn-ghost"
         >
           Save Phase Inputs
         </button>
         <button
           type="button"
           onClick={handleAIReview}
-          className="rounded-xl bg-gradient-to-r from-indigo-650 to-violet-650 px-4 py-2 text-xs font-semibold text-white hover:from-indigo-600 hover:to-violet-600 transition-all flex items-center gap-1.5"
+          className="df-btn df-btn-primary"
         >
           <svg
             className="h-4 w-4 animate-pulse"
@@ -197,11 +197,11 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
 
       {/* AI Suggestion Panel */}
       {isReviewed && (
-        <div className="rounded-xl border border-indigo-950/50 bg-indigo-950/10 p-5 space-y-2.5">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+        <div className="rounded-xl border border-violet-accent/20 bg-violet-accent/5 p-5 space-y-2.5 animate-fade-in-up">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-violet-accent">
             Coach Empathy Review Suggestions:
           </h4>
-          <ul className="space-y-1.5 list-disc pl-4 text-xs text-slate-300 leading-relaxed">
+          <ul className="space-y-1.5 list-disc pl-4 text-xs text-slate-300 leading-relaxed font-medium">
             {aiSuggestions.map((sug, i) => (
               <li key={i}>{sug}</li>
             ))}

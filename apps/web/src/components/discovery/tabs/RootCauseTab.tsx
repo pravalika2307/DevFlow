@@ -69,7 +69,7 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
     <div className="space-y-8">
       {/* 5 Whys Analysis */}
       <div className="space-y-4">
-        <div className="border-b border-slate-900 pb-3">
+        <div className="border-b border-border-default pb-3">
           <h3 className="text-base font-bold text-white tracking-tight">
             5 Whys Analysis
           </h3>
@@ -83,21 +83,22 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
           {fiveWhys.map((node, idx) => (
             <div
               key={node.whyNumber}
-              className="rounded-xl border border-slate-900 bg-slate-900/10 p-4 space-y-3 relative overflow-hidden"
+              className="rounded-xl border border-border-default bg-bg-card p-5 space-y-3 relative overflow-hidden shadow-md animate-fade-in-up"
+              style={{ animationDelay: `${idx * 40}ms` }}
             >
-              <div className="absolute top-0 left-0 bottom-0 w-1 bg-indigo-500" />
+              <div className="absolute top-0 left-0 bottom-0 w-1 bg-blue-accent" />
               <div className="flex items-center gap-2 pl-2">
-                <span className="h-5 w-5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-[10px] font-bold flex items-center justify-center">
+                <span className="df-badge df-badge-blue">
                   #{node.whyNumber}
                 </span>
-                <span className="text-xs font-bold text-white">
+                <span className="text-xs font-bold text-white tracking-tight">
                   Why Step {node.whyNumber}
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-2">
                 <div>
-                  <label className="block text-[9px] font-semibold text-slate-500 uppercase mb-1">
+                  <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                     Question
                   </label>
                   <input
@@ -106,12 +107,12 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                     onChange={(e) =>
                       handleWhyChange(idx, "question", e.target.value)
                     }
-                    className="w-full rounded-lg border border-slate-800 bg-slate-950/80 py-1.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full df-input px-3 py-2"
                     placeholder="Ask why..."
                   />
                 </div>
                 <div>
-                  <label className="block text-[9px] font-semibold text-slate-500 uppercase mb-1">
+                  <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                     Answer
                   </label>
                   <input
@@ -120,7 +121,7 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                     onChange={(e) =>
                       handleWhyChange(idx, "answer", e.target.value)
                     }
-                    className="w-full rounded-lg border border-slate-800 bg-slate-950/80 py-1.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full df-input px-3 py-2"
                     placeholder="Provide answer..."
                   />
                 </div>
@@ -132,18 +133,18 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
 
       {/* Fishbone Ishikawa Diagram */}
       <div className="space-y-4">
-        <div className="border-b border-slate-900 pb-3">
+        <div className="border-b border-border-default pb-3">
           <h3 className="text-base font-bold text-white tracking-tight">
             Fishbone (Ishikawa) Diagram
           </h3>
           <p className="text-xs text-slate-400 mt-1">
             Group causes of problem failures under five structured categories.
-            Hover or click to explore causes.
+            Click to explore causes.
           </p>
         </div>
 
         {/* Visual Skeleton Row */}
-        <div className="relative border border-slate-900 rounded-2xl bg-slate-900/10 p-6 overflow-x-auto min-w-[600px] select-none h-64 flex flex-col justify-between">
+        <div className="relative border border-border-default rounded-2xl bg-bg-card p-6 overflow-x-auto min-w-[600px] select-none h-64 flex flex-col justify-between shadow-lg">
           <div className="absolute inset-0 -z-10 bg-grid-slate-900/50" />
 
           {/* Top Ribs */}
@@ -155,25 +156,21 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                 onClick={() => setSelectedCategory(item.category)}
                 className={`rounded-xl border p-3 flex flex-col items-center justify-center transition-all h-full ${
                   selectedCategory === item.category
-                    ? "bg-indigo-950/20 border-indigo-500"
-                    : "bg-slate-950 border-slate-850 hover:bg-slate-900"
+                    ? "bg-blue-accent/10 border-blue-accent text-blue-accent"
+                    : "bg-bg-base border-border-default text-slate-400 hover:bg-white/[0.02] hover:text-white"
                 }`}
               >
-                <span className="text-xs font-bold text-white">
-                  {item.category}
-                </span>
-                <span className="text-[10px] text-slate-500 mt-1">
+                <span className="text-xs font-bold">{item.category}</span>
+                <span className="text-[10px] text-slate-500 mt-1.5 font-bold uppercase tracking-wider">
                   {item.causes.length} causes
                 </span>
-                {/* Diagonal Connector Line */}
-                <div className="absolute bottom-0 h-10 w-[2px] bg-slate-800 transform rotate-12 origin-top" />
               </button>
             ))}
           </div>
 
           {/* Central Spine Line */}
-          <div className="relative h-2 w-full bg-slate-800 rounded-full my-3 flex items-center justify-end pr-2">
-            <div className="absolute right-0 h-4 w-4 bg-slate-700 transform rotate-45 -mr-1" />
+          <div className="relative h-2.5 w-full bg-border-accent rounded-full my-3 flex items-center justify-end pr-2">
+            <div className="absolute right-0 h-4 w-4 bg-border-strong transform rotate-45 -mr-1" />
             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mr-6">
               Problem Effect
             </span>
@@ -189,14 +186,12 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                 onClick={() => setSelectedCategory(item.category)}
                 className={`rounded-xl border p-3 flex flex-col items-center justify-center transition-all h-full ${
                   selectedCategory === item.category
-                    ? "bg-indigo-950/20 border-indigo-500"
-                    : "bg-slate-950 border-slate-850 hover:bg-slate-900"
+                    ? "bg-blue-accent/10 border-blue-accent text-blue-accent"
+                    : "bg-bg-base border-border-default text-slate-400 hover:bg-white/[0.02] hover:text-white"
                 }`}
               >
-                <span className="text-xs font-bold text-white">
-                  {item.category}
-                </span>
-                <span className="text-[10px] text-slate-500 mt-1">
+                <span className="text-xs font-bold">{item.category}</span>
+                <span className="text-[10px] text-slate-500 mt-1.5 font-bold uppercase tracking-wider">
                   {item.causes.length} causes
                 </span>
               </button>
@@ -206,15 +201,15 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
 
         {/* Selected Category Editor */}
         {selectedCategory && (
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-900 pb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+          <div className="rounded-2xl border border-border-default bg-bg-surface/50 p-5 space-y-4 shadow-lg animate-fade-in-up">
+            <div className="flex items-center justify-between border-b border-border-default pb-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-accent">
                 Explore causes: {selectedCategory}
               </h4>
               <button
                 type="button"
                 onClick={() => setSelectedCategory(null)}
-                className="text-[10px] text-slate-500 hover:text-white"
+                className="text-[10px] text-slate-500 hover:text-white font-bold uppercase tracking-wider"
               >
                 Close Editor
               </button>
@@ -229,7 +224,7 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                   ?.causes.map((cause, idx) => (
                     <span
                       key={idx}
-                      className="rounded-lg border border-slate-850 bg-slate-900 px-3 py-1.5 text-xs text-slate-300 flex items-center gap-2"
+                      className="rounded-lg border border-border-default bg-bg-card px-3 py-1.5 text-xs text-slate-350 flex items-center gap-2 font-medium"
                     >
                       {cause}
                       <button
@@ -240,7 +235,7 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                             idx,
                           )
                         }
-                        className="text-slate-500 hover:text-rose-455 transition-colors"
+                        className="text-slate-500 hover:text-rose-accent transition-colors font-bold text-sm"
                       >
                         &times;
                       </button>
@@ -259,7 +254,7 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                 type="text"
                 value={newCause}
                 onChange={(e) => setNewCause(e.target.value)}
-                className="flex-1 rounded-xl border border-slate-850 bg-slate-950 py-2 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="flex-1 df-input px-3 py-2.5"
                 placeholder={`Submit a new cause for ${selectedCategory}...`}
               />
               <button
@@ -269,7 +264,7 @@ export function RootCauseTab({ data, onUpdate }: RootCauseTabProps) {
                     selectedCategory as FishboneCategory["category"],
                   )
                 }
-                className="rounded-xl bg-indigo-650 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-600 transition-all"
+                className="df-btn df-btn-primary px-4 py-2.5"
               >
                 Add Cause
               </button>

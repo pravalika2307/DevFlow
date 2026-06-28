@@ -45,50 +45,50 @@ export function DashboardTab({ data, onUpdate }: DashboardTabProps) {
     {
       field: "innovationReadiness" as const,
       label: "Innovation Readiness",
-      color: "bg-indigo-500",
-      text: "text-indigo-400",
+      color: "from-blue-accent to-violet-accent",
+      text: "text-blue-accent",
     },
     {
       field: "socialImpact" as const,
       label: "Social Impact Scale",
-      color: "bg-emerald-500",
-      text: "text-emerald-400",
+      color: "from-emerald-accent to-cyan-accent",
+      text: "text-emerald-accent",
     },
     {
       field: "technicalFeasibility" as const,
       label: "Technical Feasibility",
-      color: "bg-blue-500",
-      text: "text-blue-400",
+      color: "from-blue-accent to-cyan-accent",
+      text: "text-cyan-accent",
     },
     {
       field: "scalability" as const,
       label: "Scalability Index",
-      color: "bg-purple-500",
-      text: "text-purple-400",
+      color: "from-violet-accent to-pink-500",
+      text: "text-violet-accent",
     },
     {
       field: "sustainability" as const,
       label: "Sustainability Score",
-      color: "bg-teal-500",
-      text: "text-teal-400",
+      color: "from-emerald-accent to-teal-500",
+      text: "text-emerald-accent",
     },
     {
       field: "accessibility" as const,
       label: "Accessibility rating",
-      color: "bg-pink-500",
-      text: "text-pink-400",
+      color: "from-pink-500 to-rose-accent",
+      text: "text-rose-accent",
     },
     {
       field: "aiReadiness" as const,
       label: "AI & Model Readiness",
-      color: "bg-cyan-500",
-      text: "text-cyan-400",
+      color: "from-blue-accent to-emerald-accent",
+      text: "text-blue-accent",
     },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           Impact Dashboard
         </h3>
@@ -98,13 +98,11 @@ export function DashboardTab({ data, onUpdate }: DashboardTabProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Radial gauge for overall score */}
-        <div className="md:col-span-1 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 flex flex-col items-center justify-center relative overflow-hidden">
-          <div className="absolute -left-12 -top-12 h-24 w-24 bg-indigo-500/5 rounded-full blur-2xl" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-6">
-            Overall Impact Score
-          </span>
+        <div className="md:col-span-1 rounded-2xl border border-border-default bg-bg-card p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-lg animate-fade-in-up">
+          <div className="absolute -left-12 -top-12 h-24 w-24 bg-blue-accent/5 rounded-full blur-2xl" />
+          <span className="df-section-label mb-6">Overall Impact Score</span>
 
           <div className="relative flex items-center justify-center">
             <svg className="w-36 h-36 transform -rotate-90">
@@ -112,16 +110,20 @@ export function DashboardTab({ data, onUpdate }: DashboardTabProps) {
                 cx="72"
                 cy="72"
                 r="60"
-                className="stroke-slate-800"
-                strokeWidth="10"
+                stroke="rgba(255, 255, 255, 0.04)"
+                strokeWidth="8"
                 fill="transparent"
               />
               <circle
                 cx="72"
                 cy="72"
                 r="60"
-                className="stroke-indigo-500 transition-all duration-1000"
-                strokeWidth="10"
+                stroke="var(--blue)"
+                style={{
+                  transition: "stroke-dashoffset 1s ease",
+                  filter: "drop-shadow(0 0 6px var(--blue))",
+                }}
+                strokeWidth="8"
                 fill="transparent"
                 strokeDasharray={2 * Math.PI * 60}
                 strokeDashoffset={
@@ -131,32 +133,36 @@ export function DashboardTab({ data, onUpdate }: DashboardTabProps) {
               />
             </svg>
             <div className="absolute flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-white">
+              <span className="text-3xl font-black text-white tracking-tight">
                 {data.overallImpactScore}%
               </span>
-              <span className="text-[9px] uppercase tracking-widest text-slate-505 mt-1">
+              <span className="text-[9px] uppercase tracking-widest text-slate-500 mt-1 font-bold">
                 Impact
               </span>
             </div>
           </div>
 
-          <p className="text-[10px] text-slate-500 mt-6 text-center leading-relaxed">
+          <p className="text-[10px] text-slate-500 mt-6 text-center leading-relaxed font-medium">
             Calculated average across social, scaling, and feasibility
             dimensions.
           </p>
         </div>
 
         {/* Sliders and risk indicator */}
-        <div className="md:col-span-2 rounded-2xl border border-slate-900 bg-slate-900/10 p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-900 pb-2">
+        <div className="md:col-span-2 rounded-2xl border border-border-default bg-bg-card p-6 space-y-4 shadow-lg animate-fade-in-up delay-100">
+          <div className="flex items-center justify-between border-b border-border-default pb-2">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Dimension Scoring
             </h4>
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-500 font-medium">Risk Level:</span>
+              <span className="text-slate-500 font-bold uppercase tracking-wider">
+                Risk Level:
+              </span>
               <span
-                className={`font-bold ${
-                  data.riskLevel > 50 ? "text-rose-400" : "text-emerald-400"
+                className={`font-black ${
+                  data.riskLevel > 50
+                    ? "text-rose-accent"
+                    : "text-emerald-accent"
                 }`}
               >
                 {data.riskLevel}%
@@ -164,7 +170,7 @@ export function DashboardTab({ data, onUpdate }: DashboardTabProps) {
             </div>
           </div>
 
-          <div className="space-y-3.5">
+          <div className="space-y-4 pt-1">
             {metrics.map((m) => (
               <div key={m.field} className="space-y-1">
                 <div className="flex justify-between text-xs font-semibold text-slate-350">
@@ -182,17 +188,17 @@ export function DashboardTab({ data, onUpdate }: DashboardTabProps) {
                     onChange={(e) =>
                       handleScoreChange(m.field, Number(e.target.value))
                     }
-                    className="flex-1 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                    className="flex-1 h-1 bg-white/[0.04] rounded-lg appearance-none cursor-pointer accent-blue-accent"
                   />
                 </div>
               </div>
             ))}
 
             {/* Risk Slider */}
-            <div className="space-y-1 pt-1.5 border-t border-slate-900">
-              <div className="flex justify-between text-xs font-semibold text-slate-350">
+            <div className="space-y-1 pt-2 border-t border-border-default">
+              <div className="flex justify-between text-xs font-semibold text-slate-355">
                 <span>Aggregated Risk Level</span>
-                <span className="text-rose-455 font-bold">
+                <span className="text-rose-accent font-bold">
                   {data.riskLevel}%
                 </span>
               </div>
@@ -204,7 +210,7 @@ export function DashboardTab({ data, onUpdate }: DashboardTabProps) {
                 onChange={(e) =>
                   handleScoreChange("riskLevel", Number(e.target.value))
                 }
-                className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500"
+                className="w-full h-1 bg-white/[0.04] rounded-lg appearance-none cursor-pointer accent-rose-accent"
               />
             </div>
           </div>

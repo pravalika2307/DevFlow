@@ -54,31 +54,31 @@ export function ExportCenterModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-base/80 backdrop-blur-md p-4">
       <div
-        className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 space-y-6 relative overflow-hidden shadow-2xl"
+        className="w-full max-w-md rounded-2xl border border-border-default bg-bg-surface p-6 space-y-6 relative overflow-hidden shadow-2xl shadow-glow-blue/10 animate-fade-in-scale"
         role="dialog"
         aria-modal="true"
         aria-labelledby="export-title"
       >
-        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div className="flex justify-between items-center border-b border-border-default pb-3">
           <h3
             id="export-title"
-            className="text-sm font-bold text-white uppercase tracking-wider"
+            className="text-xs font-bold text-white uppercase tracking-widest"
           >
             Solve for Tomorrow Export Center
           </h3>
           <button
             onClick={onClose}
             aria-label="Close export dialog"
-            className="text-slate-500 hover:text-white transition-colors text-lg focus:ring-2 focus:ring-indigo-500 outline-none rounded-lg p-0.5"
+            className="text-slate-500 hover:text-white transition-colors text-lg focus:ring-2 focus:ring-blue-accent outline-none rounded-lg p-0.5"
           >
             &times;
           </button>
         </div>
 
         <div className="space-y-4">
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-400 leading-relaxed font-semibold">
             Select the report classification you want to compile. The Export
             Center packs all metrics, checklists, and advisor summaries.
           </p>
@@ -110,8 +110,8 @@ export function ExportCenterModal({
                 key={opt.id}
                 className={`flex gap-3 items-start p-3 rounded-xl border cursor-pointer transition-all ${
                   exportType === opt.id
-                    ? "bg-indigo-950/20 border-indigo-500 text-white"
-                    : "bg-slate-950 border-slate-850 hover:bg-slate-900/60 text-slate-400"
+                    ? "bg-blue-accent/10 border-blue-accent text-white"
+                    : "bg-bg-card border-border-default hover:bg-white/[0.02] text-slate-450"
                 }`}
               >
                 <input
@@ -119,13 +119,11 @@ export function ExportCenterModal({
                   name="exportType"
                   checked={exportType === opt.id}
                   onChange={() => setExportType(opt.id)}
-                  className="mt-1 accent-indigo-500 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="mt-1 accent-blue-accent focus:ring-2 focus:ring-blue-accent outline-none"
                 />
                 <div>
-                  <span className="text-xs font-semibold block">
-                    {opt.title}
-                  </span>
-                  <span className="text-[10px] text-slate-500 block mt-0.5 leading-relaxed">
+                  <span className="text-xs font-bold block">{opt.title}</span>
+                  <span className="text-[10px] text-slate-500 block mt-0.5 leading-relaxed font-semibold">
                     {opt.desc}
                   </span>
                 </div>
@@ -134,23 +132,25 @@ export function ExportCenterModal({
           </div>
 
           {successMsg && (
-            <p className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-center">
+            <p className="text-xs font-semibold text-emerald-accent bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-center">
               {successMsg}
             </p>
           )}
         </div>
 
-        <div className="flex gap-3 justify-end pt-3 border-t border-slate-800">
+        <div className="flex gap-3 justify-end pt-3 border-t border-border-default">
           <button
             onClick={onClose}
-            className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white hover:border-slate-700 transition-all focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="df-btn df-btn-ghost"
+            style={{ padding: "8px 16px" }}
           >
             Cancel
           </button>
           <button
             onClick={handleExport}
             disabled={isExporting}
-            className="rounded-xl bg-indigo-650 px-5 py-2 text-xs font-semibold text-white hover:bg-indigo-600 shadow-md shadow-indigo-600/10 transition-all flex items-center gap-1.5 focus:ring-2 focus:ring-indigo-500 outline-none disabled:opacity-50"
+            className="df-btn df-btn-primary"
+            style={{ padding: "8px 18px" }}
           >
             {isExporting ? (
               <>

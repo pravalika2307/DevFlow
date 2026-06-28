@@ -110,7 +110,7 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           User Research Records
         </h3>
@@ -127,19 +127,19 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
         </h4>
 
         {records.length > 0 ? (
-          <div className="relative pl-6 border-l border-slate-900 space-y-6">
+          <div className="relative pl-6 border-l border-border-default space-y-6">
             {records.map((rec) => (
-              <div key={rec.id} className="relative">
+              <div key={rec.id} className="relative animate-fade-in-up">
                 {/* Timeline Bullet */}
-                <div className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-slate-950 border-2 border-indigo-500">
-                  <div className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                <div className="absolute -left-[30px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-bg-base border-2 border-blue-accent">
+                  <div className="h-1.5 w-1.5 rounded-full bg-blue-accent" />
                 </div>
 
-                <div className="rounded-xl border border-slate-900 bg-slate-900/10 p-5 space-y-3">
+                <div className="rounded-xl border border-border-default bg-bg-card p-5 space-y-3 shadow-md hover:border-border-accent transition-colors">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`rounded px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider border ${getTypeStyle(
+                        className={`rounded px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider border ${getTypeStyle(
                           rec.type,
                         )}`}
                       >
@@ -151,13 +151,14 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] text-slate-500 font-medium">
+                      <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">
                         Logged: {rec.createdAt}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleRemoveRecord(rec.id)}
-                        className="text-slate-500 hover:text-rose-455 p-1 rounded transition-colors"
+                        className="text-slate-500 hover:text-rose-accent p-1 rounded transition-colors"
+                        aria-label="Remove record"
                       >
                         <svg
                           className="h-3.5 w-3.5"
@@ -180,9 +181,11 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
                     {rec.content}
                   </p>
 
-                  <div className="text-[10px] text-slate-500 font-medium text-right">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider text-right">
                     Recorded by:{" "}
-                    <span className="text-slate-450">{rec.author}</span>
+                    <span className="text-blue-accent lowercase font-medium text-xs ml-1">
+                      {rec.author}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -196,8 +199,8 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
       </div>
 
       {/* Input Form */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/10 p-5 space-y-4">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-900 pb-2">
+      <div className="rounded-2xl border border-border-default bg-bg-surface/50 p-5 space-y-4 shadow-lg">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-blue-accent border-b border-border-default pb-2">
           Add Research Record
         </h4>
 
@@ -213,7 +216,7 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as ResearchRecordType)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full df-input py-2.5 px-3 cursor-pointer text-xs font-semibold"
               >
                 {RECORD_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
@@ -231,13 +234,13 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
                 type="text"
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.author ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input px-3 py-2.5 ${
+                  errors.author ? "border-rose-accent" : ""
+                }`}
                 placeholder="Innovator name..."
               />
               {errors.author && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.author}
                 </p>
               )}
@@ -251,13 +254,15 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.title ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input px-3 py-2.5 ${
+                  errors.title ? "border-rose-accent" : ""
+                }`}
                 placeholder="e.g. Interview with Fatima"
               />
               {errors.title && (
-                <p className="text-[10px] text-rose-400 mt-1">{errors.title}</p>
+                <p className="text-[10px] text-rose-accent mt-1">
+                  {errors.title}
+                </p>
               )}
             </div>
           </div>
@@ -271,13 +276,13 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={7}
-                className={`w-full rounded-xl border ${
-                  errors.content ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input p-3 ${
+                  errors.content ? "border-rose-accent" : ""
+                }`}
                 placeholder="What did you observe or record during this research session?"
               />
               {errors.content && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.content}
                 </p>
               )}
@@ -285,10 +290,7 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
           </div>
 
           <div className="md:col-span-2 pt-2 text-right">
-            <button
-              type="submit"
-              className="rounded-xl bg-indigo-650 px-5 py-2 text-xs font-semibold text-white hover:bg-indigo-600 shadow-md shadow-indigo-600/10 transition-all"
-            >
+            <button type="submit" className="df-btn df-btn-primary px-5 py-2.5">
               Add Timeline Record
             </button>
           </div>

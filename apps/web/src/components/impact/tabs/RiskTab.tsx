@@ -62,9 +62,9 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
   const getSeverityStyle = (val: string) => {
     switch (val) {
       case "High":
-        return "bg-rose-500/10 text-rose-450 border-rose-500/20";
+        return "bg-rose-accent/10 text-rose-accent border-rose-accent/20";
       case "Medium":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-amber-accent/10 text-amber-accent border-amber-accent/20";
       default:
         return "bg-slate-500/10 text-slate-400 border-slate-500/20";
     }
@@ -72,7 +72,7 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           Risk Assessment & Mitigation
         </h3>
@@ -93,11 +93,12 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
             {risks.map((risk, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-slate-900 bg-slate-900/10 p-5 space-y-3"
+                className="rounded-xl border border-border-default bg-bg-card p-5 space-y-3 shadow-md hover:border-border-accent transition-colors animate-fade-in-up"
+                style={{ animationDelay: `${idx * 40}ms` }}
               >
                 <div className="flex justify-between items-center gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <span className="rounded bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-indigo-400">
+                    <span className="df-badge df-badge-blue">
                       {risk.category} Category
                     </span>
                     <span
@@ -111,7 +112,8 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
                   <button
                     type="button"
                     onClick={() => handleRemoveRisk(idx)}
-                    className="text-slate-550 hover:text-rose-455 p-1 rounded transition-colors"
+                    className="text-slate-555 hover:text-rose-accent p-1 rounded transition-colors"
+                    aria-label="Remove risk"
                   >
                     <svg
                       className="h-3.5 w-3.5"
@@ -130,19 +132,19 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div className="rounded-lg bg-slate-950 p-3 border border-slate-900">
+                  <div className="rounded-lg bg-bg-base/40 p-3 border border-border-default">
                     <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
                       Risk Description
                     </span>
-                    <p className="text-slate-300 leading-relaxed">
+                    <p className="text-slate-300 leading-relaxed font-medium">
                       {risk.description}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-slate-950 p-3 border border-slate-900">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-450 block mb-1">
+                  <div className="rounded-lg bg-bg-base/40 p-3 border border-border-default">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-accent block mb-1">
                       Mitigation Plan
                     </span>
-                    <p className="text-slate-350 leading-relaxed font-semibold">
+                    <p className="text-slate-300 leading-relaxed font-semibold">
                       {risk.mitigation}
                     </p>
                   </div>
@@ -158,8 +160,8 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
       </div>
 
       {/* Form */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/10 p-5 space-y-4">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-900 pb-2">
+      <div className="rounded-2xl border border-border-default bg-bg-surface/50 p-5 space-y-4 shadow-lg">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-blue-accent border-b border-border-default pb-2">
           Add Risk Analysis
         </h4>
 
@@ -177,7 +179,7 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
                 onChange={(e) =>
                   setCategory(e.target.value as RiskItem["category"])
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full df-input py-2.5 px-3 cursor-pointer text-xs font-semibold"
               >
                 {RISK_CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -196,7 +198,7 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
                 onChange={(e) =>
                   setSeverity(e.target.value as RiskItem["severity"])
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full df-input py-2.5 px-3 cursor-pointer text-xs font-semibold"
               >
                 {SEVERITIES.map((s) => (
                   <option key={s} value={s}>
@@ -214,13 +216,13 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className={`w-full rounded-xl border ${
-                  errors.description ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2 px-3 text-xs text-white focus:outline-none focus:border-indigo-500`}
+                className={`w-full df-input p-3 ${
+                  errors.description ? "border-rose-accent" : ""
+                }`}
                 placeholder="What failure vector exists?"
               />
               {errors.description && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.description}
                 </p>
               )}
@@ -236,13 +238,13 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
                 value={mitigation}
                 onChange={(e) => setMitigation(e.target.value)}
                 rows={7}
-                className={`w-full rounded-xl border ${
-                  errors.mitigation ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2 px-3 text-xs text-white focus:outline-none focus:border-indigo-500`}
+                className={`w-full df-input p-3 ${
+                  errors.mitigation ? "border-rose-accent" : ""
+                }`}
                 placeholder="What engineering or procedural control bypasses or absorbs this risk?"
               />
               {errors.mitigation && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.mitigation}
                 </p>
               )}
@@ -250,10 +252,7 @@ export function RiskTab({ risks, onUpdate }: RiskTabProps) {
           </div>
 
           <div className="md:col-span-2 pt-2 text-right">
-            <button
-              type="submit"
-              className="rounded-xl bg-indigo-650 px-5 py-2 text-xs font-semibold text-white hover:bg-indigo-600 shadow-md shadow-indigo-600/10 transition-all"
-            >
+            <button type="submit" className="df-btn df-btn-primary px-5 py-2.5">
               Add Risk Mitigation Log
             </button>
           </div>

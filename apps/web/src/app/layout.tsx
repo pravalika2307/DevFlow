@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 
 export const metadata: Metadata = {
   title: "DevFlow OS — AI Innovation Operating System",
@@ -30,7 +31,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning style={{ position: "relative" }}>
+        <BackgroundGrid />
+        <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
+      </body>
     </html>
   );
 }

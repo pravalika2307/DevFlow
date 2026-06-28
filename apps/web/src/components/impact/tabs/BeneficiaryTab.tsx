@@ -69,7 +69,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           Beneficiary Analysis
         </h3>
@@ -81,10 +81,11 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
 
       {/* Visual representations */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {cards.map((c) => (
+        {cards.map((c, idx) => (
           <div
             key={c.label}
-            className="rounded-xl border border-slate-900 bg-slate-900/10 p-5 space-y-2"
+            className="rounded-xl border border-border-default bg-bg-card p-5 space-y-2.5 shadow-md hover:border-border-accent transition-colors animate-fade-in-up"
+            style={{ animationDelay: `${idx * 40}ms` }}
           >
             <span
               className={`text-[10px] font-bold uppercase tracking-wider block ${
@@ -105,8 +106,8 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
       </div>
 
       {/* Editor block */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/10 p-5 space-y-4">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-900 pb-2">
+      <div className="rounded-2xl border border-border-default bg-bg-surface/50 p-5 space-y-4 shadow-lg">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-blue-accent border-b border-border-default pb-2">
           Update Beneficiary Details
         </h4>
 
@@ -119,7 +120,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
               type="text"
               value={primary}
               onChange={(e) => setPrimary(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. Rural students without grid connection"
             />
           </div>
@@ -132,7 +133,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
               type="text"
               value={secondary}
               onChange={(e) => setSecondary(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. Village teachers"
             />
           </div>
@@ -145,7 +146,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
               type="text"
               value={estimatedUsers}
               onChange={(e) => setEstimatedUsers(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. 15,000 active students"
             />
           </div>
@@ -158,7 +159,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
               type="text"
               value={geoReach}
               onChange={(e) => setGeoReach(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. Kolar region, Karnataka"
             />
           </div>
@@ -171,7 +172,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
               type="text"
               value={ageGroups}
               onChange={(e) => setAgeGroups(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. 8 to 15 years old"
             />
           </div>
@@ -184,7 +185,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
               type="text"
               value={incomeGroups}
               onChange={(e) => setIncomeGroups(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. Under $2/day"
             />
           </div>
@@ -197,7 +198,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
               type="text"
               value={accessibilityNeeds}
               onChange={(e) => setAccessibilityNeeds(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. Kannada audio narration"
             />
           </div>
@@ -207,7 +208,7 @@ export function BeneficiaryTab({ data, onUpdate }: BeneficiaryTabProps) {
           <button
             type="button"
             onClick={handleSave}
-            className="rounded-xl bg-indigo-650 px-5 py-2 text-xs font-semibold text-white hover:bg-indigo-600 shadow-md shadow-indigo-600/10 transition-all"
+            className="df-btn df-btn-primary px-5 py-2.5 ml-auto"
           >
             Save Beneficiary Details
           </button>

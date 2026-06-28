@@ -199,7 +199,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight font-sans">
           Problem Explorer
         </h3>
@@ -210,7 +210,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
       </div>
 
       {/* Explorer Inputs */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/10 p-5 space-y-4">
+      <div className="rounded-2xl border border-border-default bg-bg-surface/50 p-5 space-y-4 shadow-lg">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -220,7 +220,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
               type="text"
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. EdTech, Clean Water"
             />
           </div>
@@ -233,7 +233,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. Rural India, Coastal Bangladesh"
             />
           </div>
@@ -246,7 +246,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
               type="text"
               value={targetUsers}
               onChange={(e) => setTargetUsers(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full df-input px-3 py-2.5"
               placeholder="e.g. Students without internet"
             />
           </div>
@@ -260,7 +260,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
             value={initialProblem}
             onChange={(e) => setInitialProblem(e.target.value)}
             rows={3}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+            className="w-full df-input p-3"
             placeholder="Describe the problem you want to explore..."
           />
         </div>
@@ -269,7 +269,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
           <button
             type="button"
             onClick={handleExpandProblem}
-            className="rounded-xl bg-gradient-to-r from-indigo-650 to-violet-650 px-5 py-2 text-xs font-semibold text-white hover:from-indigo-600 hover:to-violet-600 shadow-md shadow-indigo-600/10 transition-all flex items-center gap-1.5 ml-auto"
+            className="df-btn df-btn-primary ml-auto"
           >
             <svg
               className="h-4 w-4"
@@ -291,7 +291,7 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
 
       {/* Expandable outputs cards */}
       {isExpanded && (
-        <div className="space-y-3">
+        <div className="space-y-3 animate-fade-in-up">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
             Analyse Output Matrix
           </h4>
@@ -302,12 +302,12 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
               return (
                 <div
                   key={sec.id}
-                  className="rounded-xl border border-slate-900 bg-slate-900/10 overflow-hidden transition-all"
+                  className="rounded-xl border border-border-default bg-bg-card overflow-hidden transition-all shadow-md"
                 >
                   <button
                     type="button"
                     onClick={() => toggleSection(sec.id)}
-                    className="w-full text-left px-5 py-3.5 flex items-center justify-between hover:bg-slate-900/20 transition-colors"
+                    className="w-full text-left px-5 py-3.5 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
                   >
                     <span
                       className={`text-xs font-bold uppercase tracking-wider ${
@@ -334,9 +334,9 @@ export function ExplorerTab({ data, onUpdate }: ExplorerTabProps) {
                   </button>
 
                   {open && (
-                    <div className="px-6 pb-4 pt-1 border-t border-slate-900/50 bg-slate-950/20">
+                    <div className="px-6 pb-4 pt-2 border-t border-border-default bg-bg-base/40">
                       {sec.data.length > 0 ? (
-                        <ul className="space-y-2 list-disc pl-4 text-xs text-slate-300 leading-relaxed">
+                        <ul className="space-y-2 list-disc pl-4 text-xs text-slate-300 leading-relaxed font-medium">
                           {sec.data.map((item, idx) => (
                             <li key={idx}>{item}</li>
                           ))}

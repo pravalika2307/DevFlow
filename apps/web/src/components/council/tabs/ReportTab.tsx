@@ -51,7 +51,7 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
   return (
     <div className="space-y-6">
       {/* Header controls */}
-      <div className="flex justify-between items-center border-b border-slate-900 pb-3 flex-wrap gap-2 print:hidden">
+      <div className="flex justify-between items-center border-b border-border-default pb-3 flex-wrap gap-2 print:hidden">
         <div>
           <h3 className="text-base font-bold text-white tracking-tight">
             Project Review Report
@@ -64,7 +64,8 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
         <button
           type="button"
           onClick={handlePrint}
-          className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-850 hover:text-indigo-400 transition-all flex items-center gap-1.5"
+          className="df-btn df-btn-secondary"
+          style={{ padding: "8px 16px" }}
         >
           <svg
             className="h-4 w-4"
@@ -84,17 +85,17 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
       </div>
 
       {/* A4 Report Sheet Canvas */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/5 p-8 space-y-6 text-slate-200 border-dashed print:border-solid print:bg-white print:text-black print:p-12 print:my-0">
+      <div className="rounded-2xl border border-border-default bg-bg-card p-8 space-y-6 text-slate-200 border-dashed shadow-xl animate-fade-in-up print:border-solid print:bg-white print:text-black print:p-12 print:my-0">
         {/* Pitch Title */}
-        <div className="flex justify-between items-start border-b border-slate-900 print:border-slate-300 pb-5">
+        <div className="flex justify-between items-start border-b border-border-default print:border-slate-300 pb-5">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded print:border print:border-indigo-400">
+            <span className="df-badge df-badge-violet print:border print:border-indigo-400">
               Multi-Agent AI Council Evaluation Report
             </span>
-            <h2 className="text-2xl font-extrabold text-white print:text-black tracking-tight mt-3">
+            <h2 className="text-2xl font-black text-white print:text-black tracking-tight mt-4">
               {project.name}
             </h2>
-            <p className="text-xs text-slate-400 print:text-slate-500 mt-1.5 font-medium">
+            <p className="text-xs text-slate-400 print:text-slate-500 mt-2 font-semibold">
               Innovation Theme Category:{" "}
               <strong className="text-slate-200 print:text-slate-800">
                 {project.innovationTheme}
@@ -107,7 +108,7 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
               <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block">
                 Innovation Score
               </span>
-              <span className="text-2xl font-black text-indigo-400 mt-1 block">
+              <span className="text-2xl font-black text-blue-accent mt-1.5 block">
                 {data.consensus.overallInnovationScore}%
               </span>
             </div>
@@ -115,7 +116,7 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
               <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block">
                 Readiness Score
               </span>
-              <span className="text-2xl font-black text-emerald-450 mt-1 block">
+              <span className="text-2xl font-black text-emerald-accent mt-1.5 block">
                 {data.consensus.overallReadiness}%
               </span>
             </div>
@@ -133,14 +134,14 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
               handleTextChange("executiveSummary", e.target.value)
             }
             rows={3}
-            className="w-full rounded-xl border border-slate-850 bg-slate-950/40 py-2.5 px-3 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 leading-relaxed font-medium print:bg-transparent print:border-none print:p-0 print:text-black"
+            className="w-full df-input p-3 print:bg-transparent print:border-none print:p-0 print:text-black"
             placeholder="Executive summary of the evaluation..."
           />
         </div>
 
         {/* Overall Recommendation */}
         <div className="space-y-2">
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-455 print:text-slate-600">
             Overall Recommendation
           </label>
           <textarea
@@ -149,31 +150,32 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
               handleTextChange("overallRecommendation", e.target.value)
             }
             rows={2}
-            className="w-full rounded-xl border border-slate-850 bg-slate-950/40 py-2.5 px-3 text-xs text-slate-350 focus:outline-none focus:border-indigo-500 leading-relaxed font-semibold print:bg-transparent print:border-none print:p-0 print:text-black print:font-bold text-indigo-400"
+            className="w-full df-input p-3 text-blue-accent font-semibold print:bg-transparent print:border-none print:p-0 print:text-black print:font-bold"
             placeholder="Final recommendation to the implementation team..."
           />
         </div>
 
         {/* Priority Improvements List */}
         <div className="space-y-3">
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-455 print:text-slate-600">
             Priority Improvements Needed
           </label>
 
-          <ul className="space-y-2 list-none pl-1">
+          <ul className="space-y-2.5 list-none pl-1">
             {data.report.priorityImprovements.map((imp, idx) => (
               <li
                 key={idx}
                 className="text-xs text-slate-300 print:text-black leading-relaxed flex items-center justify-between gap-2"
               >
-                <span className="flex gap-2 items-start font-medium">
-                  <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0" />
+                <span className="flex gap-2 items-start font-medium animate-fade-in-up">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-accent mt-1.5 flex-shrink-0" />
                   <span>{imp}</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => handleRemoveImprovement(idx)}
-                  className="text-slate-500 hover:text-rose-455 transition-colors p-0.5 rounded print:hidden"
+                  className="text-slate-555 hover:text-rose-accent transition-colors p-0.5 rounded print:hidden font-bold text-sm"
+                  aria-label="Remove improvement"
                 >
                   &times;
                 </button>
@@ -187,7 +189,7 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
               value={newImp}
               onChange={(e) => setNewImp(e.target.value)}
               placeholder="Add key improvement point..."
-              className="flex-1 rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="flex-1 df-input px-3 py-2"
             />
             <button
               type="button"
@@ -195,7 +197,7 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
                 handleAddImprovement(newImp);
                 setNewImp("");
               }}
-              className="rounded-xl bg-indigo-650 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-600 transition-all"
+              className="df-btn df-btn-primary px-4 py-2"
             >
               Add Improvement
             </button>
@@ -203,20 +205,20 @@ export function ReportTab({ project, data, onUpdate }: ReportTabProps) {
         </div>
 
         {/* Advisor Score matrix summary for print */}
-        <div className="pt-6 border-t border-slate-900 print:border-slate-300">
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600 mb-3">
+        <div className="pt-6 border-t border-border-default print:border-slate-300 animate-fade-in-up">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-455 print:text-slate-600 mb-3">
             Individual Advisor Ratings
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {data.advisors.map((adv) => (
               <div
                 key={adv.advisorId}
-                className="rounded-xl bg-slate-950/50 print:bg-slate-100 p-3 border border-slate-900 print:border-slate-300 text-center"
+                className="rounded-xl bg-bg-base/40 print:bg-slate-100 p-3 border border-border-default print:border-slate-300 text-center"
               >
                 <span className="text-[9px] font-bold text-slate-500 block uppercase tracking-wider">
                   {adv.role}
                 </span>
-                <span className="text-xl font-black text-indigo-400 print:text-indigo-800 block mt-1">
+                <span className="text-xl font-black text-blue-accent print:text-indigo-800 block mt-1">
                   {adv.score}%
                 </span>
               </div>

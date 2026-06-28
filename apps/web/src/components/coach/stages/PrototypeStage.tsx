@@ -70,7 +70,7 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           Stage 4: Prototype
         </h3>
@@ -87,21 +87,21 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
         </h4>
 
         {versions.length > 0 ? (
-          <div className="relative pl-6 border-l border-slate-900 space-y-6">
+          <div className="relative pl-6 border-l border-border-default space-y-6">
             {versions.map((ver) => (
-              <div key={ver.id} className="relative">
+              <div key={ver.id} className="relative animate-fade-in-up">
                 {/* Bullet */}
-                <div className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-slate-950 border-2 border-indigo-500">
-                  <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-ping" />
+                <div className="absolute -left-[30px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-bg-base border-2 border-blue-accent">
+                  <div className="h-1.5 w-1.5 rounded-full bg-blue-accent animate-ping" />
                 </div>
 
-                <div className="rounded-xl border border-slate-900 bg-slate-900/10 p-5 space-y-3">
+                <div className="rounded-xl border border-border-default bg-bg-card p-5 space-y-3 shadow-md hover:border-border-accent transition-colors">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-white bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">
+                      <span className="df-badge df-badge-blue">
                         {ver.version}
                       </span>
-                      <span className="text-[10px] text-slate-500 font-medium">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
                         Released: {ver.createdAt}
                       </span>
                     </div>
@@ -109,7 +109,8 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                     <button
                       type="button"
                       onClick={() => handleRemoveVersion(ver.id)}
-                      className="text-slate-500 hover:text-rose-455 p-1 rounded transition-colors"
+                      className="text-slate-500 hover:text-rose-accent p-1 rounded transition-colors"
+                      aria-label="Remove version"
                     >
                       <svg
                         className="h-3.5 w-3.5"
@@ -127,41 +128,41 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                     </button>
                   </div>
 
-                  <p className="text-xs text-slate-350 leading-relaxed font-medium">
+                  <p className="text-xs text-slate-300 leading-relaxed font-medium">
                     {ver.notes}
                   </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] text-slate-400">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                     <div className="truncate">
-                      <strong>Figma Design:</strong>{" "}
+                      <span className="text-slate-500">Figma Design:</span>{" "}
                       <a
                         href={ver.figmaLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-indigo-400 hover:underline"
+                        className="text-blue-accent hover:underline lowercase font-medium text-xs"
                       >
                         {ver.figmaLink}
                       </a>
                     </div>
                     <div className="truncate">
-                      <strong>GitHub Repository:</strong>{" "}
+                      <span className="text-slate-500">GitHub Repo:</span>{" "}
                       <a
                         href={ver.githubRepo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-indigo-400 hover:underline"
+                        className="text-blue-accent hover:underline lowercase font-medium text-xs"
                       >
                         {ver.githubRepo}
                       </a>
                     </div>
                     {ver.demoUrl && (
                       <div className="truncate sm:col-span-2">
-                        <strong>Deployment Demo URL:</strong>{" "}
+                        <span className="text-slate-500">Deployment Demo:</span>{" "}
                         <a
                           href={ver.demoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-indigo-400 hover:underline"
+                          className="text-blue-accent hover:underline lowercase font-medium text-xs"
                         >
                           {ver.demoUrl}
                         </a>
@@ -169,7 +170,7 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                     )}
                   </div>
 
-                  <div className="rounded-lg bg-slate-950 p-2.5 border border-slate-900 text-[10px] text-slate-500 leading-relaxed">
+                  <div className="rounded-lg bg-bg-base p-2.5 border border-border-default text-[10px] text-slate-400 leading-relaxed font-medium">
                     <strong>Interface Screenshots Layout:</strong>{" "}
                     {ver.screenshots}
                   </div>
@@ -185,8 +186,8 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
       </div>
 
       {/* Add prototype release form */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/10 p-5 space-y-4">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-900 pb-2">
+      <div className="rounded-2xl border border-border-default bg-bg-surface/50 p-5 space-y-4 shadow-lg">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-blue-accent border-b border-border-default pb-2">
           Log Prototype Version Release
         </h4>
 
@@ -203,13 +204,13 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                 type="text"
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.version ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input px-3 py-2.5 ${
+                  errors.version ? "border-rose-accent" : ""
+                }`}
                 placeholder="e.g. v1.0.0"
               />
               {errors.version && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.version}
                 </p>
               )}
@@ -223,13 +224,13 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                 type="text"
                 value={figmaLink}
                 onChange={(e) => setFigmaLink(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.figmaLink ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input px-3 py-2.5 ${
+                  errors.figmaLink ? "border-rose-accent" : ""
+                }`}
                 placeholder="https://figma.com/..."
               />
               {errors.figmaLink && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.figmaLink}
                 </p>
               )}
@@ -243,13 +244,13 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                 type="text"
                 value={githubRepo}
                 onChange={(e) => setGithubRepo(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.githubRepo ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input px-3 py-2.5 ${
+                  errors.githubRepo ? "border-rose-accent" : ""
+                }`}
                 placeholder="https://github.com/..."
               />
               {errors.githubRepo && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.githubRepo}
                 </p>
               )}
@@ -265,7 +266,7 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                 type="text"
                 value={demoUrl}
                 onChange={(e) => setDemoUrl(e.target.value)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none"
+                className="w-full df-input px-3 py-2.5"
                 placeholder="https://demo-site.com"
               />
             </div>
@@ -278,13 +279,13 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                 type="text"
                 value={screenshots}
                 onChange={(e) => setScreenshots(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.screenshots ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input px-3 py-2.5 ${
+                  errors.screenshots ? "border-rose-accent" : ""
+                }`}
                 placeholder="Describe screen layouts..."
               />
               {errors.screenshots && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.screenshots}
                 </p>
               )}
@@ -298,22 +299,21 @@ export function PrototypeStage({ project, onUpdate }: PrototypeStageProps) {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                className={`w-full rounded-xl border ${
-                  errors.notes ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2 px-3 text-xs text-white focus:outline-none`}
+                className={`w-full df-input p-3 ${
+                  errors.notes ? "border-rose-accent" : ""
+                }`}
                 placeholder="What improvements were made in this release?"
               />
               {errors.notes && (
-                <p className="text-[10px] text-rose-400 mt-1">{errors.notes}</p>
+                <p className="text-[10px] text-rose-accent mt-1">
+                  {errors.notes}
+                </p>
               )}
             </div>
           </div>
 
           <div className="md:col-span-2 pt-2 text-right">
-            <button
-              type="submit"
-              className="rounded-xl bg-indigo-650 px-5 py-2 text-xs font-semibold text-white hover:bg-indigo-600 shadow-md shadow-indigo-600/10 transition-all"
-            >
+            <button type="submit" className="df-btn df-btn-primary px-5 py-2.5">
               Add Release to Timeline
             </button>
           </div>

@@ -234,27 +234,28 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="relative w-full max-w-4xl rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-base/80 backdrop-blur-md p-4 overflow-y-auto">
+      <div className="relative w-full max-w-4xl rounded-2xl border border-border-default bg-bg-surface shadow-2xl overflow-hidden flex flex-col my-8 max-h-[90vh] shadow-glow-blue/15 animate-fade-in-scale">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 p-6 bg-slate-900/50">
+        <div className="flex items-center justify-between border-b border-border-default p-6 bg-bg-card/50">
           <div>
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-lg font-black text-white tracking-tight">
               {project ? "Edit Innovation Project" : "New Innovation Project"}
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-400 mt-1.5 font-semibold">
               Configure alignment goals, scores, and SDG attributes.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-white/[0.04] hover:text-white transition-colors"
+            aria-label="Close"
           >
             <svg
               className="h-5 w-5"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.5"
               viewBox="0 0 24 24"
             >
               <path
@@ -274,31 +275,33 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
           {/* Main Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Project Name
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.name ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-4 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
+                className={`w-full df-input px-4 py-2.5 ${
+                  errors.name ? "border-rose-accent" : ""
+                }`}
                 placeholder="e.g. Solar Literacy Offline Drive"
               />
               {errors.name && (
-                <p className="text-[10px] text-rose-400 mt-1">{errors.name}</p>
+                <p className="text-[10px] text-rose-accent mt-1">
+                  {errors.name}
+                </p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Innovation Theme
               </label>
               <select
                 value={innovationTheme}
                 onChange={(e) => setInnovationTheme(e.target.value)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-4 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                className="w-full df-input px-4 py-2.5 cursor-pointer text-xs font-semibold"
               >
                 {INNOVATION_THEMES.map((theme) => (
                   <option key={theme} value={theme}>
@@ -312,109 +315,103 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
           {/* Problem & Solution */}
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Problem Statement
               </label>
               <textarea
                 value={problemStatement}
                 onChange={(e) => setProblemStatement(e.target.value)}
                 rows={3}
-                className={`w-full rounded-xl border ${
-                  errors.problemStatement
-                    ? "border-rose-500"
-                    : "border-slate-800"
-                } bg-slate-950 py-2.5 px-4 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none`}
+                className={`w-full df-input p-3 ${
+                  errors.problemStatement ? "border-rose-accent" : ""
+                }`}
                 placeholder="What community problem does this project tackle?"
               />
               {errors.problemStatement && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.problemStatement}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Proposed Solution
               </label>
               <textarea
                 value={proposedSolution}
                 onChange={(e) => setProposedSolution(e.target.value)}
                 rows={3}
-                className={`w-full rounded-xl border ${
-                  errors.proposedSolution
-                    ? "border-rose-500"
-                    : "border-slate-800"
-                } bg-slate-950 py-2.5 px-4 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none`}
+                className={`w-full df-input p-3 ${
+                  errors.proposedSolution ? "border-rose-accent" : ""
+                }`}
                 placeholder="How does your tech or innovation resolve this issue?"
               />
               {errors.proposedSolution && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.proposedSolution}
                 </p>
               )}
             </div>
           </div>
 
-          {/* Target, Impact & Success Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Target Beneficiaries & Impact statement */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Target Beneficiaries
               </label>
               <input
                 type="text"
                 value={targetBeneficiaries}
                 onChange={(e) => setTargetBeneficiaries(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.targetBeneficiaries
-                    ? "border-rose-500"
-                    : "border-slate-800"
-                } bg-slate-950 py-2.5 px-4 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none`}
-                placeholder="Who benefits? (e.g. Rural Children)"
+                className={`w-full df-input px-4 py-2.5 ${
+                  errors.targetBeneficiaries ? "border-rose-accent" : ""
+                }`}
+                placeholder="e.g. Offline students and village councils"
               />
               {errors.targetBeneficiaries && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.targetBeneficiaries}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Expected Impact
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+                Expected Impact Statement
               </label>
               <input
                 type="text"
                 value={expectedImpact}
                 onChange={(e) => setExpectedImpact(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.expectedImpact ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-4 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none`}
-                placeholder="What is the long-term impact?"
+                className={`w-full df-input px-4 py-2.5 ${
+                  errors.expectedImpact ? "border-rose-accent" : ""
+                }`}
+                placeholder="e.g. Bypasses internet blackout regions"
               />
               {errors.expectedImpact && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.expectedImpact}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Success Metrics
               </label>
               <input
                 type="text"
                 value={successMetrics}
                 onChange={(e) => setSuccessMetrics(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.successMetrics ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-4 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none`}
+                className={`w-full df-input px-4 py-2.5 ${
+                  errors.successMetrics ? "border-rose-accent" : ""
+                }`}
                 placeholder="e.g. 5,000 processed liters/day"
               />
               {errors.successMetrics && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.successMetrics}
                 </p>
               )}
@@ -424,27 +421,27 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
           {/* Timeline, Stage, Priority */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Timeline Range
               </label>
               <input
                 type="text"
                 value={timeline}
                 onChange={(e) => setTimeline(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  errors.timeline ? "border-rose-500" : "border-slate-800"
-                } bg-slate-950 py-2.5 px-4 text-xs text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none`}
+                className={`w-full df-input px-4 py-2.5 ${
+                  errors.timeline ? "border-rose-accent" : ""
+                }`}
                 placeholder="e.g. Q1 - Q3 2026"
               />
               {errors.timeline && (
-                <p className="text-[10px] text-rose-400 mt-1">
+                <p className="text-[10px] text-rose-accent mt-1">
                   {errors.timeline}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Project Stage
               </label>
               <select
@@ -452,7 +449,7 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                 onChange={(e) =>
                   setProjectStage(e.target.value as ProjectStage)
                 }
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-4 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                className="w-full df-input px-4 py-2.5 cursor-pointer text-xs font-semibold"
               >
                 <option value="Ideation">Ideation</option>
                 <option value="Prototyping">Prototyping</option>
@@ -462,13 +459,13 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Priority
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as ProjectPriority)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-4 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                className="w-full df-input px-4 py-2.5 cursor-pointer text-xs font-semibold"
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -479,10 +476,10 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
 
           {/* SDG Selectors */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
               UN SDG Goals Target
             </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-slate-800 bg-slate-950 p-3 rounded-xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-border-default bg-bg-base p-3 rounded-xl">
               {AVAILABLE_SDG_GOALS.map((goal) => {
                 const checked = selectedSdgs.includes(goal);
                 return (
@@ -490,17 +487,17 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                     key={goal}
                     className={`flex items-center gap-2 rounded-lg p-2 text-xs border ${
                       checked
-                        ? "bg-indigo-950/20 border-indigo-500/30 text-white"
+                        ? "bg-blue-accent/10 border-blue-accent/30 text-white"
                         : "border-transparent text-slate-400"
-                    } hover:bg-slate-900 cursor-pointer transition-all`}
+                    } hover:bg-white/[0.02] cursor-pointer transition-all`}
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => handleSdgToggle(goal)}
-                      className="rounded border-slate-800 text-indigo-500 focus:ring-0 focus:ring-offset-0 focus:outline-none"
+                      className="rounded border-border-default text-blue-accent focus:ring-0 focus:ring-offset-0 focus:outline-none"
                     />
-                    <span className="truncate">{goal}</span>
+                    <span className="truncate font-semibold">{goal}</span>
                   </label>
                 );
               })}
@@ -509,12 +506,12 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
 
           {/* Innovation and Alignment Scores */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3 border-b border-slate-800/80 pb-2">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-blue-accent mb-3 border-b border-border-default pb-2">
               Innovation & Alignment Weights
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
                   Innovation Score
                 </label>
                 <input
@@ -523,12 +520,12 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                   max="100"
                   value={innovationScore}
                   onChange={(e) => setInnovationScore(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white"
+                  className="w-full df-input px-3 py-2 text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
                   Eng Health
                 </label>
                 <input
@@ -537,12 +534,12 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                   max="100"
                   value={engineeringHealth}
                   onChange={(e) => setEngineeringHealth(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white"
+                  className="w-full df-input px-3 py-2 text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
                   Progress %
                 </label>
                 <input
@@ -551,12 +548,12 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                   max="100"
                   value={projectProgress}
                   onChange={(e) => setProjectProgress(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white"
+                  className="w-full df-input px-3 py-2 text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
                   Impact Score
                 </label>
                 <input
@@ -565,12 +562,12 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                   max="100"
                   value={impactScore}
                   onChange={(e) => setImpactScore(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white"
+                  className="w-full df-input px-3 py-2 text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
                   Readiness Score
                 </label>
                 <input
@@ -579,7 +576,7 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                   max="100"
                   value={readinessScore}
                   onChange={(e) => setReadinessScore(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white"
+                  className="w-full df-input px-3 py-2 text-xs font-semibold"
                 />
               </div>
             </div>
@@ -587,7 +584,7 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
 
           {/* Team Members List */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3 border-b border-slate-800/80 pb-2">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-blue-accent mb-3 border-b border-border-default pb-2">
               Team Configurations
             </h4>
             <div className="space-y-3">
@@ -597,45 +594,48 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
                   value={newMemberName}
                   onChange={(e) => setNewMemberName(e.target.value)}
                   placeholder="Member Name"
-                  className="flex-1 rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white placeholder-slate-700"
+                  className="flex-1 df-input px-3 py-2"
                 />
                 <input
                   type="text"
                   value={newMemberRole}
                   onChange={(e) => setNewMemberRole(e.target.value)}
                   placeholder="Role (e.g. Sorter Developer)"
-                  className="flex-1 rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs text-white placeholder-slate-700"
+                  className="flex-1 df-input px-3 py-2"
                 />
                 <button
                   type="button"
                   onClick={handleAddMember}
-                  className="rounded-xl bg-slate-800 px-4 text-xs font-semibold text-white hover:bg-slate-750 border border-slate-700 transition-colors"
+                  className="df-btn df-btn-ghost px-4 py-2 text-xs font-semibold"
                 >
                   Add
                 </button>
               </div>
 
               {teamMembers.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-2">
+                <div className="flex flex-wrap gap-2 pt-2 animate-fade-in-up">
                   {teamMembers.map((member, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-950/60 py-1 pl-3 pr-2 text-xs"
+                      className="flex items-center gap-1.5 rounded-lg border border-border-default bg-bg-card py-1.5 pl-3 pr-2 text-xs"
                     >
-                      <span className="text-white font-medium">
+                      <span className="text-white font-bold">
                         {member.name}
                       </span>
-                      <span className="text-slate-500">({member.role})</span>
+                      <span className="text-slate-500 font-semibold">
+                        ({member.role})
+                      </span>
                       <button
                         type="button"
                         onClick={() => handleRemoveMember(idx)}
-                        className="rounded-md p-0.5 text-slate-500 hover:bg-slate-800 hover:text-white transition-colors"
+                        className="rounded-md p-0.5 text-slate-555 hover:text-rose-accent transition-colors"
+                        aria-label="Remove member"
                       >
                         <svg
                           className="h-3.5 w-3.5"
                           fill="none"
                           stroke="currentColor"
-                          strokeWidth="2"
+                          strokeWidth="2.5"
                           viewBox="0 0 24 24"
                         >
                           <path
@@ -654,18 +654,20 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
         </form>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 border-t border-slate-800 p-6 bg-slate-900/50">
+        <div className="flex items-center justify-end gap-3 border-t border-border-default p-6 bg-bg-card/50">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-slate-800 px-4 py-2 text-xs font-semibold text-slate-350 hover:bg-slate-850 hover:text-white transition-all"
+            className="df-btn df-btn-ghost"
+            style={{ padding: "8px 16px" }}
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleSubmit}
-            className="rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2 text-xs font-semibold text-white hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-600/10 transition-all"
+            className="df-btn df-btn-primary"
+            style={{ padding: "8px 18px" }}
           >
             {project ? "Save Project" : "Create Project"}
           </button>

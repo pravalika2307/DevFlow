@@ -15,7 +15,7 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
   return (
     <div className="space-y-6">
       {/* Header controls */}
-      <div className="flex justify-between items-center border-b border-slate-900 pb-3 flex-wrap gap-2 print:hidden">
+      <div className="flex justify-between items-center border-b border-border-default pb-3 flex-wrap gap-2 print:hidden">
         <div>
           <h3 className="text-base font-bold text-white tracking-tight">
             Executive Summary Pitch Sheet
@@ -28,7 +28,8 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
         <button
           type="button"
           onClick={handlePrint}
-          className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-850 hover:text-indigo-400 transition-all flex items-center gap-1.5"
+          className="df-btn df-btn-secondary"
+          style={{ padding: "8px 16px" }}
         >
           <svg
             className="h-4 w-4"
@@ -48,17 +49,17 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
       </div>
 
       {/* A4 Pitch Canvas */}
-      <div className="rounded-2xl border border-slate-900 bg-slate-900/5 p-8 space-y-6 text-slate-200 border-dashed print:border-solid print:bg-white print:text-black print:p-12 print:my-0">
+      <div className="rounded-2xl border border-border-default bg-bg-card p-8 space-y-6 text-slate-200 border-dashed shadow-xl animate-fade-in-up print:border-solid print:bg-white print:text-black print:p-12 print:my-0">
         {/* Pitch Title */}
-        <div className="flex justify-between items-start border-b border-slate-900 print:border-slate-300 pb-5">
+        <div className="flex justify-between items-start border-b border-border-default print:border-slate-300 pb-5">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded print:border print:border-indigo-400">
+            <span className="df-badge df-badge-violet print:border print:border-indigo-400">
               Solve for Tomorrow Innovation Project Pitch
             </span>
-            <h2 className="text-2xl font-extrabold text-white print:text-black tracking-tight mt-3">
+            <h2 className="text-2xl font-black text-white print:text-black tracking-tight mt-4">
               {project.name}
             </h2>
-            <p className="text-xs text-slate-400 print:text-slate-500 mt-1.5 font-medium">
+            <p className="text-xs text-slate-400 print:text-slate-500 mt-2 font-semibold">
               Theme Category:{" "}
               <strong className="text-slate-200 print:text-slate-800">
                 {project.innovationTheme}
@@ -74,7 +75,7 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block">
               Overall Impact Score
             </span>
-            <span className="text-4xl font-black text-indigo-400 mt-1 block">
+            <span className="text-4xl font-black text-blue-accent mt-1.5 block">
               {impactData.overallImpactScore}%
             </span>
           </div>
@@ -88,7 +89,7 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
               <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600">
                 Problem statement
               </h4>
-              <p className="text-xs text-slate-300 print:text-slate-700 leading-relaxed font-medium">
+              <p className="text-xs text-slate-350 print:text-slate-700 leading-relaxed font-medium">
                 {project.problemStatement}
               </p>
             </div>
@@ -98,17 +99,17 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
               <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600">
                 Proposed Solution
               </h4>
-              <p className="text-xs text-slate-300 print:text-slate-700 leading-relaxed font-medium">
+              <p className="text-xs text-slate-350 print:text-slate-700 leading-relaxed font-medium">
                 {project.proposedSolution}
               </p>
             </div>
 
             {/* Target Beneficiary */}
             <div className="space-y-1.5">
-              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600">
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-455 print:text-slate-600">
                 Target Beneficiary Group
               </h4>
-              <p className="text-xs text-slate-350 print:text-slate-700 leading-relaxed">
+              <p className="text-xs text-slate-350 print:text-slate-700 leading-relaxed font-medium">
                 {impactData.beneficiary.primary}
               </p>
             </div>
@@ -116,32 +117,40 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
 
           <div className="space-y-5">
             {/* Impact stats */}
-            <div className="space-y-2 rounded-xl bg-slate-950/50 print:bg-slate-100 p-4 border border-slate-900 print:border-slate-300">
+            <div className="space-y-2.5 rounded-xl bg-bg-base/40 print:bg-slate-100 p-4 border border-border-default print:border-slate-300">
               <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-650">
                 Score breakdown
               </h4>
-              <div className="grid grid-cols-2 gap-3 text-[10px] font-medium text-slate-400 print:text-slate-600">
+              <div className="grid grid-cols-2 gap-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 print:text-slate-600">
                 <div>
-                  <span>Readiness Score</span>
-                  <span className="font-semibold text-white print:text-black block mt-0.5">
+                  <span className="font-semibold block mb-0.5">
+                    Readiness Score
+                  </span>
+                  <span className="font-extrabold text-white print:text-black block text-xs">
                     {project.readinessScore}%
                   </span>
                 </div>
                 <div>
-                  <span>Innovation Novelty</span>
-                  <span className="font-semibold text-white print:text-black block mt-0.5">
+                  <span className="font-semibold block mb-0.5">
+                    Innovation Novelty
+                  </span>
+                  <span className="font-extrabold text-white print:text-black block text-xs">
                     {project.innovationScore}%
                   </span>
                 </div>
                 <div>
-                  <span>Technical Feasibility</span>
-                  <span className="font-semibold text-white print:text-black block mt-0.5">
+                  <span className="font-semibold block mb-0.5">
+                    Technical Feasibility
+                  </span>
+                  <span className="font-extrabold text-white print:text-black block text-xs">
                     {impactData.technicalFeasibility}%
                   </span>
                 </div>
                 <div>
-                  <span>Sustainability Index</span>
-                  <span className="font-semibold text-white print:text-black block mt-0.5">
+                  <span className="font-semibold block mb-0.5">
+                    Sustainability Index
+                  </span>
+                  <span className="font-extrabold text-white print:text-black block text-xs">
                     {impactData.sustainability}%
                   </span>
                 </div>
@@ -150,14 +159,14 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
 
             {/* UN SDGs */}
             <div className="space-y-1.5">
-              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600">
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-455 print:text-slate-600">
                 Mapped UN SDG Alignment
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {impactData.sdgs.map((sdg) => (
                   <span
                     key={sdg.sdgNumber}
-                    className="rounded border border-indigo-900/40 bg-indigo-950/20 px-2 py-1 text-[10px] text-indigo-300 font-semibold flex items-center gap-1.5 print:border-indigo-300 print:text-indigo-700 print:bg-indigo-50"
+                    className="df-badge df-badge-blue print:border print:border-indigo-300 print:text-indigo-700 print:bg-indigo-50"
                   >
                     Goal {sdg.sdgNumber}: {sdg.sdgName}
                   </span>
@@ -167,14 +176,14 @@ export function ExecutiveTab({ project, impactData }: ExecutiveTabProps) {
 
             {/* Critical Risks */}
             <div className="space-y-1.5">
-              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-450 print:text-slate-600">
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-455 print:text-slate-600">
                 Critical Threat & Mitigation
               </h4>
               {impactData.risks.length > 0 ? (
-                <div className="text-xs text-slate-350 print:text-slate-700 leading-relaxed">
+                <div className="text-xs text-slate-350 print:text-slate-700 leading-relaxed font-medium">
                   <strong>Risk:</strong> {impactData.risks[0].description}
                   <br />
-                  <strong className="text-emerald-450 print:text-emerald-700">
+                  <strong className="text-emerald-accent print:text-emerald-700 block mt-1.5">
                     Mitigation:
                   </strong>{" "}
                   {impactData.risks[0].mitigation}

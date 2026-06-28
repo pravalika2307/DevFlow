@@ -46,7 +46,7 @@ export function TimelineTab({ timeline, onUpdate }: TimelineTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-900 pb-3">
+      <div className="border-b border-border-default pb-3">
         <h3 className="text-base font-bold text-white tracking-tight">
           Projected Impact Timeline
         </h3>
@@ -57,15 +57,19 @@ export function TimelineTab({ timeline, onUpdate }: TimelineTabProps) {
       </div>
 
       {/* Visual Timeline Ribs */}
-      <div className="relative pl-6 border-l border-slate-900 space-y-6">
-        {steps.map((step) => (
-          <div key={step.key} className="relative">
+      <div className="relative pl-6 border-l border-border-default space-y-6">
+        {steps.map((step, idx) => (
+          <div
+            key={step.key}
+            className="relative animate-fade-in-up"
+            style={{ animationDelay: `${idx * 40}ms` }}
+          >
             {/* Bullet */}
-            <div className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-slate-955 border-2 border-indigo-500">
-              <div className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+            <div className="absolute -left-[30px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-bg-base border-2 border-blue-accent">
+              <div className="h-1.5 w-1.5 rounded-full bg-blue-accent" />
             </div>
 
-            <div className="rounded-xl border border-slate-900 bg-slate-900/10 p-5 space-y-3">
+            <div className="rounded-xl border border-border-default bg-bg-card p-5 space-y-3 shadow-md hover:border-border-accent transition-colors">
               <div className="flex items-center gap-2.5">
                 <span
                   className={`rounded-lg border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${step.color}`}
@@ -81,7 +85,7 @@ export function TimelineTab({ timeline, onUpdate }: TimelineTabProps) {
                 value={timeline[step.key]}
                 onChange={(e) => handleTextChange(step.key, e.target.value)}
                 rows={2}
-                className="w-full rounded-xl border border-slate-850 bg-slate-950 py-2 px-3 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 font-medium leading-relaxed"
+                className="w-full df-input p-3"
                 placeholder={`Describe goals for ${step.label}...`}
               />
             </div>

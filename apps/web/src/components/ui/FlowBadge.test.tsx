@@ -14,7 +14,6 @@ describe("FlowBadge Component", () => {
       <FlowBadge variant="emerald">Success</FlowBadge>,
     );
     const spanElement = container.querySelector("span");
-    expect(spanElement?.className).toContain("bg-emerald-950/40");
-    expect(spanElement?.className).toContain("text-emerald-400");
+    expect(spanElement?.className).toContain("df-badge-emerald");
   });
 });
