@@ -696,8 +696,14 @@ const INITIAL_MOCK_PROJECTS: InnovationProject[] = [
 
 export class InnovationService {
   /**
+   * Return the raw, immutable mock dataset for SSR/Hydration consistency.
+   */
+  static getRawMockProjects(): InnovationProject[] {
+    return INITIAL_MOCK_PROJECTS;
+  }
+
+  /**
    * Fetch all projects from LocalStorage.
-   * If empty, initialize with initial mock data.
    */
   static getProjects(): InnovationProject[] {
     if (typeof window === "undefined") {

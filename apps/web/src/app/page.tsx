@@ -485,7 +485,7 @@ function ProjectCard({
 /* ── Dashboard Page ───────────────────────────────────── */
 export default function HomePage() {
   const [projects, setProjects] = useState<InnovationProject[]>(() =>
-    InnovationService.getProjects(),
+    InnovationService.getRawMockProjects(),
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("All");
@@ -525,6 +525,7 @@ export default function HomePage() {
   useEffect(() => {
     const t = setTimeout(() => {
       setHasHydrated(true);
+      setProjects(InnovationService.getProjects());
     }, 0);
     return () => clearTimeout(t);
   }, []);
