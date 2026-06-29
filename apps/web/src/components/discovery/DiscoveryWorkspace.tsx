@@ -8,6 +8,7 @@ import { InsightTab } from "./tabs/InsightTab";
 import { RootCauseTab } from "./tabs/RootCauseTab";
 import { OpportunityTab } from "./tabs/OpportunityTab";
 import { ConfidenceTab } from "./tabs/ConfidenceTab";
+import { NovaGuidanceBanner } from "../ui/NovaGuidanceBanner";
 
 interface DiscoveryWorkspaceProps {
   projects: InnovationProject[];
@@ -181,6 +182,12 @@ export function DiscoveryWorkspace({
         {/* Center content panel */}
         <main className="flex-1 overflow-y-auto p-6 bg-bg-base">
           <div className="max-w-4xl mx-auto">
+            <NovaGuidanceBanner
+              module="discovery"
+              project={projects.find((p) => p.id === selectedProjectId) ?? null}
+              onNext={onBack}
+              nextLabel="Next: Design Thinking →"
+            />
             {activeTab === "explorer" && (
               <ExplorerTab
                 data={discoveryData.explorer}

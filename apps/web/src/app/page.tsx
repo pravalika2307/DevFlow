@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { InnovationProject, ProjectStage } from "../types/innovation";
 import { InnovationService } from "../services/innovation";
@@ -18,6 +18,11 @@ import { ExportCenterModal } from "../components/flow/ExportCenterModal";
 import { ToastContainer, ToastMessage } from "../components/ui/Toast";
 import { InnovationGalaxy } from "../components/ui/InnovationGalaxy";
 import { AIMentorPanel } from "../components/mentor/AIMentorPanel";
+import { WorkflowBanner, WorkflowModule } from "../components/ui/WorkflowBanner";
+import { JourneyStepsBar } from "../components/ui/JourneyStepsBar";
+import { QuickActionsBar } from "../components/ui/QuickActionsBar";
+import { MilestoneSuccessModal, MilestoneTrigger } from "../components/ui/MilestoneSuccessModal";
+import { AutoSaveIndicator } from "../components/ui/AutoSaveIndicator";
 
 type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
 
@@ -490,6 +495,14 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isBooting, setIsBooting] = useState(true);
+  // AutoSave state
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<number | null>(null);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Milestone modal state
+  const [milestoneTrigger, setMilestoneTrigger] = useState<MilestoneTrigger | null>(null);
+  const [milestoneProject, setMilestoneProject] = useState<InnovationProject | null>(null);
+  const prevProjectCount = useRef(projects.length);
 
   const pushToast = useCallback(
     (message: string, variant: ToastMessage["variant"] = "success") => {
@@ -500,6 +513,59 @@ export default function HomePage() {
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
+
+  const triggerAutoSave = useCallback(() => {
+    setIsSaving(true);
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      setIsSaving(false);
+      setLastSaved(Date.now());
+    }, 700);
+  }, []);
+
+  // Workflow navigation — maps WorkflowModule to page state
+  const handleWorkflowNavigate = useCallback(
+    (mod: WorkflowModule) => {
+      switch (mod) {
+        case "dashboard":
+          setActiveModule("dashboard");
+          setActiveCoachProject(null);
+          break;
+        case "discovery":
+          setActiveModule("discovery");
+          break;
+        case "coach":
+          if (projects.length > 0) {
+            setActiveCoachProject(projects[0]);
+          } else {
+            pushToast("Create a project first to launch Design Thinking.", "info");
+          }
+          break;
+        case "mentor":
+          setActiveModule("dashboard");
+          setActiveCoachProject(null);
+          break;
+        case "galaxy":
+          setActiveModule("galaxy");
+          break;
+        case "impact":
+          setActiveModule("impact");
+          break;
+        case "council":
+          setActiveModule("council");
+          break;
+        case "reports":
+          setIsExportOpen(true);
+          break;
+      }
+    },
+    [projects, pushToast],
+  );
+
+  // Detect workflow module for WorkflowBanner
+  const currentWorkflowModule: WorkflowModule = activeCoachProject
+    ? "coach"
+    : (activeModule as WorkflowModule);
 
   const handleDemoModeLaunch = useCallback(() => {
     const demoProjects = InnovationService.getProjects();
@@ -516,14 +582,22 @@ export default function HomePage() {
 
   const handleSaveProject = useCallback(
     (project: InnovationProject) => {
+      const isNew = !projects.find((p) => p.id === project.id);
       const updated = InnovationService.saveProject(project);
       setProjects(updated);
       setIsFormOpen(false);
       setEditingProject(null);
       if (selectedProject?.id === project.id) setSelectedProject(project);
       pushToast(`"${project.name}" saved successfully.`);
+      triggerAutoSave();
+      // Fire first-project milestone
+      if (isNew && prevProjectCount.current === 0) {
+        setMilestoneTrigger("first_project");
+        setMilestoneProject(project);
+      }
+      prevProjectCount.current = updated.length;
     },
-    [selectedProject, pushToast],
+    [selectedProject, pushToast, triggerAutoSave, projects],
   );
 
   const handleDeleteProject = useCallback(
@@ -794,6 +868,22 @@ export default function HomePage() {
             onExportCenterClick={() => setIsExportOpen(true)}
             onMobileMenuToggle={() => setIsMobileSidebarOpen(true)}
           />
+          {/* AutoSave indicator — positioned alongside Navbar visually via overlay */}
+          <div
+            style={{
+              position: "absolute",
+              top: 26,
+              right: 80,
+              zIndex: 60,
+              pointerEvents: "none",
+            }}
+            aria-live="polite"
+          >
+            <AutoSaveIndicator
+              isSaving={isSaving}
+              lastSaved={lastSaved}
+            />
+          </div>
 
           <AnimatePresence>
             {isExportOpen && (
@@ -818,6 +908,20 @@ export default function HomePage() {
             }}
             id="main-content"
           >
+            {/* ── Journey Steps Bar ──────────────────────────── */}
+            <JourneyStepsBar
+              currentModule={currentWorkflowModule}
+              project={projects.length > 0 ? projects[0] : null}
+              onNavigate={handleWorkflowNavigate}
+            />
+
+            {/* ── Workflow Banner ─────────────────────────────── */}
+            <WorkflowBanner
+              currentModule={currentWorkflowModule}
+              project={projects.length > 0 ? projects[0] : null}
+              onNavigate={handleWorkflowNavigate}
+            />
+
             {/* ── Executive AI Briefing ───────────────────── */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -1492,6 +1596,41 @@ export default function HomePage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Quick Actions FAB ──────────────────────────────── */}
+      <QuickActionsBar
+        project={projects.length > 0 ? projects[0] : null}
+        onNavigate={handleWorkflowNavigate}
+        onOpenMentor={() => {
+          setActiveModule("dashboard");
+          setActiveCoachProject(null);
+        }}
+        onOpenCoach={() => {
+          if (projects.length > 0) setActiveCoachProject(projects[0]);
+          else pushToast("Create a project first to launch Design Thinking.", "info");
+        }}
+        onOpenExport={() => setIsExportOpen(true)}
+        onOpenCouncil={() => setActiveModule("council")}
+      />
+
+      {/* ── Milestone Success Modal ────────────────────────── */}
+      <MilestoneSuccessModal
+        trigger={milestoneTrigger}
+        project={milestoneProject}
+        onClose={() => setMilestoneTrigger(null)}
+        onCTA={() => {
+          if (milestoneTrigger === "first_project") {
+            setActiveModule("discovery");
+          } else if (milestoneTrigger === "council_complete") {
+            setActiveModule("council");
+          } else if (milestoneTrigger === "project_complete" || milestoneTrigger === "report_exported") {
+            setIsExportOpen(true);
+          } else if (milestoneTrigger === "first_mentor") {
+            setActiveModule("dashboard");
+          }
+          setMilestoneTrigger(null);
+        }}
+      />
     </>
   );
 }

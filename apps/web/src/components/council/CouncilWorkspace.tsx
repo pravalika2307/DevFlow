@@ -5,6 +5,7 @@ import { CouncilService } from "../../services/council";
 import { DashboardTab } from "./tabs/DashboardTab";
 import { ConsensusTab } from "./tabs/ConsensusTab";
 import { ReportTab } from "./tabs/ReportTab";
+import { NovaGuidanceBanner } from "../ui/NovaGuidanceBanner";
 
 interface CouncilWorkspaceProps {
   projects: InnovationProject[];
@@ -179,6 +180,12 @@ export function CouncilWorkspace({ projects, onBack }: CouncilWorkspaceProps) {
         {/* Center content panel */}
         <main className="flex-1 overflow-y-auto p-6 bg-bg-base">
           <div className="max-w-4xl mx-auto">
+            <NovaGuidanceBanner
+              module="council"
+              project={projects.find((p) => p.id === selectedProjectId) ?? null}
+              onNext={onBack}
+              nextLabel="Next: Reports & Export →"
+            />
             {activeTab === "dashboard" && (
               <DashboardTab
                 data={councilData}
