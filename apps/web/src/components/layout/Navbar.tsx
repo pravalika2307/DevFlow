@@ -54,10 +54,6 @@ export function Navbar({
               height="32"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="url(#devflow-logo-grad-navbar)"
-              strokeWidth="2.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
               style={{ flexShrink: 0 }}
               aria-hidden="true"
             >
@@ -73,7 +69,11 @@ export function Navbar({
                   <stop offset="100%" stopColor="#8b5cf6" />
                 </linearGradient>
               </defs>
-              <path d="M6 3h7l6 6-5 3 5 3-6 6H6V3z" />
+              <path
+                d="M4 3h8a9 9 0 0 1 9 9a9 9 0 0 1-9 9H4V3zm4 4v10h5l4-5l-4-5H8zm3 5l-3-3v6l3-3z"
+                fill="url(#devflow-logo-grad-navbar)"
+                fillRule="evenodd"
+              />
             </svg>
             <div className="df-hide-mobile">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
