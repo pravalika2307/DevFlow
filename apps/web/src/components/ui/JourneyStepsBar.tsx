@@ -31,7 +31,18 @@ export function JourneyStepsBar({
   project,
   onNavigate,
 }: JourneyStepsBarProps) {
+  const [hasHydrated, setHasHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    const t = setTimeout(() => {
+      setHasHydrated(true);
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
+
   const currentIdx = WORKFLOW_STEPS.findIndex((s) => s.id === currentModule);
+  // Use null project during server side rendering and initial hydration to guarantee identical markup
+  const activeProject = hasHydrated ? project : null;
 
   return (
     <div
@@ -48,7 +59,7 @@ export function JourneyStepsBar({
       className="no-scrollbar"
     >
       {WORKFLOW_STEPS.map((step, idx) => {
-        const status = getStepStatus(idx, currentIdx, project);
+        const status = getStepStatus(idx, currentIdx, activeProject);
         const isLast = idx === WORKFLOW_STEPS.length - 1;
 
         return (
@@ -72,9 +83,7 @@ export function JourneyStepsBar({
                     ? "1px solid rgba(59,130,246,0.4)"
                     : "1px solid transparent",
                 background:
-                  status === "active"
-                    ? "rgba(59,130,246,0.08)"
-                    : "transparent",
+                  status === "active" ? "rgba(59,130,246,0.08)" : "transparent",
                 cursor: "pointer",
                 flexShrink: 0,
                 transition: "all 200ms ease",
@@ -165,11 +174,11 @@ export function JourneyStepsBar({
                   flexShrink: 0,
                   borderRadius: 99,
                   background:
-                    getStepStatus(idx, currentIdx, project) === "done"
+                    getStepStatus(idx, currentIdx, activeProject) === "done"
                       ? "var(--emerald)"
                       : "var(--border)",
                   opacity:
-                    getStepStatus(idx, currentIdx, project) === "done"
+                    getStepStatus(idx, currentIdx, activeProject) === "done"
                       ? 0.6
                       : 0.3,
                   marginTop: -16, // align with circle center
