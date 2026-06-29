@@ -26,6 +26,11 @@ export function EmpathiseStage({ project, onUpdate }: EmpathiseStageProps) {
       behaviours: behaviours.trim(),
       needs: needs.trim(),
     });
+    window.dispatchEvent(
+      new CustomEvent("devflow-task-complete", {
+        detail: { task: "edit-empathy" },
+      }),
+    );
   };
 
   const handleAIReview = () => {

@@ -82,7 +82,14 @@ export function ConsensusTab({ consensus, onUpdate }: ConsensusTabProps) {
       step++;
       if (step >= ADVISORS.length) {
         clearInterval(interval);
-        setTimeout(() => setIsSimulating(false), 2000);
+        setTimeout(() => {
+          setIsSimulating(false);
+          window.dispatchEvent(
+            new CustomEvent("devflow-task-complete", {
+              detail: { task: "run-council" },
+            }),
+          );
+        }, 2000);
       } else {
         setCurrentAdvisorIdx(step);
       }
@@ -170,6 +177,7 @@ export function ConsensusTab({ consensus, onUpdate }: ConsensusTabProps) {
             <button
               onClick={startSimulation}
               className="df-btn df-btn-primary px-3 py-1.5 text-[10px]"
+              data-action-id="run-council"
             >
               Simulate Live Consensus
             </button>

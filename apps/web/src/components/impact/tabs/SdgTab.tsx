@@ -140,6 +140,12 @@ export function SdgTab({ sdgs, onUpdate, projects }: SdgTabProps) {
 
     onUpdate(updated);
 
+    window.dispatchEvent(
+      new CustomEvent("devflow-task-complete", {
+        detail: { task: "review-sdg" },
+      }),
+    );
+
     // Reset Form
     setReasoning("");
     setOutcomes("");

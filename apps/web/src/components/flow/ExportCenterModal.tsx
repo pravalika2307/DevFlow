@@ -50,6 +50,11 @@ export function ExportCenterModal({
       URL.revokeObjectURL(url);
 
       setSuccessMsg(`Successfully generated and downloaded ${filename}!`);
+      window.dispatchEvent(
+        new CustomEvent("devflow-task-complete", {
+          detail: { task: "generate-report" },
+        }),
+      );
     }, 1200);
   };
 
@@ -152,6 +157,7 @@ export function ExportCenterModal({
             disabled={isExporting}
             className="df-btn df-btn-primary"
             style={{ padding: "8px 18px" }}
+            data-action-id="generate-report"
           >
             {isExporting ? (
               <>

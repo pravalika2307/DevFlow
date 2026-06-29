@@ -84,6 +84,12 @@ export function ResearchTab({ records, onUpdate }: ResearchTabProps) {
     const updated = [newRecord, ...records];
     onUpdate(updated);
 
+    window.dispatchEvent(
+      new CustomEvent("devflow-task-complete", {
+        detail: { task: "add-observation" },
+      }),
+    );
+
     // Reset Form
     setTitle("");
     setContent("");

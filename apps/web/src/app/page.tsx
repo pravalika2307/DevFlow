@@ -1743,7 +1743,14 @@ export default function HomePage() {
                       <ProjectCard
                         key={project.id}
                         project={project}
-                        onClick={() => setSelectedProject(project)}
+                        onClick={() => {
+                          setSelectedProject(project);
+                          window.dispatchEvent(
+                            new CustomEvent("devflow-task-complete", {
+                              detail: { task: "view-project" },
+                            }),
+                          );
+                        }}
                       />
                     ))}
                   </motion.div>

@@ -268,6 +268,13 @@ export function InnovationGalaxy({ projects, onBack }: InnovationGalaxyProps) {
                 }}
                 whileHover={{ scale: 1.15 }}
                 onClick={() => setSelectedProject(proj)}
+                onMouseEnter={() => {
+                  window.dispatchEvent(
+                    new CustomEvent("devflow-task-complete", {
+                      detail: { task: "hover-galaxy" },
+                    }),
+                  );
+                }}
               >
                 {/* Planet Body */}
                 <div

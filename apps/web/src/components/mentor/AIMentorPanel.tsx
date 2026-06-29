@@ -763,6 +763,13 @@ export function AIMentorPanel({ project }: AIMentorPanelProps) {
             timestamp: Date.now(),
           },
         ]);
+        if (action === "improve_idea") {
+          window.dispatchEvent(
+            new CustomEvent("devflow-task-complete", {
+              detail: { task: "improve-idea" },
+            }),
+          );
+        }
       }, delay);
     },
     [project, thinking, startThinkingAnimation, stopThinkingAnimation],
