@@ -1667,11 +1667,36 @@ export default function HomePage() {
               <span style={{ color: "var(--border)" }}>|</span>
               <span>v1.0.0</span>
             </div>
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-              <span style={{ color: "var(--text-secondary)", fontWeight: 600 }}>
-                ✦ Built with AI & Design Thinking
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                flexWrap: "wrap",
+                color: "var(--text-tertiary)",
+                transition: "opacity 150ms ease",
+              }}
+              className="hover:opacity-80 transition-opacity duration-150 cursor-default"
+            >
+              <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ color: "var(--rose)", fontSize: 11 }}>❤️</span>{" "}
+                Built by{" "}
+                <span style={{ color: "var(--violet)", fontWeight: 700 }}>
+                  Pravalika Palle
+                </span>
               </span>
-              <span>© 2026 DevFlow Team</span>
+              <span style={{ color: "var(--border)" }}>|</span>
+              <span
+                style={{
+                  color: "var(--text-secondary)",
+                  fontWeight: 800,
+                  letterSpacing: "0.02em",
+                }}
+              >
+                NovaForge AI
+              </span>
+              <span style={{ color: "var(--border)" }}>|</span>
+              <span>© 2026 DevFlow OS</span>
             </div>
           </footer>
         </div>

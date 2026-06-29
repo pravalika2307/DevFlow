@@ -689,7 +689,27 @@ export function SettingsCenterModal({
             }}
           >
             <span>DevFlow OS • Version 1.0.0</span>
-            <span>Built with AI + Design Thinking © 2026</span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                color: "var(--text-tertiary)",
+              }}
+            >
+              <span style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                <span style={{ color: "var(--rose)" }}>❤️</span> Built by{" "}
+                <span style={{ color: "var(--violet)", fontWeight: 700 }}>
+                  Pravalika Palle
+                </span>
+              </span>
+              <span>|</span>
+              <span style={{ color: "var(--text-secondary)", fontWeight: 800 }}>
+                NovaForge AI
+              </span>
+              <span>|</span>
+              <span>© 2026 DevFlow OS</span>
+            </div>
           </div>
         </motion.div>
       </div>
