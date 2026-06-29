@@ -93,48 +93,58 @@ export function Sidebar({
 
       {/* Brand & Section links */}
       <div className="space-y-6">
-        <div className="flex items-center gap-3 px-3 py-1.5 border-b border-border-default pb-4">
+        <div className="flex items-center gap-4 px-4 py-2 border-b border-border-default pb-5">
           <div
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
+              width: 38,
+              height: 38,
+              borderRadius: 10,
               background:
                 "linear-gradient(135deg, var(--blue) 0%, var(--violet) 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 0 14px rgba(59,130,246,0.3)",
+              boxShadow: "0 0 16px rgba(59,130,246,0.25)",
               flexShrink: 0,
             }}
             aria-hidden="true"
           >
             <svg
-              width="16"
-              height="16"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="white"
-              strokeWidth="2.5"
+              strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <path d="M5 4h6a8 8 0 0 1 8 8l-4 4h-4l4-4H8v8H5V4z" />
+              <path d="M4 3h7a9 9 0 0 1 9 9c0 3-1.5 5.7-3.8 7.3L12 14h4a3 3 0 0 0 0-6H8v13H4V3z" />
             </svg>
           </div>
-          <div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <h2
               style={{
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: 900,
                 color: "white",
-                letterSpacing: "-0.01em",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.1,
               }}
             >
               DevFlow
             </h2>
-            <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold block leading-tight">
-              AI Innovation OS
+            <span
+              style={{
+                fontSize: 8.5,
+                color: "var(--text-tertiary)",
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                lineHeight: 1.2,
+              }}
+            >
+              Innovation Operating System
             </span>
           </div>
         </div>
@@ -183,8 +193,35 @@ export function Sidebar({
 
         {/* Profile Card */}
         <div className="flex items-center gap-3 px-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-violet-600 flex items-center justify-center text-white font-extrabold text-xs shadow-md">
-            P
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              background:
+                "linear-gradient(135deg, var(--blue) 0%, var(--violet) 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "white",
+              boxShadow: "0 0 12px rgba(59,130,246,0.2)",
+              flexShrink: 0,
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+              />
+            </svg>
           </div>
           <div className="truncate">
             <span className="text-xs font-bold text-white block truncate leading-tight">

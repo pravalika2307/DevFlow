@@ -59,7 +59,7 @@ export function Navbar({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0 0 16px rgba(59,130,246,0.35)",
+                boxShadow: "0 0 16px rgba(59,130,246,0.3)",
                 flexShrink: 0,
               }}
               aria-hidden="true"
@@ -70,20 +70,20 @@ export function Navbar({
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="white"
-                strokeWidth="2.5"
+                strokeWidth="2.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M5 4h6a8 8 0 0 1 8 8l-4 4h-4l4-4H8v8H5V4z" />
+                <path d="M4 3h7a9 9 0 0 1 9 9c0 3-1.5 5.7-3.8 7.3L12 14h4a3 3 0 0 0 0-6H8v13H4V3z" />
               </svg>
             </div>
             <div className="df-hide-mobile">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span
                   style={{
-                    fontSize: 15,
-                    fontWeight: 800,
-                    color: "var(--text-primary)",
+                    fontSize: 16,
+                    fontWeight: 900,
+                    color: "white",
                     letterSpacing: "-0.02em",
                   }}
                 >
@@ -92,14 +92,14 @@ export function Navbar({
                 <span
                   style={{
                     fontSize: 9,
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
+                    fontWeight: 800,
+                    letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    background: "var(--blue-dim)",
-                    color: "#93c5fd",
-                    border: "1px solid var(--blue-border)",
-                    padding: "2px 6px",
-                    borderRadius: 6,
+                    background: "rgba(59,130,246,0.1)",
+                    color: "#60a5fa",
+                    border: "1px solid rgba(59,130,246,0.2)",
+                    padding: "1px 5px",
+                    borderRadius: 5,
                   }}
                 >
                   OS
@@ -107,13 +107,15 @@ export function Navbar({
               </div>
               <p
                 style={{
-                  fontSize: 10,
+                  fontSize: 9,
                   color: "var(--text-tertiary)",
-                  fontWeight: 500,
-                  marginTop: 1,
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  marginTop: 2,
                 }}
               >
-                AI Innovation OS
+                Innovation Operating System
               </p>
             </div>
           </div>
@@ -264,17 +266,28 @@ export function Navbar({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 12,
-                fontWeight: 800,
                 color: "white",
-                boxShadow: "0 0 12px rgba(59,130,246,0.3)",
+                boxShadow: "0 0 12px rgba(59,130,246,0.2)",
                 cursor: "default",
                 flexShrink: 0,
               }}
               title="Pravalika – Workspace Admin"
               aria-label="User avatar: Pravalika"
             >
-              P
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                />
+              </svg>
             </div>
 
             {/* Mobile hamburger */}
