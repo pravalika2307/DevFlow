@@ -44,7 +44,6 @@ export function CoachWorkspace({
   };
 
   const handleUpdateDefine = (data: DefineData) => {
-    // If problem statement changes, update problemClarity score and overall score
     const scoreDiff = data.problemStatement.length > 30 ? 95 : 60;
     const updatedScores = {
       ...project.innovationScores,

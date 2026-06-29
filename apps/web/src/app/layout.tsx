@@ -1,5 +1,5 @@
 import React from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 
@@ -22,6 +22,12 @@ export const metadata: Metadata = {
       "Premium AI-powered innovation workspace. Design Thinking. Impact Intelligence. AI Council.",
     type: "website",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#050505",
 };
 
 export default function RootLayout({

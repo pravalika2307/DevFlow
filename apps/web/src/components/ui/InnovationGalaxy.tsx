@@ -164,7 +164,13 @@ export function InnovationGalaxy({ projects, onBack }: InnovationGalaxyProps) {
       </div>
 
       {/* Main Galaxy Orbit Area */}
-      <div className="flex-1 relative flex items-center justify-center overflow-hidden">
+      <div
+        className="flex-1 relative flex items-center justify-center overflow-hidden"
+        role="img"
+        aria-label={`Innovation Galaxy map showing ${projects.length} project${
+          projects.length !== 1 ? "s" : ""
+        } orbiting a central AI core. Use project cards to explore details.`}
+      >
         {/* Ambient background Nebulae */}
         <div
           className="absolute inset-0 pointer-events-none opacity-45"

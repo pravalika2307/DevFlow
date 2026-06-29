@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { InnovationProject } from "../../types/innovation";
 
@@ -133,12 +133,40 @@ export function MilestoneSuccessModal({
 }: MilestoneSuccessModalProps) {
   const isOpen = trigger !== null;
   const config = trigger ? MILESTONE_CONFIG[trigger] : null;
+  const dismissRef = useRef<HTMLButtonElement>(null);
+  const ctaRef = useRef<HTMLButtonElement>(null);
 
-  // Close on Escape key
+  // Auto-focus the primary CTA button when the modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        ctaRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  // Close on Escape key & Focus Trap
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+      }
+      if (e.key === "Tab") {
+        const focused = document.activeElement;
+        if (e.shiftKey) {
+          if (focused === dismissRef.current) {
+            e.preventDefault();
+            ctaRef.current?.focus();
+          }
+        } else {
+          if (focused === ctaRef.current) {
+            e.preventDefault();
+            dismissRef.current?.focus();
+          }
+        }
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -323,6 +351,7 @@ export function MilestoneSuccessModal({
                 }}
               >
                 <button
+                  ref={dismissRef}
                   onClick={onClose}
                   style={{
                     flex: 1,
@@ -339,6 +368,7 @@ export function MilestoneSuccessModal({
                   Dismiss
                 </button>
                 <motion.button
+                  ref={ctaRef}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {

@@ -18,11 +18,18 @@ import { ExportCenterModal } from "../components/flow/ExportCenterModal";
 import { ToastContainer, ToastMessage } from "../components/ui/Toast";
 import { InnovationGalaxy } from "../components/ui/InnovationGalaxy";
 import { AIMentorPanel } from "../components/mentor/AIMentorPanel";
-import { WorkflowBanner, WorkflowModule } from "../components/ui/WorkflowBanner";
+import {
+  WorkflowBanner,
+  WorkflowModule,
+} from "../components/ui/WorkflowBanner";
 import { JourneyStepsBar } from "../components/ui/JourneyStepsBar";
 import { QuickActionsBar } from "../components/ui/QuickActionsBar";
-import { MilestoneSuccessModal, MilestoneTrigger } from "../components/ui/MilestoneSuccessModal";
+import {
+  MilestoneSuccessModal,
+  MilestoneTrigger,
+} from "../components/ui/MilestoneSuccessModal";
 import { AutoSaveIndicator } from "../components/ui/AutoSaveIndicator";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 
 type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
 
@@ -500,9 +507,14 @@ export default function HomePage() {
   const [lastSaved, setLastSaved] = useState<number | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Milestone modal state
-  const [milestoneTrigger, setMilestoneTrigger] = useState<MilestoneTrigger | null>(null);
-  const [milestoneProject, setMilestoneProject] = useState<InnovationProject | null>(null);
+  const [milestoneTrigger, setMilestoneTrigger] =
+    useState<MilestoneTrigger | null>(null);
+  const [milestoneProject, setMilestoneProject] =
+    useState<InnovationProject | null>(null);
   const prevProjectCount = useRef(projects.length);
+  // Confirm delete state (replaces window.confirm)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [confirmDeleteName, setConfirmDeleteName] = useState<string>("");
 
   const pushToast = useCallback(
     (message: string, variant: ToastMessage["variant"] = "success") => {
@@ -538,7 +550,10 @@ export default function HomePage() {
           if (projects.length > 0) {
             setActiveCoachProject(projects[0]);
           } else {
-            pushToast("Create a project first to launch Design Thinking.", "info");
+            pushToast(
+              "Create a project first to launch Design Thinking.",
+              "info",
+            );
           }
           break;
         case "mentor":
@@ -600,16 +615,19 @@ export default function HomePage() {
     [selectedProject, pushToast, triggerAutoSave, projects],
   );
 
-  const handleDeleteProject = useCallback(
-    (id: string) => {
-      if (!confirm("Delete this project? This cannot be undone.")) return;
-      const updated = InnovationService.deleteProject(id);
-      setProjects(updated);
-      setSelectedProject(null);
-      pushToast("Project deleted.", "warning");
-    },
-    [pushToast],
-  );
+  const handleDeleteProject = useCallback((id: string, name: string) => {
+    setConfirmDeleteName(name);
+    setConfirmDeleteId(id);
+  }, []);
+
+  const handleConfirmDelete = useCallback(() => {
+    if (!confirmDeleteId) return;
+    const updated = InnovationService.deleteProject(confirmDeleteId);
+    setProjects(updated);
+    setSelectedProject(null);
+    setConfirmDeleteId(null);
+    pushToast("Project deleted.", "warning");
+  }, [confirmDeleteId, pushToast]);
 
   const handleEditClick = useCallback((project: InnovationProject) => {
     setEditingProject(project);
@@ -877,18 +895,17 @@ export default function HomePage() {
               zIndex: 60,
               pointerEvents: "none",
             }}
-            aria-live="polite"
+            aria-hidden="true"
           >
-            <AutoSaveIndicator
-              isSaving={isSaving}
-              lastSaved={lastSaved}
-            />
+            <AutoSaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
           </div>
 
           <AnimatePresence>
             {isExportOpen && (
               <ExportCenterModal
-                project={projects[0] || ({} as InnovationProject)}
+                project={
+                  selectedProject || projects[0] || ({} as InnovationProject)
+                }
                 onClose={() => setIsExportOpen(false)}
               />
             )}
@@ -1497,7 +1514,9 @@ export default function HomePage() {
           <ProjectDetail
             project={selectedProject}
             onEdit={() => handleEditClick(selectedProject)}
-            onDelete={() => handleDeleteProject(selectedProject.id)}
+            onDelete={() =>
+              handleDeleteProject(selectedProject.id, selectedProject.name)
+            }
             onClose={() => setSelectedProject(null)}
             onLaunchCoach={() => {
               setActiveCoachProject(selectedProject);
@@ -1607,7 +1626,11 @@ export default function HomePage() {
         }}
         onOpenCoach={() => {
           if (projects.length > 0) setActiveCoachProject(projects[0]);
-          else pushToast("Create a project first to launch Design Thinking.", "info");
+          else
+            pushToast(
+              "Create a project first to launch Design Thinking.",
+              "info",
+            );
         }}
         onOpenExport={() => setIsExportOpen(true)}
         onOpenCouncil={() => setActiveModule("council")}
@@ -1623,13 +1646,28 @@ export default function HomePage() {
             setActiveModule("discovery");
           } else if (milestoneTrigger === "council_complete") {
             setActiveModule("council");
-          } else if (milestoneTrigger === "project_complete" || milestoneTrigger === "report_exported") {
+          } else if (
+            milestoneTrigger === "project_complete" ||
+            milestoneTrigger === "report_exported"
+          ) {
             setIsExportOpen(true);
           } else if (milestoneTrigger === "first_mentor") {
             setActiveModule("dashboard");
           }
           setMilestoneTrigger(null);
         }}
+      />
+
+      {/* ── Confirm Delete Dialog ───────────────────────── */}
+      <ConfirmDialog
+        isOpen={confirmDeleteId !== null}
+        title="Delete Project"
+        message={`"${confirmDeleteName}" will be permanently deleted. This action cannot be undone.`}
+        confirmLabel="Delete Project"
+        cancelLabel="Keep Project"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDeleteId(null)}
       />
     </>
   );
