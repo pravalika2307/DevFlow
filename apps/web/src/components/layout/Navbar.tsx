@@ -65,18 +65,16 @@ export function Navbar({
               aria-hidden="true"
             >
               <svg
-                width="17"
-                height="17"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="white"
                 strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                />
+                <path d="M5 4h6a8 8 0 0 1 8 8l-4 4h-4l4-4H8v8H5V4z" />
               </svg>
             </div>
             <div className="df-hide-mobile">

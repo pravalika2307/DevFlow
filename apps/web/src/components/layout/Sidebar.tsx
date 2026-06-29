@@ -94,15 +94,47 @@ export function Sidebar({
       {/* Brand & Section links */}
       <div className="space-y-6">
         <div className="flex items-center gap-3 px-3 py-1.5 border-b border-border-default pb-4">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <span className="text-white font-black text-sm">DF</span>
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background:
+                "linear-gradient(135deg, var(--blue) 0%, var(--violet) 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 0 14px rgba(59,130,246,0.3)",
+              flexShrink: 0,
+            }}
+            aria-hidden="true"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 4h6a8 8 0 0 1 8 8l-4 4h-4l4-4H8v8H5V4z" />
+            </svg>
           </div>
           <div>
-            <h2 className="text-xs font-black text-white tracking-widest uppercase">
-              DevFlow OS
+            <h2
+              style={{
+                fontSize: 14,
+                fontWeight: 900,
+                color: "white",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              DevFlow
             </h2>
-            <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold block">
-              Innovation Hub
+            <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold block leading-tight">
+              AI Innovation OS
             </span>
           </div>
         </div>

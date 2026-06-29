@@ -1639,7 +1639,7 @@ export default function HomePage() {
           {/* ── Premium Footer ────────────────────────────────── */}
           <footer
             style={{
-              padding: "32px 20px 48px",
+              padding: "32px 20px 110px",
               borderTop: "1px solid var(--border)",
               marginTop: "auto",
               display: "flex",
@@ -1688,7 +1688,7 @@ export default function HomePage() {
               <span style={{ color: "var(--border)" }}>|</span>
               <span
                 style={{
-                  color: "var(--text-secondary)",
+                  color: "var(--blue-accent)",
                   fontWeight: 800,
                   letterSpacing: "0.02em",
                 }}

@@ -704,7 +704,7 @@ export function SettingsCenterModal({
                 </span>
               </span>
               <span>|</span>
-              <span style={{ color: "var(--text-secondary)", fontWeight: 800 }}>
+              <span style={{ color: "var(--blue-accent)", fontWeight: 800 }}>
                 NovaForge AI
               </span>
               <span>|</span>
