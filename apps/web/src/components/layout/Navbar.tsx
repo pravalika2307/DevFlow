@@ -49,34 +49,32 @@ export function Navbar({
               flexShrink: 0,
             }}
           >
-            <div
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: 10,
-                background:
-                  "linear-gradient(135deg, var(--blue) 0%, var(--violet) 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 0 16px rgba(59,130,246,0.3)",
-                flexShrink: 0,
-              }}
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="url(#devflow-logo-grad-navbar)"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ flexShrink: 0 }}
               aria-hidden="true"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M4 3h7a9 9 0 0 1 9 9c0 3-1.5 5.7-3.8 7.3L12 14h4a3 3 0 0 0 0-6H8v13H4V3z" />
-              </svg>
-            </div>
+              <defs>
+                <linearGradient
+                  id="devflow-logo-grad-navbar"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#3b82f6" />
+                  <stop offset="100%" stopColor="#8b5cf6" />
+                </linearGradient>
+              </defs>
+              <path d="M6 3h7l6 6-5 3 5 3-6 6H6V3z" />
+            </svg>
             <div className="df-hide-mobile">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span
