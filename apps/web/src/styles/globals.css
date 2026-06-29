@@ -122,6 +122,8 @@ html {
 body {
   background: var(--bg-base);
   color: var(--text-primary);
+  font-size: 15.5px;
+  line-height: 1.6;
   font-family:
     "Inter",
     system-ui,
@@ -700,7 +702,7 @@ body {
 
 /* ── Section Label ────────────────────────────────────── */
 .df-section-label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -709,7 +711,7 @@ body {
 
 /* ── Stat Value ───────────────────────────────────────── */
 .df-stat-value {
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;

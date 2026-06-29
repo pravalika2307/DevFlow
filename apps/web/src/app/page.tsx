@@ -1217,19 +1217,19 @@ export default function HomePage() {
               >
                 <h1
                   style={{
-                    fontSize: 28,
+                    fontSize: 34,
                     fontWeight: 900,
                     letterSpacing: "-0.04em",
                     color: "var(--text-primary)",
-                    lineHeight: 1,
-                    marginBottom: 8,
+                    lineHeight: 1.1,
+                    marginBottom: 10,
                   }}
                 >
                   Innovation <span className="df-gradient-text">Workspace</span>
                 </h1>
                 <p
                   style={{
-                    fontSize: 14,
+                    fontSize: 16,
                     color: "var(--text-secondary)",
                     fontWeight: 500,
                   }}
@@ -1446,13 +1446,13 @@ export default function HomePage() {
                 className="df-hide-mobile"
               >
                 {/* Council Status */}
-                <div className="df-card" style={{ padding: 20 }}>
+                <div className="df-card" style={{ padding: 24 }}>
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      marginBottom: 16,
+                      marginBottom: 18,
                     }}
                   >
                     <span
@@ -1503,13 +1503,13 @@ export default function HomePage() {
                           background: "var(--bg-surface)",
                           border: "1px solid var(--border)",
                           borderRadius: 12,
-                          padding: "12px 14px",
+                          padding: "14px 16px",
                         }}
                       >
                         <span className="df-section-label">{item.label}</span>
                         <div
                           style={{
-                            fontSize: 20,
+                            fontSize: 24,
                             fontWeight: 900,
                             letterSpacing: "-0.03em",
                             color: "var(--text-primary)",
@@ -1521,7 +1521,7 @@ export default function HomePage() {
                         </div>
                         <span
                           style={{
-                            fontSize: 11,
+                            fontSize: 12.5,
                             color: "var(--text-tertiary)",
                             fontWeight: 500,
                           }}
@@ -1534,10 +1534,10 @@ export default function HomePage() {
                 </div>
 
                 {/* Activity Log */}
-                <div className="df-card" style={{ padding: 20 }}>
+                <div className="df-card" style={{ padding: 24 }}>
                   <span
                     className="df-section-label"
-                    style={{ display: "block", marginBottom: 14 }}
+                    style={{ display: "block", marginBottom: 16 }}
                   >
                     Recent Activity
                   </span>
@@ -1587,17 +1587,17 @@ export default function HomePage() {
                         <div>
                           <p
                             style={{
-                              fontSize: 12,
+                              fontSize: 13.5,
                               fontWeight: 600,
                               color: "var(--text-primary)",
-                              lineHeight: 1.4,
+                              lineHeight: 1.5,
                             }}
                           >
                             {act.action}
                           </p>
                           <span
                             className="df-badge df-badge-blue"
-                            style={{ marginTop: 4, fontSize: 9 }}
+                            style={{ marginTop: 4, fontSize: 10.5 }}
                           >
                             {act.tag}
                           </span>

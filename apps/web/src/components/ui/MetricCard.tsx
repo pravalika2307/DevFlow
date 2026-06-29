@@ -96,7 +96,7 @@ export function MetricCard({
   return (
     <div
       ref={ref}
-      className={`df-card ${cfg.glow} relative overflow-hidden p-5 flex flex-col gap-4 animate-fade-in-up`}
+      className={`df-card ${cfg.glow} relative overflow-hidden p-6 flex flex-col gap-4 animate-fade-in-up`}
       role="region"
       aria-label={`${title}: ${value}%`}
     >
@@ -120,8 +120,8 @@ export function MetricCard({
         {/* Icon */}
         <div
           style={{
-            width: 36,
-            height: 36,
+            width: 38,
+            height: 38,
             borderRadius: 10,
             background: `rgba(255,255,255,0.04)`,
             border: `1px solid var(--border)`,
@@ -139,8 +139,8 @@ export function MetricCard({
         <div style={{ position: "relative" }}>
           <ProgressRing
             value={value}
-            size={64}
-            strokeWidth={3.5}
+            size={72}
+            strokeWidth={4.0}
             color={cfg.color}
             trackColor={cfg.trackColor}
             animated={visible}
@@ -153,7 +153,7 @@ export function MetricCard({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 11,
+              fontSize: 12.5,
               fontWeight: 800,
               color: cfg.text,
               letterSpacing: "-0.02em",
@@ -172,15 +172,15 @@ export function MetricCard({
             className={`df-stat-value ${
               visible ? "animate-count-up" : "opacity-0"
             }`}
-            style={{ fontSize: 26 }}
+            style={{ fontSize: 32 }}
           >
             {animated}
           </span>
           <span
             style={{
-              fontSize: 13,
+              fontSize: 14,
               color: "var(--text-tertiary)",
-              marginBottom: 3,
+              marginBottom: 4,
               fontWeight: 600,
             }}
           >
@@ -197,7 +197,7 @@ export function MetricCard({
             display: "flex",
             alignItems: "center",
             gap: 3,
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 700,
             color: trendUp ? "var(--emerald)" : "var(--rose)",
           }}
@@ -242,10 +242,10 @@ export function MetricCard({
       {/* Description */}
       <p
         style={{
-          fontSize: 11,
+          fontSize: 13,
           color: "var(--text-tertiary)",
-          lineHeight: 1.5,
-          marginTop: -8,
+          lineHeight: 1.6,
+          marginTop: -4,
         }}
       >
         {description}

@@ -99,7 +99,7 @@ export function Sidebar({
           <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <h2
               style={{
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: 900,
                 color: "white",
                 letterSpacing: "-0.02em",
@@ -110,7 +110,7 @@ export function Sidebar({
             </h2>
             <span
               style={{
-                fontSize: 8.5,
+                fontSize: 10,
                 color: "var(--text-tertiary)",
                 fontWeight: 600,
                 letterSpacing: "0.06em",
@@ -137,7 +137,7 @@ export function Sidebar({
                 }`}
               >
                 <span className="text-base flex-shrink-0">{item.icon}</span>
-                <span className="text-xs font-bold tracking-tight truncate">
+                <span className="text-sm font-bold tracking-tight truncate">
                   {item.label}
                 </span>
               </button>
@@ -150,7 +150,7 @@ export function Sidebar({
       <div className="space-y-4 pt-4 border-t border-border-default">
         {/* Innovation Streak Card */}
         <div className="rounded-xl border border-border-default bg-bg-card/65 p-3 space-y-2 relative overflow-hidden">
-          <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+          <div className="flex justify-between items-center text-xs font-bold text-slate-500 uppercase tracking-wider">
             <span className="flex items-center gap-1">⚡ Streak</span>
             <span className="text-blue-accent font-extrabold">5 Days</span>
           </div>
@@ -160,7 +160,7 @@ export function Sidebar({
               style={{ width: "70%" }}
             />
           </div>
-          <span className="text-[9px] text-slate-500 block font-semibold">
+          <span className="text-[10px] text-slate-500 block font-semibold">
             Next Milestone: 7-Day Matrix
           </span>
         </div>
@@ -198,10 +198,10 @@ export function Sidebar({
             </svg>
           </div>
           <div className="truncate">
-            <span className="text-xs font-bold text-white block truncate leading-tight">
+            <span className="text-sm font-bold text-white block truncate leading-tight">
               Pravalika
             </span>
-            <span className="text-[9px] text-slate-500 font-bold uppercase block tracking-wider">
+            <span className="text-[10px] text-slate-500 font-bold uppercase block tracking-wider">
               Workspace Admin
             </span>
           </div>
@@ -213,7 +213,7 @@ export function Sidebar({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-accent opacity-75"></span>
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-accent"></span>
           </span>
-          <span className="text-[8px] font-bold uppercase tracking-widest text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
             Live Connect / API Active
           </span>
         </div>
