@@ -504,6 +504,7 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isBooting, setIsBooting] = useState(true);
+  const [isLandingIntro, setIsLandingIntro] = useState(false);
   // AutoSave state
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<number | null>(null);
@@ -521,6 +522,15 @@ export default function HomePage() {
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [tourType, setTourType] = useState<TourType>("general");
   const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    if (isLandingIntro) {
+      const timer = setTimeout(() => {
+        setIsLandingIntro(false);
+      }, 4200);
+      return () => clearTimeout(timer);
+    }
+  }, [isLandingIntro]);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -969,7 +979,95 @@ export default function HomePage() {
   return (
     <>
       <AnimatePresence>
-        {isBooting && <BootSequence onComplete={() => setIsBooting(false)} />}
+        {isBooting && (
+          <BootSequence
+            onComplete={() => {
+              setIsBooting(false);
+              setIsLandingIntro(true);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isLandingIntro && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[190] bg-[#030712] flex flex-col items-center justify-center p-6 text-center select-none"
+          >
+            {/* Cinematic backdrop */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(124,77,255,0.08)_0%,rgba(59,130,246,0.04)_60%,transparent_100%)] pointer-events-none" />
+
+            <div className="space-y-12 max-w-lg z-10">
+              {/* Category label */}
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8, type: "spring" }}
+                className="text-[11px] font-bold tracking-[0.25em] text-blue-accent uppercase"
+              >
+                Innovation Operating System
+              </motion.p>
+
+              {/* Main title */}
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 1, type: "spring" }}
+                style={{
+                  fontSize: "min(64px, 12vw)",
+                  fontWeight: 900,
+                  color: "white",
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1,
+                }}
+              >
+                DevFlow <span className="text-[#8b5cf6]">OS</span>
+              </motion.h1>
+
+              {/* Pillars: Build. Validate. Scale. */}
+              <div className="flex items-center justify-center gap-6 md:gap-8 pt-4">
+                {[
+                  { text: "Build.", color: "text-white" },
+                  { text: "Validate.", color: "text-[#8b5cf6]" },
+                  { text: "Scale.", color: "text-[#3b82f6]" },
+                ].map((pillar, idx) => (
+                  <motion.span
+                    key={pillar.text}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      delay: 0.9 + idx * 0.3,
+                      duration: 0.8,
+                      type: "spring",
+                      stiffness: 120,
+                    }}
+                    className={`text-lg md:text-xl font-bold tracking-wider ${pillar.color}`}
+                  >
+                    {pillar.text}
+                  </motion.span>
+                ))}
+              </div>
+
+              {/* Skip / Enter Action */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2.2, duration: 0.6 }}
+                className="pt-8"
+              >
+                <button
+                  onClick={() => setIsLandingIntro(false)}
+                  className="px-6 py-2.5 rounded-full border border-white/10 bg-white/[0.02] hover:bg-white/[0.08] text-xs font-bold text-slate-300 hover:text-white transition-all duration-300 tracking-wider hover:border-white/20"
+                >
+                  Enter Workspace &rarr;
+                </button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       <div className="flex min-h-screen bg-bg-base text-text-primary">
