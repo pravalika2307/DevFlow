@@ -1,168 +1,193 @@
-# DevFlow: Engineering Command Center
+# DevFlow OS: AI Innovation Operating System ✦
 
-DevFlow is a premium Engineering Command Center and intelligence platform. It integrates with GitHub to monitor repository health, pull requests, issues, and developer metrics, and surfaces proactive AI-driven engineering insights from one unified, sleek command dashboard.
+[![Build Status](https://github.com/pravalika2307/DevFlow/actions/workflows/main.yml/badge.svg)](https://github.com/pravalika2307/DevFlow/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.x-black.svg)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-emerald.svg)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-blue.svg)](https://www.docker.com/)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blueviolet.svg)](https://github.com/features/actions)
+[![Version](https://img.shields.io/badge/Version-1.0.0--RC1-blue.svg)](CHANGELOG.md)
+
+DevFlow OS is a premium, multi-agent AI-powered Innovation Operating System designed to guide student teams, startups, and innovators from initial concept discovery to presentation-ready **Samsung Solve for Tomorrow** submissions.
+
+Built on a Next.js 16 monorepo and styled with a sleek, dark Samsung-inspired glassmorphism design language, it bridges the gap between chaotic brainstorming and structured, compliance-ready project frameworks.
 
 ---
 
-## 1. Service & Network Architecture
+## 🧭 Innovation Journey Lifecycle
 
-DevFlow is designed as a decoupled workspaces monorepo containing four core services operating in a local virtual bridge network:
+DevFlow OS models the double-diamond Design Thinking methodology combined with active AI validation gates.
+
+```mermaid
+flowchart LR
+    A[1. Problem Discovery] --> B[2. Empathise Stage]
+    B --> C[3. Define Stage]
+    C --> D[4. Ideate & Model]
+    D --> E[5. Prototype CAD/Code]
+    E --> F[6. User Validation]
+    F --> G[7. AI Council Review]
+    G --> H[8. Generate Report & Widescreen Deck]
+```
+
+---
+
+## 🌌 Key Highlights
+
+- **Innovation Workspace**: A premium flight deck hosting dynamic project progress indices, health rings, and a double-diamond design thinking wizard.
+- **Problem Discovery Panel**: Tools for root cause analysis including the **5 Whys drill-down**, stakeholder maps, chronological research logs, and visual Fishbone skeletons.
+- **AI Innovation Mentor (NOVA)**: Continuous contextual coaching that flags product blind spots, estimates feasibility, assesses risks, and maps SDG alignment.
+- **Spatial Innovation Galaxy Map**: A beautiful 3D particle orbit representation where projects revolve around the AI Core. Orbit distance represents development stage, and connection lines trace shared SDG paths.
+- **Impact Intelligence Matrix**: Formulates target SDG weights, outputs predictive beneficiary growth curves, and highlights inclusivity hazards.
+- **NOVA Expert Council**: A simulated panel of 8 specialized AI agents (Tech Lead, SDG Ethicist, Accessibility Expert, and others) performing automated evaluations to deliver a unified Readiness Score.
+- **One-Click Slide Deck & Reports**: Instantly render high-contrast pitch decks and compile print-ready PDF reports containing empathy maps, SDG matrices, and AI council reviews.
+
+---
+
+## 🏗️ Architecture & Network Setup
+
+DevFlow is organized as a decoupled monorepo leveraging npm workspaces and Turborepo:
 
 ```mermaid
 graph TD
-    User([Developer / User]) -->|HTTP Port 3000| FE[Frontend Next.js]
-    FE -->|API Queries Port 8000| BE[Backend FastAPI]
+    User([User Client]) -->|HTTP Port 3000| FE[Frontend Next.js App]
+    FE -->|REST API Port 8000| BE[Backend FastAPI Gateway]
     BE -->|SQL Port 5432| DB[(PostgreSQL Database)]
-    BE -->|TCP Port 6379| RD[(Redis Broker & Cache)]
+    BE -->|TCP Port 6379| RD[(Redis Broker / Cache)]
 
-    subgraph Docker Network [devflow_net]
+    subgraph local_network [Local Docker Bridge Net]
         BE
         DB
         RD
     end
 ```
 
-### Infrastructure Port Registry
+### Port Registry
 
 - **Frontend Client**: `http://localhost:3000`
-- **Backend REST Gateway**: `http://localhost:8000`
+- **Backend API Gateway**: `http://localhost:8000`
 - **Interactive Swagger Docs**: `http://localhost:8000/docs`
-- **PostgreSQL Relational DB**: `localhost:5432`
-- **Redis Cache / Task Broker**: `localhost:6379`
+- **PostgreSQL Database**: `localhost:5432`
+- **Redis Cache & Broker**: `localhost:6379`
 
 ---
 
-## 2. Onboarding & Local Development Setup
+## 🛠️ Onboarding & Quick Start
 
-To initialize the project and get it running on your local machine, follow these steps:
+### Prerequisites
 
-### 2.1 Prerequisites
-
-Ensure your local host has the following runtimes:
+Make sure your local host has the following runtimes installed:
 
 - **Node.js** (v20+ / npm 10+)
-- **Python** (3.13+)
-- **Docker & Docker Compose** (Recommended)
+- **Python** (v3.13+)
+- **Docker & Docker Compose** (Recommended for full services)
 
-### 2.2 Standard Setup (Single Command)
+### Standard Setup (Single Command)
 
-Run the automated initialization command from the root folder:
+Run the automated installer script from the root folder:
 
 ```bash
 make install
 ```
 
-This script (`scripts/setup_dev.py`) will automatically:
-
-1. Copy `.env.example` to create `.env` in the root and backend directories.
-2. Install npm workspace modules and dependencies.
-3. Configure the Python virtual environment (`apps/api/venv`).
-4. Install all backend python packages, including code quality tools (pytest, black, ruff, mypy, pre-commit).
-5. Install and configure Git pre-commit hooks locally.
-6. Run the environment verification checklist (`scripts/verify_env.py`).
+_Under the hood, this script (`scripts/setup_dev.py`) automatically generates environment config files, configures python virtual environments, installs npm packages, and sets up Git pre-commit format hooks._
 
 ---
 
-## 3. Orchestration & Local Run Commands
+## 🚀 Running Locally
 
-### 3.1 Docker Compose Development (Recommended)
+### 1. Docker Compose (Recommended)
 
-You can build and start the complete containerized stack using the following Makefile targets:
+Compile and launch the containerized stack:
 
-- **Start the complete stack**:
+```bash
+# Start the services
+make start
 
-  ```bash
-  make start
-  ```
+# Verify container health checks (pg_isready, api health endpoints)
+docker compose ps
+```
 
-- **Check container health**:
+To shut down and wipe volumes:
 
-  ```bash
-  docker compose ps
-  ```
+```bash
+make stop
+```
 
-  Once booted, the internal healthcheck probes will execute:
+### 2. Native Dev Environment
 
-  - **PostgreSQL**: verified using `pg_isready`.
-  - **Redis**: verified using `redis-cli ping`.
-  - **FastAPI Backend**: verified using a socket checker against `/api/v1/health`.
-  - **Next.js Frontend**: verified using a node checker against path `/`.
+If you prefer running services natively:
 
-- **Stop and wipe volumes**:
+1. Start your local PostgreSQL and Redis servers.
+2. Run the concurrent developer pipeline:
 
-  ```bash
-  make stop
-  ```
+```bash
+make dev
+```
 
-- **Follow logs**:
-
-  ```bash
-  make logs
-  ```
-
-- **Database migrations**:
-  ```bash
-  make docker-migrate
-  ```
+This runs the Next.js client on port `3000` and the FastAPI backend on port `8000` with hot-reload watch processes enabled.
 
 ---
 
-### 3.2 Native Local Development
+## 🧪 Testing & Code Quality
 
-If you prefer running services directly on your host machine:
+Maintain codebase stability by running verification routines:
 
-1. Start your local PostgreSQL (`5432`) and Redis (`6379`) instances (or run `docker compose up -d db redis`).
-2. Run the Turborepo development runner:
-   ```bash
-   make dev
-   ```
-   This boots the Next.js dev server on `http://localhost:3000` and the FastAPI server on `http://localhost:8000` in concurrent hot-reload watch mode.
-3. Run migrations on the native database:
-   ```bash
-   make migrate
-   ```
+- **Format Code**: `make format` (runs Prettier for tsx/css, Black/Ruff for python)
+- **Static Linting**: `make lint` (runs ESLint and Mypy static check compilers)
+- **Unit Tests**: `make test` (runs Vitest for client, Pytest for backend)
 
 ---
 
-## 4. Linting, Formatting, and Testing
+## 📁 Repository Structure
 
-DevFlow maintains high engineering standards. Run quality check routines regularly:
-
-- **Formatting**: Format backend python files and frontend tsx/css files:
-  ```bash
-  make format
-  ```
-- **Linting & Typing**: Validate syntax rules, typing parameters, and ESLint configs:
-  ```bash
-  make lint
-  ```
-- **Testing**: Execute frontend and backend testing suites:
-  ```bash
-  make test
-  ```
-  _(Under the hood: runs Pytest for the FastAPI backend and Vitest for the Next.js frontend)_
-
----
-
-## 5. Coding & Contribution Rules
-
-Before writing code, please read our [Contribution Guidelines](CONTRIBUTING.md) to align on coding standards, commit messages, and PR processes. Release history can be tracked in the [Changelog](CHANGELOG.md).
+```
+├── apps
+│   ├── api          # FastAPI Python backend service
+│   │   ├── app      # Core logic (endpoints, middleware, schemas, models)
+│   │   └── tests    # Backend testing suite
+│   └── web          # Next.js App Router frontend application
+│       ├── src      # Frontend assets, hooks, styling, and components
+│       └── public   # Static images and client data assets
+├── packages         # Shared configurations
+│   ├── config       # Shared ESLint, Prettier, and Typescript configs
+│   ├── types        # Global typings and models
+│   └── ui           # Shared layout frameworks
+├── docs             # Production blueprints, architecture, and diagrams
+├── scripts          # Automated verification and installation utilities
+├── Makefile         # Command shortcut orchestration
+└── turbo.json       # Monorepo task cache configurations
+```
 
 ---
 
-## 6. Troubleshooting Guide
+## 📖 Extended Documentation
 
-### ❌ Docker Daemon Connection Error
+Refer to our deep-dive architecture folders:
 
-- **Issue**: `unable to get image ... failed to connect to the docker API`
-- **Resolution**: Docker Desktop is not running. Please start Docker Desktop, ensure the daemon is active in your taskbar, and run `make start` again.
+- [System Architecture Guide](docs/ARCHITECTURE.md)
+- [Front & Backend Design Specifications](docs/SYSTEM_DESIGN.md)
+- [REST Endpoint Catalog](docs/API_REFERENCE.md)
+- [Git Rules & Contributing Guidelines](docs/CONTRIBUTING.md)
+- [Production Deployment Protocols](docs/DEPLOYMENT.md)
+- [Security & Trusted Host Configurations](docs/SECURITY.md)
+- [Product Milestone Changelog](docs/CHANGELOG.md)
+- [Project Future Roadmap](docs/ROADMAP.md)
 
-### ❌ Port Conflicts (e.g. 5432 or 6379 already in use)
+---
 
-- **Issue**: Docker Compose fails because a port is occupied.
-- **Resolution**: A local database or Redis instance is already running natively. Stop the native service (e.g., `sudo systemctl stop postgresql` on Linux or via Services.msc on Windows) or update ports in `docker-compose.yml` / `.env`.
+## 🤝 Contributing
 
-### ❌ Environment Validation Mismatch
+Contributions are welcome! Please review [CONTRIBUTING.md](CONTRIBUTING.md) for details on code style requirements, branch patterns, and pull request validations.
 
-- **Issue**: The setup script or `verify_env.py` fails reporting missing keys.
-- **Resolution**: Compare your `.env` file against `.env.example`. Restore any missing key mappings. Run `python scripts/verify_env.py` to check again.
+---
+
+## 🛡️ License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## ✉️ Contact & Support
+
+For Samsung Solve for Tomorrow queries, demo day schedules, or general support, please reach out to the project maintainers at `support@devflow.io`.
