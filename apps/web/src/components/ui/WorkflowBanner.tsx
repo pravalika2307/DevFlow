@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { InnovationProject } from "../../types/innovation";
 
@@ -44,7 +44,9 @@ export const WORKFLOW_STEPS: {
     icon: "🎯",
     novaHint: (p) =>
       p
-        ? `You have ${p.ideate?.length ?? 0} ideas in the ideation phase. Select the strongest candidate and prototype it.`
+        ? `You have ${
+            p.ideate?.length ?? 0
+          } ideas in the ideation phase. Select the strongest candidate and prototype it.`
         : "Design Thinking guides you from empathy to testable prototypes.",
   },
   {
@@ -105,6 +107,15 @@ export function WorkflowBanner({
   project,
   onNavigate,
 }: WorkflowBannerProps) {
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setHasHydrated(true);
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
+
   const currentIdx = WORKFLOW_STEPS.findIndex((s) => s.id === currentModule);
   const step = WORKFLOW_STEPS[currentIdx];
   const prevStep = currentIdx > 0 ? WORKFLOW_STEPS[currentIdx - 1] : null;
@@ -113,14 +124,18 @@ export function WorkflowBanner({
       ? WORKFLOW_STEPS[currentIdx + 1]
       : null;
 
+  // Use null project during server side rendering and initial hydration to guarantee identical markup
+  const activeProject = hasHydrated ? project : null;
+
   // Derive progress % from project or step index
   const overallProgress = useMemo(() => {
-    if (project) return Math.min(100, Math.round(project.projectProgress));
+    if (activeProject)
+      return Math.min(100, Math.round(activeProject.projectProgress));
     // Fall back to position-based estimate
     return Math.round(((currentIdx + 1) / WORKFLOW_STEPS.length) * 100);
-  }, [project, currentIdx]);
+  }, [activeProject, currentIdx]);
 
-  const hint = step?.novaHint(project) ?? "";
+  const hint = step?.novaHint(activeProject) ?? "";
 
   if (!step) return null;
 
