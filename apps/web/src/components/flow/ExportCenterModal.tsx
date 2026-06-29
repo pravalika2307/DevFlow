@@ -56,6 +56,7 @@ export function ExportCenterModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-base/80 backdrop-blur-md p-4">
       <div
+        id="reports-panel"
         className="w-full max-w-md rounded-2xl border border-border-default bg-bg-surface p-6 space-y-6 relative overflow-hidden shadow-2xl shadow-glow-blue/10 animate-fade-in-scale"
         role="dialog"
         aria-modal="true"

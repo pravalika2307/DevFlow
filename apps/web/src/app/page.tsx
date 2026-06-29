@@ -798,42 +798,52 @@ export default function HomePage() {
   /* Module views */
   if (activeModule === "galaxy")
     return (
-      <InnovationGalaxy
-        projects={projects}
-        onBack={() => setActiveModule("dashboard")}
-      />
+      <div id="galaxy-panel" className="w-full h-full min-h-[500px]">
+        <InnovationGalaxy
+          projects={projects}
+          onBack={() => setActiveModule("dashboard")}
+        />
+      </div>
     );
   if (activeModule === "discovery")
     return (
-      <DiscoveryWorkspace
-        projects={projects}
-        onBack={() => setActiveModule("dashboard")}
-      />
+      <div id="discovery-panel" className="w-full">
+        <DiscoveryWorkspace
+          projects={projects}
+          onBack={() => setActiveModule("dashboard")}
+        />
+      </div>
     );
   if (activeModule === "impact")
     return (
-      <ImpactWorkspace
-        projects={projects}
-        onBack={() => setActiveModule("dashboard")}
-      />
+      <div id="impact-panel" className="w-full">
+        <ImpactWorkspace
+          projects={projects}
+          onBack={() => setActiveModule("dashboard")}
+        />
+      </div>
     );
   if (activeModule === "council")
     return (
-      <CouncilWorkspace
-        projects={projects}
-        onBack={() => setActiveModule("dashboard")}
-      />
+      <div id="council-panel" className="w-full">
+        <CouncilWorkspace
+          projects={projects}
+          onBack={() => setActiveModule("dashboard")}
+        />
+      </div>
     );
   if (activeCoachProject) {
     return (
-      <CoachWorkspace
-        project={activeCoachProject}
-        onSave={(updated) => {
-          handleSaveProject(updated);
-          setActiveCoachProject(updated);
-        }}
-        onBack={() => setActiveCoachProject(null)}
-      />
+      <div id="coach-panel" className="w-full">
+        <CoachWorkspace
+          project={activeCoachProject}
+          onSave={(updated) => {
+            handleSaveProject(updated);
+            setActiveCoachProject(updated);
+          }}
+          onBack={() => setActiveCoachProject(null)}
+        />
+      </div>
     );
   }
 
@@ -1245,6 +1255,7 @@ export default function HomePage() {
 
             {/* ── Metric Cards ─────────────────────────────── */}
             <section
+              id="workspace-metrics"
               aria-label="Workspace metrics"
               style={{ marginBottom: 36, marginTop: 12 }}
             >
@@ -1990,7 +2001,10 @@ export default function HomePage() {
         isOpen={isTourOpen}
         type={tourType}
         project={projects.length > 0 ? projects[0] : null}
-        onClose={() => setIsTourOpen(false)}
+        onClose={() => {
+          setIsTourOpen(false);
+          setIsExportOpen(false);
+        }}
         onNavigate={handleTourNavigate}
       />
     </>
