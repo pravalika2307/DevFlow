@@ -95,7 +95,7 @@ export function ProjectDetail({
             </button>
             <button
               onClick={onEdit}
-              className="df-btn df-btn-ghost p-2"
+              className="df-btn df-btn-ghost p-2 df-hide-presenter"
               title="Edit Project"
             >
               <svg
@@ -114,7 +114,7 @@ export function ProjectDetail({
             </button>
             <button
               onClick={onDelete}
-              className="df-btn df-btn-ghost p-2 hover:text-rose-accent hover:border-rose-500/20"
+              className="df-btn df-btn-ghost p-2 hover:text-rose-accent hover:border-rose-500/20 df-hide-presenter"
               title="Delete Project"
             >
               <svg

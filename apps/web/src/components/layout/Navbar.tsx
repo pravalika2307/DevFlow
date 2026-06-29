@@ -100,7 +100,7 @@ export function Navbar({
           {/* Search */}
           <div
             style={{ flex: 1, maxWidth: 280, position: "relative" }}
-            className="df-hide-tablet"
+            className="df-hide-tablet df-hide-presenter"
           >
             <svg
               width="14"
@@ -168,7 +168,7 @@ export function Navbar({
             {/* Export */}
             <button
               onClick={onExportCenterClick}
-              className="df-btn df-btn-ghost df-hide-mobile"
+              className="df-btn df-btn-ghost df-hide-mobile df-hide-presenter"
               style={{ width: 34, height: 34, padding: 0 }}
               aria-label="Export center"
               title="Export Center"
@@ -193,7 +193,7 @@ export function Navbar({
             {/* New Project */}
             <button
               onClick={onNewProjectClick}
-              className="df-btn df-btn-primary"
+              className="df-btn df-btn-primary df-hide-presenter"
               style={{ padding: "7px 14px", fontSize: 12 }}
               aria-label="Create new innovation project"
             >

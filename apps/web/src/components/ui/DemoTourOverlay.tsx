@@ -16,6 +16,8 @@ interface TourStep {
   whatItDoes?: string;
   whyItMatters?: string;
   solveForTomorrow?: string;
+  currentGoal?: string;
+  estTimeRemaining?: string;
 }
 
 interface DemoTourOverlayProps {
@@ -34,6 +36,8 @@ interface DemoTourOverlayProps {
       | "reports"
       | "slides",
   ) => void;
+  isPresenterMode: boolean;
+  setIsPresenterMode: (val: boolean) => void;
 }
 
 export function DemoTourOverlay({
@@ -42,6 +46,8 @@ export function DemoTourOverlay({
   project: _project,
   onClose,
   onNavigate,
+  isPresenterMode,
+  setIsPresenterMode,
 }: DemoTourOverlayProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [coords, setCoords] = useState<{
@@ -50,6 +56,7 @@ export function DemoTourOverlay({
     width: number;
     height: number;
   } | null>(null);
+  const [isMentorTyping, setIsMentorTyping] = useState(false);
 
   const steps: TourStep[] = useMemo(
     () => [
@@ -57,15 +64,18 @@ export function DemoTourOverlay({
       {
         title: "Welcome to DevFlow OS",
         description:
-          "In the next few minutes, you'll experience how DevFlow guides teams from identifying real-world problems to building impactful, AI-assisted innovations.",
+          "Let's explore how great innovations are built—from identifying real problems to delivering measurable impact.",
         actionLabel: "Start Journey",
         targetId: undefined,
+        estTimeRemaining: "4 Minutes",
         setupEffect: () => onNavigate("dashboard"),
       },
       // 2. Workspace
       {
         title: "Executive Workspace",
         moduleName: "Workspace Dashboard",
+        currentGoal: "Understand the metrics dashboard overview.",
+        estTimeRemaining: "3 Minutes 45 Seconds",
         targetId: "#workspace-metrics",
         setupEffect: () => onNavigate("dashboard"),
         whatItDoes:
@@ -79,6 +89,9 @@ export function DemoTourOverlay({
       {
         title: "Empathy & Research",
         moduleName: "Problem Discovery",
+        currentGoal:
+          "Understand root-cause validation before writing solutions.",
+        estTimeRemaining: "3 Minutes 15 Seconds",
         targetId: "#discovery-panel",
         setupEffect: () => onNavigate("discovery"),
         whatItDoes:
@@ -92,6 +105,8 @@ export function DemoTourOverlay({
       {
         title: "Human-Centered Design",
         moduleName: "Design Thinking Workspace",
+        currentGoal: "Structure human-centered design steps.",
+        estTimeRemaining: "2 Minutes 45 Seconds",
         targetId: "#coach-panel",
         setupEffect: () => onNavigate("coach"),
         whatItDoes:
@@ -105,6 +120,8 @@ export function DemoTourOverlay({
       {
         title: "Cooperative AI Assistant",
         moduleName: "NOVA AI Mentor",
+        currentGoal: "Interactively coach and improve the core idea.",
+        estTimeRemaining: "2 Minutes 15 Seconds",
         targetId: "#ai-mentor-panel",
         setupEffect: () => onNavigate("dashboard"),
         whatItDoes:
@@ -118,6 +135,8 @@ export function DemoTourOverlay({
       {
         title: "Relational Modeling",
         moduleName: "Innovation Galaxy Map",
+        currentGoal: "Discover collaboration and SDG clusters across projects.",
+        estTimeRemaining: "1 Minute 45 Seconds",
         targetId: "#galaxy-panel",
         setupEffect: () => onNavigate("galaxy"),
         whatItDoes:
@@ -131,6 +150,8 @@ export function DemoTourOverlay({
       {
         title: "Quantitative Societal Reach",
         moduleName: "Impact Intelligence Matrix",
+        currentGoal: "Quantify societal reach and map SDG objectives.",
+        estTimeRemaining: "1 Minute 15 Seconds",
         targetId: "#impact-panel",
         setupEffect: () => onNavigate("impact"),
         whatItDoes:
@@ -144,6 +165,9 @@ export function DemoTourOverlay({
       {
         title: "Compliance Audit",
         moduleName: "NOVA AI Council Panel",
+        currentGoal:
+          "Evaluate innovation proposals from 8 expert AI advisor perspectives.",
+        estTimeRemaining: "45 Seconds",
         targetId: "#council-panel",
         setupEffect: () => onNavigate("council"),
         whatItDoes:
@@ -157,6 +181,8 @@ export function DemoTourOverlay({
       {
         title: "Widescreen Pitch Deck",
         moduleName: "Reports & Export Center",
+        currentGoal: "Export presentation-ready slide decks and PDF briefs.",
+        estTimeRemaining: "15 Seconds",
         targetId: "#reports-panel",
         setupEffect: () => onNavigate("reports"),
         whatItDoes:
@@ -227,21 +253,62 @@ export function DemoTourOverlay({
     }
   }, [currentStep, isOpen, steps]);
 
+  // Reset mentor typing state on step change
+  useEffect(() => {
+    const t = setTimeout(() => setIsMentorTyping(false), 0);
+    return () => clearTimeout(t);
+  }, [currentStep]);
+
+  const handleSimulateImproveIdea = () => {
+    const btn = document.querySelector(
+      '[data-action-id="improve_idea"]',
+    ) as HTMLButtonElement;
+    if (btn) {
+      btn.click();
+      setIsMentorTyping(true);
+      setTimeout(() => {
+        setIsMentorTyping(false);
+        setCurrentStep((prev) => prev + 1);
+      }, 3500);
+    } else {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+
   // Accessibility: Keyboard listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
       if (e.key === "Escape") {
+        setIsPresenterMode(false);
         onClose();
-      } else if (e.key === "ArrowRight") {
-        if (currentStep < steps.length - 1) setCurrentStep((prev) => prev + 1);
+      } else if (e.key === "ArrowRight" || e.key === " ") {
+        if (e.key === " ") {
+          e.preventDefault();
+        }
+        if (currentStep < steps.length - 1) {
+          if (currentStep === 4) {
+            handleSimulateImproveIdea();
+          } else {
+            setCurrentStep((prev) => prev + 1);
+          }
+        }
       } else if (e.key === "ArrowLeft") {
-        if (currentStep > 0) setCurrentStep((prev) => prev - 1);
+        if (currentStep > 0) {
+          setCurrentStep((prev) => prev - 1);
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, currentStep, steps.length, onClose]);
+  }, [
+    isOpen,
+    currentStep,
+    steps.length,
+    onClose,
+    isPresenterMode,
+    setIsPresenterMode,
+  ]);
 
   if (!isOpen) return null;
 
@@ -312,7 +379,7 @@ export function DemoTourOverlay({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 180 }}
             style={{
-              width: "min(500px, 92vw)",
+              width: "min(520px, 92vw)",
               borderRadius: 24,
               background: "rgba(10, 10, 10, 0.85)",
               backdropFilter: "blur(24px)",
@@ -326,7 +393,7 @@ export function DemoTourOverlay({
             {/* Header progress line */}
             <div
               style={{
-                height: 3,
+                height: 4,
                 width: `${progressPercent}%`,
                 background: "linear-gradient(90deg, #7C4DFF 0%, #3B82F6 100%)",
                 transition: "width 0.3s ease",
@@ -350,7 +417,7 @@ export function DemoTourOverlay({
                     fontSize: 24,
                   }}
                 >
-                  🚀
+                  🎬
                 </div>
                 <div className="space-y-2">
                   <h3 style={{ fontSize: 24, fontWeight: 900, color: "white" }}>
@@ -365,7 +432,7 @@ export function DemoTourOverlay({
                       textTransform: "uppercase",
                     }}
                   >
-                    Samsung Demo Center v2.0
+                    Innovation Operating System
                   </p>
                 </div>
                 <p
@@ -377,30 +444,79 @@ export function DemoTourOverlay({
                 >
                   {step.description}
                 </p>
+
+                {/* Presenter Mode Toggle Switch */}
                 <div
                   style={{
-                    padding: "10px 16px",
-                    borderRadius: 12,
+                    padding: "16px 20px",
+                    borderRadius: 16,
                     background: "rgba(255,255,255,0.02)",
                     border: "1px solid var(--border)",
-                    display: "inline-block",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 12,
                   }}
                 >
-                  <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
-                    Estimated duration:{" "}
-                  </span>
-                  <span
-                    style={{ fontSize: 12, color: "white", fontWeight: 700 }}
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      cursor: "pointer",
+                      fontSize: 13.5,
+                      color: "white",
+                      fontWeight: 700,
+                    }}
                   >
-                    4–5 minutes
+                    <input
+                      type="checkbox"
+                      checked={isPresenterMode}
+                      onChange={(e) => setIsPresenterMode(e.target.checked)}
+                      style={{
+                        width: 18,
+                        height: 18,
+                        accentColor: "var(--blue-accent)",
+                        cursor: "pointer",
+                      }}
+                    />
+                    Enable Presenter Mode
+                  </label>
+                  <p
+                    style={{
+                      fontSize: 11,
+                      color: "var(--text-tertiary)",
+                      textAlign: "center",
+                      margin: 0,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    Optimizes typography sizes by 20% and hides secondary
+                    controls for live conference screens.
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 12,
+                    fontSize: 12,
+                    color: "var(--text-tertiary)",
+                  }}
+                >
+                  <span>Estimated Duration: </span>
+                  <span style={{ color: "white", fontWeight: 700 }}>
+                    {step.estTimeRemaining}
                   </span>
                 </div>
-                <div className="flex gap-3 justify-center pt-4">
+
+                <div className="flex gap-3 justify-center pt-2">
                   <button
                     onClick={onClose}
                     className="px-5 py-2.5 rounded-xl border border-white/10 hover:bg-white/[0.05] text-xs font-bold text-slate-400 hover:text-white transition-all"
                   >
-                    Cancel
+                    Exit
                   </button>
                   <button
                     onClick={() => setCurrentStep(1)}
@@ -415,7 +531,7 @@ export function DemoTourOverlay({
             {/* 2. Walkthrough Steps Overlay */}
             {currentStep > 0 && currentStep < steps.length - 1 && (
               <div style={{ padding: 28 }} className="space-y-6">
-                <div className="flex justify-between items-center border-b border-border-default pb-3">
+                <div className="flex justify-between items-start border-b border-border-default pb-3">
                   <div className="space-y-1">
                     <span
                       style={{
@@ -434,16 +550,63 @@ export function DemoTourOverlay({
                       {step.title}
                     </h3>
                   </div>
-                  <span
+                  <div style={{ textAlign: "right" }} className="space-y-0.5">
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: "var(--text-tertiary)",
+                        fontWeight: 700,
+                        display: "block",
+                      }}
+                    >
+                      Step {currentStep} of {steps.length - 2}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 9.5,
+                        color: "var(--text-tertiary)",
+                        fontWeight: 500,
+                        display: "block",
+                      }}
+                    >
+                      {step.estTimeRemaining} left
+                    </span>
+                  </div>
+                </div>
+
+                {/* Current Goal Indicator */}
+                {step.currentGoal && (
+                  <div
                     style={{
-                      fontSize: 11,
-                      color: "var(--text-tertiary)",
-                      fontWeight: 700,
+                      padding: "8px 12px",
+                      borderRadius: 8,
+                      background: "rgba(59, 130, 246, 0.04)",
+                      border: "1px solid rgba(59, 130, 246, 0.15)",
                     }}
                   >
-                    Step {currentStep} of {steps.length - 2}
-                  </span>
-                </div>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color: "var(--blue-accent)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      Current Goal
+                    </span>
+                    <p
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-secondary)",
+                        fontWeight: 600,
+                        margin: "2px 0 0",
+                      }}
+                    >
+                      {step.currentGoal}
+                    </p>
+                  </div>
+                )}
 
                 <div className="space-y-4">
                   {/* What it does */}
@@ -514,7 +677,7 @@ export function DemoTourOverlay({
                         display: "block",
                       }}
                     >
-                      Solve for Tomorrow Alignment
+                      Samsung Solve for Tomorrow Alignment
                     </span>
                     <p
                       style={{
@@ -528,13 +691,60 @@ export function DemoTourOverlay({
                   </div>
                 </div>
 
+                {/* Step 5 Interactive prompting block */}
+                {currentStep === 4 && (
+                  <div
+                    style={{
+                      padding: 14,
+                      borderRadius: 12,
+                      background: "rgba(59, 130, 246, 0.08)",
+                      border: "1px solid rgba(59, 130, 246, 0.25)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "var(--blue-accent)",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Interactive AI Demonstration
+                    </span>
+                    <p
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-secondary)",
+                        margin: 0,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {isMentorTyping
+                        ? "NOVA is analyzing innovation scores and generating recommended next steps..."
+                        : "Click the 'Improve Idea' button in the mentor panel to see the coach formulate feedback, or trigger it directly below."}
+                    </p>
+                    <button
+                      onClick={handleSimulateImproveIdea}
+                      disabled={isMentorTyping}
+                      className="w-full py-2 rounded-xl bg-blue-accent/20 hover:bg-blue-accent/40 border border-blue-accent/40 text-xs font-bold text-white transition-all disabled:opacity-50"
+                    >
+                      {isMentorTyping
+                        ? "Thinking (Please wait)..."
+                        : "Simulate 'Improve Idea' & Auto-Advance"}
+                    </button>
+                  </div>
+                )}
+
                 {/* Navigation Actions */}
-                <div className="flex justify-between items-center pt-4 border-t border-border-default">
+                <div className="flex justify-between items-center pt-4 border-t border-t-white/10">
                   <button
                     onClick={onClose}
                     className="text-xs font-bold text-slate-500 hover:text-white transition-all"
                   >
-                    Skip Tour
+                    Exit Demo
                   </button>
                   <div className="flex gap-2">
                     <button
@@ -544,7 +754,13 @@ export function DemoTourOverlay({
                       Previous
                     </button>
                     <button
-                      onClick={() => setCurrentStep((prev) => prev + 1)}
+                      onClick={() => {
+                        if (currentStep === 4) {
+                          handleSimulateImproveIdea();
+                        } else {
+                          setCurrentStep((prev) => prev + 1);
+                        }
+                      }}
                       className="px-5 py-2 rounded-xl bg-blue-accent hover:bg-blue-600 text-xs font-bold text-white transition-all shadow-lg shadow-blue-500/20"
                     >
                       Next
@@ -603,7 +819,7 @@ export function DemoTourOverlay({
                       marginBottom: 6,
                     }}
                   >
-                    Rediness Checklist
+                    Completed Milestones
                   </span>
                   {[
                     "Problem Discovery",

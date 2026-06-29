@@ -522,6 +522,18 @@ export default function HomePage() {
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [tourType, setTourType] = useState<TourType>("general");
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [isPresenterMode, setIsPresenterMode] = useState(false);
+
+  useEffect(() => {
+    if (isPresenterMode) {
+      document.documentElement.classList.add("df-presenter-mode");
+    } else {
+      document.documentElement.classList.remove("df-presenter-mode");
+    }
+    return () => {
+      document.documentElement.classList.remove("df-presenter-mode");
+    };
+  }, [isPresenterMode]);
 
   useEffect(() => {
     if (isLandingIntro) {
@@ -1085,6 +1097,7 @@ export default function HomePage() {
           activeModule={activeModule}
           onModuleChange={setActiveModule}
           activeCoachProject={!!activeCoachProject}
+          isPresenterMode={isPresenterMode}
           onLaunchCoach={() => {
             if (projects.length > 0) {
               setActiveCoachProject(projects[0]);
@@ -2006,6 +2019,8 @@ export default function HomePage() {
           setIsExportOpen(false);
         }}
         onNavigate={handleTourNavigate}
+        isPresenterMode={isPresenterMode}
+        setIsPresenterMode={setIsPresenterMode}
       />
     </>
   );

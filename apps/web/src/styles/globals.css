@@ -767,3 +767,71 @@ body {
     transition: opacity 150ms ease !important;
   }
 }
+
+/* =========================================================
+   Presenter Mode Sizing (15-20% Scale Up)
+   ========================================================= */
+.df-presenter-mode {
+  /* Increase typography sizes */
+  --font-scale: 1.18;
+}
+
+.df-presenter-mode body {
+  font-size: calc(15.5px * var(--font-scale)) !important;
+}
+
+.df-presenter-mode .df-section-label {
+  font-size: calc(12px * var(--font-scale)) !important;
+  letter-spacing: 0.12em !important;
+}
+
+.df-presenter-mode .df-stat-value {
+  font-size: calc(34px * var(--font-scale)) !important;
+}
+
+.df-presenter-mode h1 {
+  font-size: calc(34px * var(--font-scale)) !important;
+}
+
+/* Increase card padding and container spacing */
+.df-presenter-mode .df-card {
+  padding: 30px !important;
+  gap: 20px !important;
+}
+
+.df-presenter-mode .df-glass {
+  padding: 0 28px !important;
+}
+
+/* Increase sidebar width slightly */
+@media (min-width: 768px) {
+  .df-presenter-mode aside {
+    width: 300px !important;
+  }
+  .df-presenter-mode div.md\:pl-64 {
+    padding-left: 300px !important;
+  }
+}
+
+/* Increase button sizes */
+.df-presenter-mode .df-btn {
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+}
+
+/* Hide distraction elements */
+.df-presenter-mode .df-hide-presenter {
+  display: none !important;
+}
+
+/* Increase contrast for projection */
+.df-presenter-mode {
+  --bg-base: #030712;
+  --bg-surface: #0b0f19;
+  --bg-card: #111827;
+  --border: #374151;
+  --border-accent: rgba(59, 130, 246, 0.35);
+  --text-primary: #f9fafb;
+  --text-secondary: #e5e7eb;
+  --text-tertiary: #9ca3af;
+}

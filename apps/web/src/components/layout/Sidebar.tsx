@@ -15,6 +15,7 @@ interface SidebarProps {
   onSettingsClick: () => void;
   isMobileOpen: boolean;
   onCloseMobile: () => void;
+  isPresenterMode?: boolean;
 }
 
 export function Sidebar({
@@ -28,6 +29,7 @@ export function Sidebar({
   onSettingsClick,
   isMobileOpen,
   onCloseMobile,
+  isPresenterMode = false,
 }: SidebarProps) {
   const sidebarItems = [
     { id: "dashboard", label: "Workspace", icon: "🏠", isTab: true },
@@ -70,7 +72,10 @@ export function Sidebar({
       isTab: false,
       action: onSettingsClick,
     },
-  ];
+  ].filter(
+    (item) =>
+      !isPresenterMode || (item.id !== "resources" && item.id !== "settings"),
+  );
 
   const handleItemClick = (item: (typeof sidebarItems)[number]) => {
     if (item.isTab) {
@@ -149,7 +154,7 @@ export function Sidebar({
       {/* Bottom Area: Streak Card, Profile & Connectivity Status */}
       <div className="space-y-4 pt-4 border-t border-border-default">
         {/* Innovation Streak Card */}
-        <div className="rounded-xl border border-border-default bg-bg-card/65 p-3 space-y-2 relative overflow-hidden">
+        <div className="rounded-xl border border-border-default bg-bg-card/65 p-3 space-y-2 relative overflow-hidden df-hide-presenter">
           <div className="flex justify-between items-center text-xs font-bold text-slate-500 uppercase tracking-wider">
             <span className="flex items-center gap-1">⚡ Streak</span>
             <span className="text-blue-accent font-extrabold">5 Days</span>
@@ -208,7 +213,7 @@ export function Sidebar({
         </div>
 
         {/* Connectivity status */}
-        <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-border-default bg-bg-card/30">
+        <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-border-default bg-bg-card/30 df-hide-presenter">
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-accent opacity-75"></span>
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-accent"></span>
