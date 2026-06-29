@@ -5,374 +5,691 @@ const STORAGE_KEY = "devflow_innovation_projects";
 const INITIAL_MOCK_PROJECTS: InnovationProject[] = [
   {
     id: "proj-1",
-    name: "EduTech Offline Hub",
+    name: "Smart Waste Management",
     problemStatement:
-      "Children in remote rural villages lack stable internet access, preventing them from benefiting from modern digital learning resources.",
+      "Urban cities suffer from overflowing municipal bins, leading to toxic pest hazards, air pollution, and high fuel waste from unscheduled garbage truck collection routes.",
     proposedSolution:
-      "A low-cost, solar-powered local micro-server running containerized educational software that acts as an offline digital library.",
-    innovationTheme: "Education",
-    sdgGoals: ["Goal 4: Quality Education", "Goal 10: Reduced Inequalities"],
-    targetBeneficiaries:
-      "Students and teachers in communities without grid connectivity.",
+      "A network of solar-powered ultrasonic sensor nodes retrofitted inside city dumpsters that transmit fill-level data to an AI route-optimization engine for trucks.",
+    innovationTheme: "Clean Cities",
+    sdgGoals: [
+      "Goal 11: Sustainable Cities and Communities",
+      "Goal 12: Responsible Consumption and Production",
+    ],
+    targetBeneficiaries: "Municipal sanitation departments and urban citizens.",
     expectedImpact:
-      "Provide modern curriculum access to over 10,000 rural students, improving regional literacy rates.",
+      "Reduce garbage truck fuel emissions by 40%, eliminate dumpster overflows, and save $120K in monthly route costs.",
     successMetrics:
-      "10,000 student hours logged, 85% average quiz scores, 30 active micro-servers deployed.",
-    projectStage: "Validation",
+      "Average route completion time, bin overflow counts, fuel usage gallons per truck.",
+    projectStage: "Scaling",
     teamMembers: [
-      { name: "Dr. Ananya Rao", role: "Principal Researcher" },
-      { name: "David Chen", role: "Hardware Engineer" },
-      { name: "Sarah Smith", role: "Curriculum Advisor" },
+      { name: "Linus Odegard", role: "Hardware Lead" },
+      { name: "Siddharth Rao", role: "AI Optimisation Architect" },
     ],
     timeline: "Q1 - Q4 2026",
     priority: "High",
-    innovationScore: 88,
-    engineeringHealth: 92,
-    projectProgress: 75,
-    impactScore: 90,
-    readinessScore: 80,
-    codeQuality: 94,
+    innovationScore: 92,
+    engineeringHealth: 94,
+    projectProgress: 95,
+    impactScore: 91,
+    readinessScore: 90,
+    codeQuality: 92,
     testCoverage: 88,
     buildStatus: "passing",
-    openIssuesCount: 4,
-
-    // Design Thinking Stage Data
+    openIssuesCount: 3,
     empathise: {
-      targetUser:
-        "Rural students aged 8-15 and primary school teachers with basic smartphone skills.",
+      targetUser: "Municipal collection truck drivers and dispatch planners.",
       userPersona:
-        "Ramesh, a 12-year-old student who wants to study science but has no textbooks or home electricity.",
+        "Rajesh, a dispatcher who schedules 40 routes blindly everyday without knowing which bins are actually full.",
       goals:
-        "Access high-quality interactive videos, download science modules, and practice self-assessments.",
+        "Only dispatch trucks to full bins and minimize unnecessary truck miles.",
       pains:
-        "Must walk 4km to get spotty 2G mobile signal; lack of educational textbooks at home.",
-      behaviours:
-        "Shares a single mobile phone with 5 family members; highly eager to learn via visual aids.",
+        "Rising diesel fuel costs and frequent public complaints about overflowing public bins.",
+      behaviours: "Relies on fixed daily schedule grids printed on clipboards.",
       needs:
-        "A zero-cost, offline educational database that does not require cellular data packages.",
+        "A live digital map showing exact fill status across all sector dumpsters.",
     },
     define: {
       problemStatement:
-        "How can we deliver interactive, digital educational content to remote rural students who do not have reliable cellular connectivity or home electricity?",
+        "How might we design a data-driven collection system that helps sanitation dispatchers optimize routes by prioritizing bins at 80%+ capacity?",
       opportunityStatement:
-        "Providing offline solar-powered local servers leverages container technology to enable localized, free digital schoolhouses.",
+        "Integrating ultrasonic level transceivers with cell modems provides real-time telemetry at low cost.",
       howMightWe:
-        "How might we build an offline digital library that lets rural schoolkids stream educational videos without using any mobile data?",
+        "How might we dynamic-route garbage collection vehicles using live capacity coordinates?",
       successMetrics:
-        "Monthly active learners per server, quiz completion rates, and solar battery discharge cycles.",
+        "Liters of fuel saved per week, average bin fill level upon collection.",
     },
     ideate: [
       {
         id: "idea-1-1",
-        title: "Micro-SD Card Preload Distribution",
+        title: "Weight Sensor Dumpster Scales",
         description:
-          "Pre-load offline learning videos onto physical micro-SD cards and distribute them directly to teachers.",
-        innovationScore: 60,
-        feasibility: 90,
-        socialImpact: 70,
+          "Install scale pads beneath bins to track waste mass changes.",
+        innovationScore: 70,
+        feasibility: 60,
+        socialImpact: 75,
         aiRecommendation:
-          "Highly feasible but physical logistics are expensive and updates are difficult.",
+          "High cost, complex installation, and susceptible to soil shifting.",
         isSelected: false,
       },
       {
         id: "idea-1-2",
-        title: "Offline Solar Local Wifi Server",
+        title: "Ultrasonic Lid Sensors",
         description:
-          "Deploy solar-powered local Raspberry Pi servers that broadcast a localized free Wifi hotspot containing hosted video contents.",
-        innovationScore: 95,
-        feasibility: 82,
+          "Mount a small, weather-proof ultrasonic sensor inside the container cover.",
+        innovationScore: 94,
+        feasibility: 90,
         socialImpact: 92,
         aiRecommendation:
-          "Highly innovative, self-sustaining, and scalable with excellent local network throughput.",
+          "Highly feasible, low-power battery usage, simple hardware casing.",
         isSelected: true,
       },
     ],
     prototype: [
       {
         id: "proto-1-1",
-        version: "v0.1.0",
-        figmaLink: "https://figma.com/file/edutech-wireframe-v1",
-        githubRepo: "https://github.com/devflow/edutech-microserver",
-        demoUrl: "http://offline-demo.local",
-        screenshots:
-          "Text-based admin panel, offline dashboard displaying mock courses, basic static file index.",
-        notes:
-          "Initial prototype built on a Raspberry Pi 4 with a basic USB battery bank. Wifi hotspot coverage extends to 15 meters.",
-        createdAt: "2026-02-15",
-      },
-      {
-        id: "proto-1-2",
         version: "v1.0.0",
-        figmaLink: "https://figma.com/file/edutech-hifi-design",
-        githubRepo: "https://github.com/devflow/edutech-microserver",
-        demoUrl: "http://edu-hub.local",
+        figmaLink: "https://figma.com/file/smart-waste-dashboard",
+        githubRepo: "https://github.com/devflow/smart-waste-firmware",
+        demoUrl: "https://waste-dashboard.devflow.io",
         screenshots:
-          "Sleek dark learning dashboard, progressive web app installation page, interactive mock quizzes.",
+          "Route map overlay, level alerts, active sensor telemetry logging.",
         notes:
-          "Upgraded with a customized solar panel charging controller and weather-proof casing. Hotspot range boosted to 40 meters.",
-        createdAt: "2026-05-10",
+          "Sensors deployed in 50 downtown bins. Batteries show 18-month lifespan estimate.",
+        createdAt: "2026-03-10",
       },
     ],
     test: [
       {
         id: "test-1-1",
-        testUsers: "5 teachers and 20 students at Kolar Rural School.",
+        testUsers: "3 dispatchers and 12 sanitation drivers in District 4.",
         feedback:
-          "Students loved the video speeds since there was zero buffer delay. Teachers requested a dashboard to upload custom local content.",
-        improvements:
-          "Added an admin page for teachers to upload local text files via a simple local form.",
+          "Drivers saved 2 hours per shift. Recommended high-contrast maps for night driving.",
+        improvements: "Added premium dark mode to mobile map interface.",
         pendingIssues:
-          "Solar battery performance during heavy monsoon seasons needs continuous stress testing.",
+          "Filtering signal spikes caused by empty cardboard boxes blocking sensor lens.",
         lessonsLearned:
-          "Physical ease of use is critical; teachers preferred a simple single-button reboot mechanism.",
-        createdAt: "2026-05-25",
+          "Signal averaging algorithms are crucial to clean raw sensor readings.",
+        createdAt: "2026-05-15",
       },
     ],
     innovationScores: {
-      problemClarity: 90,
-      innovation: 88,
-      feasibility: 82,
-      socialImpact: 90,
-      aiReadiness: 78,
-      scalability: 85,
+      problemClarity: 92,
+      innovation: 90,
+      feasibility: 88,
+      socialImpact: 94,
+      aiReadiness: 86,
+      scalability: 91,
       sustainability: 92,
     },
   },
   {
     id: "proj-2",
-    name: "BioPurify Filter System",
+    name: "AI Disaster Response",
     problemStatement:
-      "High water salinity and impurities in coastal NGO operation zones cause waterborne health issues for local families.",
+      "First responders lack real-time map data immediately after earthquakes or floods, delaying search and rescue teams from reaching isolated survivors.",
     proposedSolution:
-      "An open-source gravity-fed bio-sand and charcoal filter utilizing local materials to purge pathogens and salt concentrations.",
-    innovationTheme: "Clean Water",
+      "A swarm of autonomous drones that maps disaster areas using computer vision to identify blocked roads and damaged structures.",
+    innovationTheme: "Safety & Relief",
     sdgGoals: [
-      "Goal 6: Clean Water and Sanitation",
-      "Goal 3: Good Health and Well-being",
+      "Goal 11: Sustainable Cities and Communities",
+      "Goal 9: Industry, Innovation, and Infrastructure",
     ],
-    targetBeneficiaries: "Coastal families and low-income fishing communities.",
+    targetBeneficiaries:
+      "Search and rescue agencies and disaster-affected citizens.",
     expectedImpact:
-      "Deliver pure drinking water to 500 households, cutting waterborne illnesses by 90%.",
+      "Locate trapped survivors up to 60% faster and create post-disaster maps within 20 minutes.",
     successMetrics:
-      "Daily output of 10,000 liters, water purity rating of 99.2%, zero reported cholera cases.",
-    projectStage: "Scaling",
+      "Map generation speed, hazard classification accuracy, flight endurance.",
+    projectStage: "Prototyping",
     teamMembers: [
-      { name: "Mark Peterson", role: "NGO Operations Lead" },
-      { name: "Elena Rostova", role: "Environmental Scientist" },
+      { name: "Priya Nair", role: "Drone Control Lead" },
+      { name: "Sarah Smith", role: "CV Engineer" },
     ],
-    timeline: "Q2 2025 - Q2 2026",
+    timeline: "Q3 2026 - Q2 2027",
     priority: "High",
-    innovationScore: 82,
-    engineeringHealth: 85,
-    projectProgress: 90,
-    impactScore: 95,
-    readinessScore: 92,
-    codeQuality: 88,
+    innovationScore: 95,
+    engineeringHealth: 88,
+    projectProgress: 40,
+    impactScore: 94,
+    readinessScore: 78,
+    codeQuality: 86,
     testCoverage: 80,
     buildStatus: "passing",
-    openIssuesCount: 2,
-
-    // Design Thinking Stage Data
+    openIssuesCount: 9,
     empathise: {
-      targetUser:
-        "Households in coastal fishing villages lacking municipal tap pipelines.",
+      targetUser: "Search and rescue team commanders.",
       userPersona:
-        "Fatima, a mother of four who boils salty pond water daily, spending 20% of income on firewood.",
-      goals:
-        "Obtain clean water that is safe for children to drink without buying expensive firewood or water bottles.",
-      pains:
-        "Frequent diarrhea in children; high fuel costs; bad taste from boiled saline pond water.",
+        "Captain Marcus, who commands a team of 15 and must decide which flooded streets to navigate blind.",
+      goals: "Quickly locate hazard-free routes to marooned neighborhoods.",
+      pains: "Complete lack of cellular signal and outdated paper maps.",
       behaviours:
-        "Spends 2 hours daily collecting wood and water; stores water in clay pots.",
+        "Relies on manual binoculars and local word of mouth reports.",
       needs:
-        "A low-maintenance purification filter made of cheap, accessible local materials.",
+        "A real-time aerial overlay of road blocks, flooding, and hazards.",
     },
     define: {
       problemStatement:
-        "How can coastal families purify saline, contaminated pond water into safe drinking water without incurring ongoing wood fuel or chemical purchase costs?",
+        "How might we provide immediate, offline road-blockage maps to rescuers when all communications infrastructure is down?",
       opportunityStatement:
-        "Combining local bio-sand filtration layers with activated coconut charcoal allows low-cost gravity-based purification.",
+        "Local WiFi meshes on automated drone hardware allow offline transmission of dynamic disaster mapping data.",
       howMightWe:
-        "How might we create a zero-energy water filter using only gravel, sand, and locally available organic charcoal?",
+        "How might we map survivor locations without cellular network backhauls?",
       successMetrics:
-        "Daily liters purified, reduction in fecal coliform count, filter layer durability.",
+        "Aerial processing frames per second, network coverage footprint.",
     },
     ideate: [
       {
         id: "idea-2-1",
-        title: "Gravity-Fed Layered Clay Pot Filter",
+        title: "Satellite Image Retransmission",
         description:
-          "Stack three local clay pots filled with gravel, active sand, and crushed coconut shell charcoal respectively.",
-        innovationScore: 85,
-        feasibility: 95,
+          "Download fresh satellite scans and push to rescuer terminals.",
+        innovationScore: 75,
+        feasibility: 50,
+        socialImpact: 85,
+        aiRecommendation:
+          "High latency and high cloud dependency; useless when local comms fail.",
+        isSelected: false,
+      },
+      {
+        id: "idea-2-2",
+        title: "Local Drone Swarm with CV",
+        description:
+          "Deploy offline edge drones classifying raw videos into local GPS overlays.",
+        innovationScore: 96,
+        feasibility: 80,
         socialImpact: 95,
         aiRecommendation:
-          "Outstanding social impact and feasibility. Highly cost-effective and culturally familiar.",
+          "Highly resilient, offline, and generates maps within 15 minutes.",
         isSelected: true,
       },
     ],
     prototype: [
       {
         id: "proto-2-1",
-        version: "v1.0.0",
-        figmaLink: "https://figma.com/file/biopurify-blueprints",
-        githubRepo: "https://github.com/devflow/biopurify-cad",
-        demoUrl: "http://biopurify.org/blueprint",
+        version: "v0.4.0",
+        figmaLink: "https://figma.com/file/disaster-map-hifi",
+        githubRepo: "https://github.com/devflow/drone-mesh-cv",
+        demoUrl: "http://disaster-mesh.local",
         screenshots:
-          "3D CAD blueprint drawings, assembly instruction guide pages.",
+          "Mesh telemetry node status, damage overlays, search path routing.",
         notes:
-          "Initial prototype constructed in the NGO office yard. Filtration output tested at 5 liters per hour.",
-        createdAt: "2025-08-01",
+          "Drones run local TensorFlow Lite models. Map data replicates via peer mesh.",
+        createdAt: "2026-06-01",
       },
     ],
     test: [
       {
         id: "test-2-1",
-        testUsers: "12 households in Satkhira coastal village.",
+        testUsers: "Volunteer Rescue Team Alpha.",
         feedback:
-          "Water turbidity dropped immediately and taste improved. Users noted the charcoal layer needs replacement every 4 months.",
+          "Drones mapped a 2km zone accurately but wind currents lowered battery life.",
         improvements:
-          "Designed a simple mesh cartridge for the charcoal layer to make replacements tool-free.",
+          "Optimized flight trajectories to maximize battery range by 15%.",
         pendingIssues:
-          "Testing biological contaminants removal over long periods (6+ months).",
+          "Stable classification of people under heavy smoke or rubble.",
         lessonsLearned:
-          "Providing clear visual color indicators (clean vs dirty) in instructions helps adoption.",
-        createdAt: "2025-11-10",
+          "Thermal imaging addition is critical for smoke-filled search environments.",
+        createdAt: "2026-06-20",
       },
     ],
     innovationScores: {
       problemClarity: 95,
-      innovation: 80,
-      feasibility: 95,
-      socialImpact: 96,
-      aiReadiness: 70,
-      scalability: 90,
-      sustainability: 95,
+      innovation: 96,
+      feasibility: 78,
+      socialImpact: 94,
+      aiReadiness: 90,
+      scalability: 88,
+      sustainability: 80,
     },
   },
   {
     id: "proj-3",
-    name: "EcoCycle AI Sorter",
+    name: "Smart Water Conservation",
     problemStatement:
-      "Inefficient manual sorting of plastics in urban recycling centers results in downcycling and high municipal landfill waste.",
+      "Water utilities lose up to 35% of clean municipal drinking water through undetected underground leaks before the water reaches households.",
     proposedSolution:
-      "A lightweight computer-vision model running on edge microcontrollers attached to mechanical pneumatic sorters.",
-    innovationTheme: "Sustainability",
-    sdgGoals: [
-      "Goal 12: Responsible Consumption and Production",
-      "Goal 11: Sustainable Cities and Communities",
-    ],
-    targetBeneficiaries:
-      "Municipal sorting hubs and local sorting cooperatives.",
+      "A smart acoustic sensor collar clamped onto main underground valves that listens for high-frequency pipe anomalies and pinpoints leak positions.",
+    innovationTheme: "Clean Water & Climate",
+    sdgGoals: ["Goal 6: Clean Water and Sanitation", "Goal 13: Climate Action"],
+    targetBeneficiaries: "Municipal utility operators and community residents.",
     expectedImpact:
-      "Increase recycling sorting speed by 300% and recovery purity to 98% for PET and HDPE.",
+      "Save 2 million gallons of drinking water daily, preventing subsidence damage and resource depletion.",
     successMetrics:
-      "10 metric tons processed daily, sorting accuracy above 97.5%, sorting cost reduced by 40%.",
-    projectStage: "Prototyping",
+      "Acoustic signal accuracy, leak location precision, battery efficiency.",
+    projectStage: "Validation",
     teamMembers: [
-      { name: "Linus Odegard", role: "AI Research Lead" },
-      { name: "Priya Nair", role: "Robotics Engineer" },
+      { name: "Elena Rostova", role: "Hydrology Researcher" },
+      { name: "David Chen", role: "Acoustic Engineer" },
     ],
-    timeline: "Q3 2026 - Q2 2027",
-    priority: "Medium",
-    innovationScore: 95,
-    engineeringHealth: 78,
-    projectProgress: 35,
-    impactScore: 86,
-    readinessScore: 50,
-    codeQuality: 82,
-    testCoverage: 75,
+    timeline: "Q2 2025 - Q2 2026",
+    priority: "High",
+    innovationScore: 88,
+    engineeringHealth: 90,
+    projectProgress: 80,
+    impactScore: 92,
+    readinessScore: 86,
+    codeQuality: 90,
+    testCoverage: 84,
     buildStatus: "passing",
-    openIssuesCount: 12,
-
-    // Design Thinking Stage Data
+    openIssuesCount: 2,
     empathise: {
-      targetUser:
-        "Municipal waste sorting plant managers and local cooperative sorting workers.",
+      targetUser: "Municipal water maintenance engineers.",
       userPersona:
-        "Arjun, a 34-year-old sorting line supervisor exposed to toxic dust who manages a team sorting 2 tons of waste daily.",
-      goals:
-        "Speed up sorting, reduce physical exposure to harmful chemical residues, and minimize sorting mistakes.",
+        "Sanjay, a maintenance tech who must manually check miles of pipeline using audio probes.",
+      goals: "Identify exact pipe leak coords before excavating heavy roads.",
       pains:
-        "Skin rashes from handling contaminated materials; high turnover of workers; low pricing due to mixed plastic contamination.",
+        "High road repair costs and massive public anger during water shortages.",
       behaviours:
-        "Sorts plastics solely by visual shape and touch; works under loud, fast conveyor line settings.",
-      needs:
-        "An automated assistant that filters out clear PET and HDPE bottles safely before manual handling.",
+        "Manually audits pipelines in response to surface water reports.",
+      needs: "Continuous, automated underground leak detection monitoring.",
     },
     define: {
       problemStatement:
-        "How can municipal waste facilities automatically sort PET and HDPE plastics from rapid conveyor lines without requiring high manual labour exposure?",
+        "How might we design a continuous pipeline monitoring system that automatically detects micro-leaks before they cause surface collapses?",
       opportunityStatement:
-        "Deploying Edge computer-vision sensors on existing mechanical lines enables cheap retrofitting.",
+        "Piezoelectric sensor collars can convert pipeline sound frequencies into digital indicators.",
       howMightWe:
-        "How might we use camera feeds and AI edge nodes to trigger air jets that sort recyclable plastics on a moving conveyor belt?",
-      successMetrics:
-        "Frames processed per second, classification accuracy, pneumatic nozzle valve latency.",
+        "How might we listen to underground city piping sounds to locate hidden micro-leaks?",
+      successMetrics: "Liters of water saved, excavation targeting accuracy.",
     },
     ideate: [
       {
         id: "idea-3-1",
-        title: "Laser Spectroscopy Sorter",
+        title: "Flow Meter Variance Audits",
         description:
-          "Deploy NIR spectroscopy sensors to analyze chemical signatures of moving plastics.",
-        innovationScore: 90,
-        feasibility: 50,
-        socialImpact: 80,
+          "Compare water input vs exit meters to find volume differences.",
+        innovationScore: 65,
+        feasibility: 85,
+        socialImpact: 70,
         aiRecommendation:
-          "Highly accurate but extremely expensive and complex to build locally.",
+          "Detects the existence of leaks but cannot identify their locations.",
         isSelected: false,
       },
       {
         id: "idea-3-2",
-        title: "Edge CV Sorter with Air Jets",
+        title: "Acoustic Frequency Analysis",
         description:
-          "Mount a high-speed camera over the conveyor belt connected to an ESP32-CAM or Raspberry Pi running a MobileNet model to trigger pneumatic actuators.",
-        innovationScore: 96,
-        feasibility: 85,
-        socialImpact: 90,
+          "Clamping microphone sensor collars to valves to detect high-frequency stress waves.",
+        innovationScore: 90,
+        feasibility: 80,
+        socialImpact: 92,
         aiRecommendation:
-          "Excellent cost-to-performance ratio; highly adaptable to existing infrastructure.",
+          "Pinpoints location to within 1 meter by comparing arrival times between collars.",
         isSelected: true,
       },
     ],
     prototype: [
       {
         id: "proto-3-1",
-        version: "v0.1.0",
-        figmaLink: "https://figma.com/file/ecocycle-dash",
-        githubRepo: "https://github.com/devflow/ecocycle-detector",
-        demoUrl: "http://localhost:8080/detect",
+        version: "v1.0.0",
+        figmaLink: "https://figma.com/file/water-leak-dashboard",
+        githubRepo: "https://github.com/devflow/water-leak-acoustic",
+        demoUrl: "https://leak-dashboard.devflow.io",
         screenshots:
-          "Edge classification logger, live video bounding boxes, classification latency chart.",
+          "Interactive pipe map, audio spectral charts, battery monitors.",
         notes:
-          "Model trained on 5,000 plastic bottle images. Classification takes 80ms on Raspberry Pi 4.",
-        createdAt: "2026-05-12",
+          "Sensors deployed along 5 kilometers of main municipal piping feed.",
+        createdAt: "2026-01-15",
       },
     ],
     test: [
       {
         id: "test-3-1",
-        testUsers: "GreenLoop Recycling sorting hub.",
+        testUsers: "City Water Authority maintenance crew.",
         feedback:
-          "Sorter runs well on clean water bottles but struggles with squashed or dirty containers.",
+          "Acoustic collars identified 4 leaks successfully with 90% excavation accuracy.",
         improvements:
-          "Augmented dataset with dirty, crushed, and partially labeled bottles to retrain the neural net.",
+          "Added filtering for heavy vehicle traffic vibrations to reduce false alarms.",
         pendingIssues:
-          "Syncing pneumatic valve trigger latency with high-speed conveyor belts.",
+          "Calibrating acoustics for pvc plastic pipes vs steel pipes.",
         lessonsLearned:
-          "Real-world waste is highly deformed; synthetic clean datasets are insufficient.",
-        createdAt: "2026-06-05",
+          "PVC pipes damp sound travel; requires placing collars closer together.",
+        createdAt: "2026-04-10",
+      },
+    ],
+    innovationScores: {
+      problemClarity: 90,
+      innovation: 88,
+      feasibility: 84,
+      socialImpact: 92,
+      aiReadiness: 80,
+      scalability: 88,
+      sustainability: 90,
+    },
+  },
+  {
+    id: "proj-4",
+    name: "Mental Health Companion",
+    problemStatement:
+      "Students in competitive universities experience high anxiety and isolation, with university mental health clinics facing 6-week appointment backlogs.",
+    proposedSolution:
+      "A privacy-first, offline-capable AI companion that uses cognitive behavioral therapy (CBT) reflection exercises to help students manage stress.",
+    innovationTheme: "Well-being & Health",
+    sdgGoals: [
+      "Goal 3: Good Health and Well-being",
+      "Goal 4: Quality Education",
+    ],
+    targetBeneficiaries: "University students and mental health staff.",
+    expectedImpact:
+      "Provide instant, zero-cost support to 5,000+ students, bridging the care gap during peak examination weeks.",
+    successMetrics:
+      "Student stress score reduction, daily active reflection logs, clinic referral rate.",
+    projectStage: "Ideation",
+    teamMembers: [
+      { name: "Dr. Ananya Rao", role: "Clinical Psychologist" },
+      { name: "Sarah Smith", role: "UX Researcher" },
+    ],
+    timeline: "Q3 - Q4 2026",
+    priority: "Medium",
+    innovationScore: 85,
+    engineeringHealth: 90,
+    projectProgress: 15,
+    impactScore: 88,
+    readinessScore: 72,
+    codeQuality: 92,
+    testCoverage: 80,
+    buildStatus: "passing",
+    openIssuesCount: 1,
+    empathise: {
+      targetUser: "Undergraduate university students.",
+      userPersona:
+        "Meera, a freshman studying Computer Science who feels overwhelmed and is too anxious to seek help.",
+      goals:
+        "Safely talk about academic pressures without fear of stigma or data leaks.",
+      pains:
+        "Long university counseling waiting lists and high costs of private therapy.",
+      behaviours:
+        "Scrolls social media when stressed, keeping worries bottled up.",
+      needs:
+        "An immediate, private tool to organize thoughts and reduce panic symptoms.",
+    },
+    define: {
+      problemStatement:
+        "How might we provide privacy-first, on-demand emotional support to college students during late-night anxiety spikes?",
+      opportunityStatement:
+        "Running local quantized AI models inside a sandboxed browser environment guarantees complete user data privacy.",
+      howMightWe:
+        "How might we design a CBT assistant that operates entirely local to the user's phone?",
+      successMetrics:
+        "User anxiety reduction ratings, data privacy compliance checkmarks.",
+    },
+    ideate: [
+      {
+        id: "idea-4-1",
+        title: "Peer-to-Peer Help Chatroom",
+        description:
+          "Connect stressed students anonymously with other student listeners.",
+        innovationScore: 72,
+        socialImpact: 78,
+        feasibility: 85,
+        aiRecommendation:
+          "High moderating costs and risk of inappropriate advice.",
+        isSelected: false,
+      },
+      {
+        id: "idea-4-2",
+        title: "Offline Local CBT Companion",
+        description:
+          "A client-side WebAssembly chatbot guiding users through CBT writing prompts.",
+        innovationScore: 89,
+        socialImpact: 90,
+        feasibility: 88,
+        aiRecommendation:
+          "Highly secure, zero server costs, absolute user data privacy.",
+        isSelected: true,
+      },
+    ],
+    prototype: [],
+    test: [],
+    innovationScores: {
+      problemClarity: 88,
+      innovation: 85,
+      feasibility: 82,
+      socialImpact: 88,
+      aiReadiness: 70,
+      scalability: 85,
+      sustainability: 80,
+    },
+  },
+  {
+    id: "proj-5",
+    name: "Smart Farming Assistant",
+    problemStatement:
+      "Smallholder farmers lose up to 40% of their harvest yields due to late pest detection and incorrect fertilizer application schedules.",
+    proposedSolution:
+      "An offline mobile app that uses leaf-image scanning models to instantly identify crop diseases and recommend natural remedies.",
+    innovationTheme: "Sustainable Agriculture",
+    sdgGoals: [
+      "Goal 2: Zero Hunger",
+      "Goal 12: Responsible Consumption and Production",
+    ],
+    targetBeneficiaries: "Smallholder farmers in rural agricultural sectors.",
+    expectedImpact:
+      "Increase crop yields by 25% for rural smallholders and decrease chemical pesticide runoffs.",
+    successMetrics:
+      "Yield improvements, pest diagnostic speed, offline model usage.",
+    projectStage: "Validation",
+    teamMembers: [
+      { name: "Priya Nair", role: "Agronomist" },
+      { name: "Siddharth Rao", role: "Mobile Developer" },
+    ],
+    timeline: "Q1 - Q4 2026",
+    priority: "High",
+    innovationScore: 90,
+    engineeringHealth: 92,
+    projectProgress: 70,
+    impactScore: 92,
+    readinessScore: 85,
+    codeQuality: 90,
+    testCoverage: 85,
+    buildStatus: "passing",
+    openIssuesCount: 4,
+    empathise: {
+      targetUser:
+        "Smallholder farmers in regions with poor internet connectivity.",
+      userPersona:
+        "Ramesh, a paddy farmer who notices brown spots on his rice stalks but has no local agronomist to ask.",
+      goals:
+        "Get an instant diagnosis for leaf spots without traveling to the city.",
+      pains:
+        "Massive crop losses from pests and zero 4G network signal in fields.",
+      behaviours:
+        "Asks neighboring farmers for advice; buys expensive chemicals blindly.",
+      needs:
+        "A visual diagnostic tool that works without using any internet data.",
+    },
+    define: {
+      problemStatement:
+        "How might we help rural farmers identify crop diseases in the field without requiring internet access or specialized lab equipment?",
+      opportunityStatement:
+        "Deploying optimized MobileNet computer vision models directly inside low-cost smartphones lets them work offline.",
+      howMightWe:
+        "How might we turn a basic phone camera into an offline agronomist assistant?",
+      successMetrics: "Disease diagnosis accuracy, app offline launch speed.",
+    },
+    ideate: [
+      {
+        id: "idea-5-1",
+        title: "Agronomist Hotline Callcenter",
+        description:
+          "Set up a toll-free number for farmers to call and describe leaf issues.",
+        innovationScore: 68,
+        feasibility: 80,
+        socialImpact: 75,
+        aiRecommendation:
+          "Difficult to describe complex fungal textures over voice calls.",
+        isSelected: false,
+      },
+      {
+        id: "idea-5-2",
+        title: "Offline Mobile Leaf Scanner",
+        description:
+          "An app hosting local disease neural nets that classify leaf spots via camera view.",
+        innovationScore: 92,
+        feasibility: 85,
+        socialImpact: 92,
+        aiRecommendation:
+          "Provides immediate, visual, offline diagnoses right in the field.",
+        isSelected: true,
+      },
+    ],
+    prototype: [
+      {
+        id: "proto-5-1",
+        version: "v1.0.0",
+        figmaLink: "https://figma.com/file/smart-farm-ui",
+        githubRepo: "https://github.com/devflow/leaf-classifier",
+        demoUrl: "https://farm-diagnostic.devflow.io",
+        screenshots:
+          "Camera leaf scanner interface, diagnostics page, natural cure recipes.",
+        notes:
+          "Supports 8 local crop types. Model file compressed to only 12MB.",
+        createdAt: "2026-03-20",
+      },
+    ],
+    test: [
+      {
+        id: "test-5-1",
+        testUsers: "15 vegetable farmers in Kolar village.",
+        feedback:
+          "App diagnosed tomato blight correctly. Recommended adding voice translations.",
+        improvements:
+          "Added local language voice audio guidance to diagnostic results.",
+        pendingIssues:
+          "Scanning crops in poor direct sunlight or shadow conditions.",
+        lessonsLearned:
+          "Audio guidance helps bridge literacy barriers in rural farms.",
+        createdAt: "2026-05-18",
       },
     ],
     innovationScores: {
       problemClarity: 92,
-      innovation: 95,
-      feasibility: 80,
-      socialImpact: 88,
-      aiReadiness: 85,
-      scalability: 90,
-      sustainability: 86,
+      innovation: 90,
+      feasibility: 85,
+      socialImpact: 92,
+      aiReadiness: 84,
+      scalability: 88,
+      sustainability: 89,
+    },
+  },
+  {
+    id: "proj-6",
+    name: "Accessible Public Transport",
+    problemStatement:
+      "Wheelchair users and visually impaired travelers struggle to navigate bus networks, finding bus station ramps blocked or buses departing without them.",
+    proposedSolution:
+      "An IoT beacon network at bus stops that transmits accessibility boarding alerts directly to the driver's dashboard interface.",
+    innovationTheme: "Urban Equity",
+    sdgGoals: [
+      "Goal 10: Reduced Inequalities",
+      "Goal 11: Sustainable Cities and Communities",
+    ],
+    targetBeneficiaries: "Visually and physically impaired urban commuters.",
+    expectedImpact:
+      "Reduce transit boarding friction times by 50% and raise public transport usage among disabled citizens.",
+    successMetrics:
+      "Boarding delay seconds, driver alert responses, system active hours.",
+    projectStage: "Prototyping",
+    teamMembers: [
+      { name: "Linus Odegard", role: "Electronics Engineer" },
+      { name: "Sarah Smith", role: "Accessibility Specialist" },
+    ],
+    timeline: "Q3 2026 - Q1 2027",
+    priority: "Medium",
+    innovationScore: 89,
+    engineeringHealth: 88,
+    projectProgress: 50,
+    impactScore: 90,
+    readinessScore: 78,
+    codeQuality: 88,
+    testCoverage: 82,
+    buildStatus: "passing",
+    openIssuesCount: 5,
+    empathise: {
+      targetUser: "Visually impaired and wheelchair commuters.",
+      userPersona:
+        "Anjali, a blind university student who stands at bus stops waiting for hours, hoping the correct bus halts.",
+      goals:
+        "Notify arriving bus drivers of her boarding request and route target.",
+      pains:
+        "Buses frequently drive past her without stopping, or stop too far from curbs.",
+      behaviours:
+        "Relies on asking strangers which bus number has just arrived.",
+      needs:
+        "A direct, automated notification link between her and the transit driver.",
+    },
+    define: {
+      problemStatement:
+        "How might we guarantee that public transit drivers receive real-time notice of disabled commuters waiting at upcoming stops?",
+      opportunityStatement:
+        "Low-energy Bluetooth beacons at shelter kiosks can link commuter boarding requests to driver control units.",
+      howMightWe:
+        "How might we trigger driver dashboard alerts when an accessibility commuter is waiting?",
+      successMetrics:
+        "Driver confirmation rate, passenger boarding satisfaction rating.",
+    },
+    ideate: [
+      {
+        id: "idea-6-1",
+        title: "Transit Booking Website",
+        description:
+          "Commuters register schedules online 24 hours before traveling.",
+        innovationScore: 60,
+        feasibility: 90,
+        socialImpact: 65,
+        aiRecommendation:
+          "Highly inflexible; fails for spontaneous daily travel.",
+        isSelected: false,
+      },
+      {
+        id: "idea-6-2",
+        title: "IoT Stop Beacons & App Link",
+        description:
+          "Commuters tap their phone at the stop beacon to push visual indicators directly to the driver's display.",
+        innovationScore: 92,
+        feasibility: 82,
+        socialImpact: 94,
+        aiRecommendation:
+          "Highly flexible, low-cost beacons, integrates with existing buses.",
+        isSelected: true,
+      },
+    ],
+    prototype: [
+      {
+        id: "proto-6-1",
+        version: "v0.6.0",
+        figmaLink: "https://figma.com/file/transit-driver-alert",
+        githubRepo: "https://github.com/devflow/transit-beacon-firmware",
+        demoUrl: "https://driver-alert.devflow.io",
+        screenshots:
+          "Driver HUD warnings, passenger wait status list, beacon logs.",
+        notes: "BLE beacons deployed in 4 central bus shelter bays.",
+        createdAt: "2026-04-12",
+      },
+    ],
+    test: [
+      {
+        id: "test-6-1",
+        testUsers: "6 disabled commuters and 10 municipal bus drivers.",
+        feedback:
+          "Drivers responded within 5 seconds. Commuters felt significantly safer.",
+        improvements:
+          "Added loud audible text-to-speech speaker output at bus shelter bays.",
+        pendingIssues:
+          "Beacon signal range overlap when multiple buses arrive at once.",
+        lessonsLearned:
+          "Clear user-interface alerts prevent driver warning fatigue.",
+        createdAt: "2026-06-08",
+      },
+    ],
+    innovationScores: {
+      problemClarity: 90,
+      innovation: 89,
+      feasibility: 82,
+      socialImpact: 94,
+      aiReadiness: 76,
+      scalability: 86,
+      sustainability: 85,
     },
   },
 ];

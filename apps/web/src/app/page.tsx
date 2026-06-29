@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { InnovationProject, ProjectStage } from "../types/innovation";
 import { InnovationService } from "../services/innovation";
@@ -30,6 +30,8 @@ import {
 } from "../components/ui/MilestoneSuccessModal";
 import { AutoSaveIndicator } from "../components/ui/AutoSaveIndicator";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
+import { SettingsCenterModal } from "../components/flow/SettingsCenterModal";
+import { DemoTourOverlay, TourType } from "../components/ui/DemoTourOverlay";
 
 type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
 
@@ -515,6 +517,9 @@ export default function HomePage() {
   // Confirm delete state (replaces window.confirm)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [confirmDeleteName, setConfirmDeleteName] = useState<string>("");
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isTourOpen, setIsTourOpen] = useState(false);
+  const [tourType, setTourType] = useState<TourType>("general");
 
   const pushToast = useCallback(
     (message: string, variant: ToastMessage["variant"] = "success") => {
@@ -524,6 +529,86 @@ export default function HomePage() {
   );
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const handleResetDemo = useCallback(() => {
+    localStorage.removeItem("devflow_innovation_projects");
+    localStorage.removeItem("devflow_problem_discoveries");
+    localStorage.removeItem("devflow_impact_metrics");
+    localStorage.removeItem("devflow_council_data");
+    const fresh = InnovationService.getProjects();
+    setProjects(fresh);
+    setSelectedProject(null);
+    setActiveCoachProject(null);
+    setActiveModule("dashboard");
+    pushToast(
+      "DevFlow system database reset. Demo parameters restored successfully.",
+      "info",
+    );
+  }, [pushToast]);
+
+  // Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      const isEditing =
+        activeEl &&
+        (activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.getAttribute("contenteditable") === "true");
+
+      if (
+        (e.ctrlKey && e.key.toLowerCase() === "k") ||
+        (e.key === "/" && !isEditing)
+      ) {
+        e.preventDefault();
+        const searchInput = document.querySelector(
+          'input[type="search"]',
+        ) as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      }
+
+      // Alt + D: Dashboard
+      if (e.altKey && e.key.toLowerCase() === "d") {
+        e.preventDefault();
+        setActiveModule("dashboard");
+        setActiveCoachProject(null);
+        pushToast("Navigated to Workspace", "info");
+      }
+
+      // Alt + G: Galaxy
+      if (e.altKey && e.key.toLowerCase() === "g") {
+        e.preventDefault();
+        setActiveModule("galaxy");
+        pushToast("Navigated to Innovation Galaxy Map", "info");
+      }
+
+      // Alt + R: Reports
+      if (e.altKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+        setIsExportOpen(true);
+        pushToast("Reports & Export center launched", "info");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [pushToast]);
+
+  // First-visit onboarding check
+  useEffect(() => {
+    const onboarded = localStorage.getItem("devflow_onboarded");
+    if (!onboarded) {
+      localStorage.setItem("devflow_onboarded", "true");
+      const t = setTimeout(() => {
+        setIsTourOpen(true);
+        setTourType("general");
+      }, 3500);
+      return () => clearTimeout(t);
+    }
   }, []);
 
   const triggerAutoSave = useCallback(() => {
@@ -577,23 +662,51 @@ export default function HomePage() {
     [projects, pushToast],
   );
 
+  const handleTourNavigate = useCallback(
+    (
+      mod:
+        | "dashboard"
+        | "discovery"
+        | "impact"
+        | "council"
+        | "galaxy"
+        | "coach"
+        | "reports"
+        | "slides",
+    ) => {
+      if (mod === "slides") {
+        setIsPresentationOpen(true);
+        setCurrentSlide(0);
+        if (projects.length > 0) {
+          setSelectedProject(projects[0]);
+        }
+        return;
+      }
+      setIsPresentationOpen(false);
+      if (mod === "dashboard") {
+        setActiveModule("dashboard");
+        setActiveCoachProject(null);
+      } else if (mod === "discovery") {
+        setActiveModule("discovery");
+      } else if (mod === "coach") {
+        if (projects.length > 0) setActiveCoachProject(projects[0]);
+      } else if (mod === "galaxy") {
+        setActiveModule("galaxy");
+      } else if (mod === "impact") {
+        setActiveModule("impact");
+      } else if (mod === "council") {
+        setActiveModule("council");
+      } else if (mod === "reports") {
+        setIsExportOpen(true);
+      }
+    },
+    [projects],
+  );
+
   // Detect workflow module for WorkflowBanner
   const currentWorkflowModule: WorkflowModule = activeCoachProject
     ? "coach"
     : (activeModule as WorkflowModule);
-
-  const handleDemoModeLaunch = useCallback(() => {
-    const demoProjects = InnovationService.getProjects();
-    setProjects(demoProjects);
-    localStorage.removeItem("devflow_problem_discoveries");
-    localStorage.removeItem("devflow_impact_metrics");
-    localStorage.removeItem("devflow_council_data");
-    setActiveModule("dashboard");
-    pushToast(
-      "Samsung Solve for Tomorrow demo loaded. All modules pre-populated.",
-      "info",
-    );
-  }, [pushToast]);
 
   const handleSaveProject = useCallback(
     (project: InnovationProject) => {
@@ -866,13 +979,16 @@ export default function HomePage() {
             }
           }}
           onExportCenterClick={() => setIsExportOpen(true)}
-          onDemoModeClick={handleDemoModeLaunch}
-          onResourcesClick={() =>
-            pushToast("Resources center launched successfully.", "info")
-          }
-          onSettingsClick={() =>
-            pushToast("Settings matrix updated successfully.", "info")
-          }
+          onDemoModeClick={() => {
+            setTourType("samsung");
+            setIsTourOpen(true);
+          }}
+          onResourcesClick={() => {
+            setIsSettingsOpen(true);
+          }}
+          onSettingsClick={() => {
+            setIsSettingsOpen(true);
+          }}
           isMobileOpen={isMobileSidebarOpen}
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
         />
@@ -882,7 +998,10 @@ export default function HomePage() {
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onNewProjectClick={handleNewProjectClick}
-            onDemoModeClick={handleDemoModeLaunch}
+            onDemoModeClick={() => {
+              setTourType("samsung");
+              setIsTourOpen(true);
+            }}
             onExportCenterClick={() => setIsExportOpen(true)}
             onMobileMenuToggle={() => setIsMobileSidebarOpen(true)}
           />
@@ -1507,6 +1626,45 @@ export default function HomePage() {
               </AnimatePresence>
             </section>
           </motion.main>
+
+          {/* ── Premium Footer ────────────────────────────────── */}
+          <footer
+            style={{
+              padding: "32px 20px 48px",
+              borderTop: "1px solid var(--border)",
+              marginTop: "auto",
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              fontSize: 12,
+              color: "var(--text-tertiary)",
+              maxWidth: 1280,
+              width: "100%",
+              margin: "0 auto",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span
+                style={{
+                  fontWeight: 900,
+                  color: "var(--text-primary)",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                DEVFLOW OS
+              </span>
+              <span style={{ color: "var(--border)" }}>|</span>
+              <span>v1.0.0</span>
+            </div>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+              <span style={{ color: "var(--text-secondary)", fontWeight: 600 }}>
+                ✦ Built with AI & Design Thinking
+              </span>
+              <span>© 2026 DevFlow Team</span>
+            </div>
+          </footer>
         </div>
 
         {/* Slide-over */}
@@ -1668,6 +1826,26 @@ export default function HomePage() {
         variant="danger"
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmDeleteId(null)}
+      />
+
+      {/* ── Settings / Guides Modal Center ───────────────── */}
+      <SettingsCenterModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onResetDemo={handleResetDemo}
+        onStartTour={(type) => {
+          setTourType(type);
+          setIsTourOpen(true);
+        }}
+      />
+
+      {/* ── Guided Interactive Tour Overlay ──────────────── */}
+      <DemoTourOverlay
+        isOpen={isTourOpen}
+        type={tourType}
+        project={projects.length > 0 ? projects[0] : null}
+        onClose={() => setIsTourOpen(false)}
+        onNavigate={handleTourNavigate}
       />
     </>
   );
