@@ -520,6 +520,14 @@ export default function HomePage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [tourType, setTourType] = useState<TourType>("general");
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setHasHydrated(true);
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const pushToast = useCallback(
     (message: string, variant: ToastMessage["variant"] = "success") => {
@@ -1127,7 +1135,7 @@ export default function HomePage() {
                     fontWeight: 500,
                   }}
                 >
-                  {projects.length > 0
+                  {hasHydrated && projects.length > 0
                     ? `${projects.length} active project${
                         projects.length > 1 ? "s" : ""
                       } across all innovation phases`
