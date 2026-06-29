@@ -1,4 +1,4 @@
-# DevFlow OS: AI Innovation Operating System ✦
+# DevFlow OS: Innovation Operating System
 
 [![Build Status](https://github.com/pravalika2307/DevFlow/actions/workflows/main.yml/badge.svg)](https://github.com/pravalika2307/DevFlow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)

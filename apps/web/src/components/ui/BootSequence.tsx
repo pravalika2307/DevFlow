@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { DevFlowLogo } from "./DevFlowLogo";
 
 interface BootSequenceProps {
   onComplete: () => void;
@@ -39,7 +40,7 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.06),transparent_70%)] pointer-events-none" />
 
-      {/* Futuristic monogram logo */}
+      {/* Premium custom logo */}
       <div className="mb-8 relative flex items-center justify-center">
         <motion.div
           animate={{
@@ -51,13 +52,13 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-500 to-violet-600 flex items-center justify-center shadow-2xl shadow-blue-500/20 relative"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <span className="text-white font-black text-2xl tracking-tighter">
-            DF
-          </span>
-          {/* Neon outer breathing ring */}
-          <div className="absolute inset-0 rounded-2xl border border-blue-accent/30 animate-pulse pointer-events-none" />
+          <DevFlowLogo size={64} />
         </motion.div>
       </div>
 

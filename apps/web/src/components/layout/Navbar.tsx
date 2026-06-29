@@ -1,4 +1,5 @@
 import React from "react";
+import { DevFlowLogo } from "../ui/DevFlowLogo";
 
 interface NavbarProps {
   searchQuery: string;
@@ -49,32 +50,7 @@ export function Navbar({
               flexShrink: 0,
             }}
           >
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              style={{ flexShrink: 0 }}
-              aria-hidden="true"
-            >
-              <defs>
-                <linearGradient
-                  id="devflow-logo-grad-navbar"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="100%"
-                >
-                  <stop offset="0%" stopColor="#3b82f6" />
-                  <stop offset="100%" stopColor="#8b5cf6" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M4 3h8a9 9 0 0 1 9 9a9 9 0 0 1-9 9H4V3zm4 4v10h5l4-5l-4-5H8zm3 5l-3-3v6l3-3z"
-                fill="url(#devflow-logo-grad-navbar)"
-                fillRule="evenodd"
-              />
-            </svg>
+            <DevFlowLogo size={32} />
             <div className="df-hide-mobile">
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span

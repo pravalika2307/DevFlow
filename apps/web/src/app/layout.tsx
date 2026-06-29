@@ -4,9 +4,9 @@ import "@/styles/globals.css";
 import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 
 export const metadata: Metadata = {
-  title: "DevFlow OS — AI Innovation Operating System",
+  title: "DevFlow OS — Innovation Operating System",
   description:
-    "DevFlow OS is an AI-powered innovation platform for students, startups, NGOs, and teams. Design Thinking, Problem Discovery, Impact Intelligence, and Multi-Agent AI Council — all in one workspace.",
+    "DevFlow OS is a premium innovation platform for students, startups, NGOs, and teams. Design Thinking, Problem Discovery, Impact Intelligence, and Multi-Agent AI Council — all in one workspace.",
   keywords: [
     "AI",
     "Innovation",
@@ -16,10 +16,15 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "DevFlow Team" }],
   creator: "DevFlow OS",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
-    title: "DevFlow OS — AI Innovation Operating System",
+    title: "DevFlow OS — Innovation Operating System",
     description:
-      "Premium AI-powered innovation workspace. Design Thinking. Impact Intelligence. AI Council.",
+      "Premium innovation workspace. Design Thinking. Impact Intelligence. AI Council.",
     type: "website",
   },
 };

@@ -1,4 +1,4 @@
-# DevFlow - AI Innovation Operating System Overview
+# DevFlow - Innovation Operating System Overview
 
 DevFlow is a premium, multi-agent AI-powered innovation operating system designed to guide students, startups, educational groups, and NGOs from initial concept discovery to presentation-ready project formulations.
 

@@ -48,7 +48,7 @@ export function DemoTourOverlay({
             {
               title: "Welcome to DevFlow OS ✦",
               description:
-                "DevFlow is an AI Innovation Operating System designed to guide teams from empathy-driven problem discovery to presentation-ready Samsung Solve for Tomorrow submissions.",
+                "DevFlow is an Innovation Operating System designed to guide teams from empathy-driven problem discovery to presentation-ready Samsung Solve for Tomorrow submissions.",
               actionLabel: "Start Guided Tour",
               setupEffect: () => onNavigate("dashboard"),
             },

@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DevFlowLogo } from "../ui/DevFlowLogo";
 
 type Module = "dashboard" | "discovery" | "impact" | "council" | "galaxy";
 
@@ -94,32 +95,7 @@ export function Sidebar({
       {/* Brand & Section links */}
       <div className="space-y-6">
         <div className="flex items-center gap-4 px-4 py-2 border-b border-border-default pb-5">
-          <svg
-            width="38"
-            height="38"
-            viewBox="0 0 24 24"
-            fill="none"
-            style={{ flexShrink: 0 }}
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient
-                id="devflow-logo-grad-sidebar"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="#3b82f6" />
-                <stop offset="100%" stopColor="#8b5cf6" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M4 3h8a9 9 0 0 1 9 9a9 9 0 0 1-9 9H4V3zm4 4v10h5l4-5l-4-5H8zm3 5l-3-3v6l3-3z"
-              fill="url(#devflow-logo-grad-sidebar)"
-              fillRule="evenodd"
-            />
-          </svg>
+          <DevFlowLogo size={38} />
           <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <h2
               style={{
